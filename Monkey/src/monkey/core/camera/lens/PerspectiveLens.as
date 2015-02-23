@@ -2,7 +2,12 @@ package monkey.core.camera.lens {
 
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Device3D;
-
+	
+	/**
+	 * 透视投影 
+	 * @author Neil
+	 * 
+	 */	
 	public class PerspectiveLens extends Lens3D {
 
 		private static const rawData : Vector.<Number> = new Vector.<Number>(16, true);

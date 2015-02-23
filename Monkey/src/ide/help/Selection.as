@@ -8,15 +8,21 @@ package ide.help {
 	import ide.events.SelectionEvent;
 	import ide.events.TransformEvent;
 	
+	import monkey.core.base.Bounds3D;
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
+	import monkey.core.camera.Camera3D;
+	import monkey.core.entities.Mesh3D;
 	import monkey.core.materials.Material3D;
+	import monkey.core.utils.Vector3DUtils;
 
 	public class Selection {
 		
 		public static const FPS 	: String = "FirstPerson";
 		public static const LOCAL 	: String = "local";
 		public static const GLOBAL	: String = "global";
+		
+		public var sceneCamera		: Camera3D;
 		
 		private var _material		: Material3D;				// 材质
 		private var _surface 		: Surface3D;				// 网格数据
@@ -27,10 +33,12 @@ package ide.help {
 		private var _app 			: App;						// app
 		private var _main 			: Object3D;					// 选中的pivot
 		private var _bounds			: Vector3D;					// bounds
+		
 				
 		public function Selection(app : App) {
 			this._objects = [];
 			this._app     = app;
+			this._bounds  = new Vector3D();
 		}
 		
 		/**
@@ -85,6 +93,67 @@ package ide.help {
 		 */		
 		public function set main(value : Object3D) : void {
 			_main = value;
+			updateBoundings();				
+		}
+		
+		private function updateBoundings() : void {
+			if (!main) {
+				return;
+			}
+			var bounds : Bounds3D = getBounds(main);
+			var center : Vector3D = bounds.center;
+			var scale  : Vector3D = main.transform.getScale();
+			Vector3DUtils.mul(scale, bounds.length, scale);	
+			this.bounds = scale;
+		}
+		
+		public function getBounds(pivot : Object3D) : Bounds3D {
+			
+			var bounds : Bounds3D = new Bounds3D();
+			var mesh : Mesh3D = pivot.getComponent(Mesh3D) as Mesh3D;
+			if (mesh && pivot.children.length == 0) {
+				bounds.copyFrom(mesh.bounds);
+				return bounds;
+			} else if (!mesh && pivot.children.length == 0) {
+				return bounds;
+			}
+			
+			bounds.max.setTo(Number.MIN_VALUE, Number.MIN_VALUE, Number.MIN_VALUE);
+			bounds.min.setTo(Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE);
+			
+			pivot.forEach(function(child : Object3D) : void {
+				mesh = child.getComponent(Mesh3D) as Mesh3D;
+				if (mesh) {
+					if (bounds.min.x > mesh.bounds.min.x) {
+						bounds.min.x = mesh.bounds.min.x;
+					}
+					if (bounds.min.y > mesh.bounds.min.y) {
+						bounds.min.y = mesh.bounds.min.y;
+					}
+					if (bounds.min.z > mesh.bounds.min.z) {
+						bounds.min.z = mesh.bounds.min.z;
+					}
+					if (bounds.max.x < mesh.bounds.max.x) {
+						bounds.max.x = mesh.bounds.max.x;
+					}
+					if (bounds.max.y < mesh.bounds.max.y) {
+						bounds.max.y = mesh.bounds.max.y;
+					}
+					if (bounds.max.z < mesh.bounds.max.z) {
+						bounds.max.z = mesh.bounds.max.z;
+					}					
+				}
+			});
+			
+			bounds.length.x = bounds.max.x - bounds.min.x;
+			bounds.length.y = bounds.max.y - bounds.min.y;
+			bounds.length.z = bounds.max.z - bounds.min.z;
+			bounds.center.x = bounds.length.x * 0.5 + bounds.min.x;
+			bounds.center.y = bounds.length.y * 0.5 + bounds.min.y;
+			bounds.center.z = bounds.length.z * 0.5 + bounds.min.z;
+			bounds.radius = Vector3D.distance(bounds.center, bounds.max);
+			
+			return bounds;
 		}
 		
 		/**

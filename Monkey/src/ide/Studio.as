@@ -17,6 +17,7 @@ package ide {
 
 	public class Studio extends Sprite {
 		
+		private var _rootLayer		: Sprite;
 		private var _ide		: Box;
 		private var _scene  	: TabControl;
 		private var _output	 	: TabControl;
@@ -29,6 +30,10 @@ package ide {
 			} else {
 				this.addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
 			}
+		}
+		
+		public function get rootLayer():Sprite {
+			return _rootLayer;
 		}
 		
 		/**
@@ -80,17 +85,19 @@ package ide {
 		private function init() : void {
 			this.stage.color = Style.backgroundColor;
 			this.stage.frameRate = 60;
+			this._rootLayer = new Sprite();
 			
-			var root : Sprite = new Sprite();
-			var pop  : Sprite = new Sprite();
-			pop.addChild(ToolTip.toolTip);
-			pop.addChild(Window.popWindow.view);
+			var baseLayer : Sprite = new Sprite();
+			var popLayer  : Sprite = new Sprite();
+			popLayer.addChild(ToolTip.toolTip);
+			popLayer.addChild(Window.popWindow.view);
 			Window.popWindow.visible = false;
 			Window.popWindow.x = stage.stageWidth / 2;
 			Window.popWindow.y = stage.stageHeight / 2;
 			// add to stage			
-			this.addChild(root);
-			this.addChild(pop);
+			this.addChild(rootLayer);
+			this.addChild(baseLayer);
+			this.addChild(popLayer);
 			// ide
 			this._ide = new Box();
 			this._ide.name = "root";
@@ -99,7 +106,7 @@ package ide {
 			this._ide.flexible 	  = 1;
 			this._ide.space 	  = 0;
 			this._ide.height 	  = 400;
-			root.addChild(this._ide.view);
+			baseLayer.addChild(this._ide.view);
 			// 场景面板
 			this._scene  = new TabControl();
 			this._scene.minHeight = 550;

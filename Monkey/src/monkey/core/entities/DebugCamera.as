@@ -34,7 +34,7 @@ package monkey.core.entities {
 		}
 		
 		override public function draw(scene:Scene3D, includeChildren:Boolean=true):void {
-			if (this._far != camera.far && this._near != camera.near) {
+			if (this._far != camera.far || this._near != camera.near) {
 				this.config();
 			}
 			super.draw(scene, includeChildren);
@@ -90,6 +90,9 @@ package monkey.core.entities {
 			lineTo(-size2X,-size2Y, far);
 			moveTo(-sizeX,  sizeY, this._camera.near);
 			lineTo(-size2X, size2Y, far);
+			
+			this._far 	= camera.far;
+			this._near 	= camera.near;
 		}
 	}
 }

@@ -34,7 +34,7 @@ package ide {
 		private var _selection 	: Selection;			// selection
 		private var _menu 		: NativeMenu; 			// menu
 		private var _studio 	: Studio;
-		
+				
 		public function App(studio : Studio) {
 			if (_instance != null) {
 				throw new Error("App:single ton");
@@ -52,7 +52,7 @@ package ide {
 			this._undo.addEventListener(UndoEvent.REDO, this.dispatchEvent);
 			this._studio.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		}
-		
+
 		/**
 		 * 添加menu 
 		 * @param label			labels

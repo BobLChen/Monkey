@@ -158,5 +158,10 @@
 			}
 		}
 		
+		public static function mul(a:Vector3D, b:Vector3D, out:Vector3D) : void {
+			out.x = a.x * b.x;
+			out.y = a.y * b.y;
+			out.z = a.z * b.z;
+		}
 	}
 }

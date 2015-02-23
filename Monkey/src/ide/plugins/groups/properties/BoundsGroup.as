@@ -1,8 +1,9 @@
 package ide.plugins.groups.properties {
 	import ide.App;
+	
 	import ui.core.controls.Spinner;
 
-	public class AABBGroup extends PropertiesGroup {
+	public class BoundsGroup extends PropertiesGroup {
 		
 		private var _lenX : Spinner;
 		private var _lenY : Spinner;
@@ -10,8 +11,8 @@ package ide.plugins.groups.properties {
 		
 		private var app : App;
 		
-		public function AABBGroup() {
-			super("AABB");
+		public function BoundsGroup() {
+			super("Boundings");
 			this.layout.labelWidth = 20;
 			this.layout.addHorizontalGroup();
 			this._lenX = layout.addControl(new Spinner(), "X:") as Spinner;
@@ -20,9 +21,9 @@ package ide.plugins.groups.properties {
 		}
 		
 		override public function update(app : App) : Boolean {
-			this._lenX.value = app.selection.aabb.x;
-			this._lenY.value = app.selection.aabb.y;
-			this._lenZ.value = app.selection.aabb.z;
+			this._lenX.value = app.selection.bounds.x;
+			this._lenY.value = app.selection.bounds.y;
+			this._lenZ.value = app.selection.bounds.z;
 			return true;
 		}
 		

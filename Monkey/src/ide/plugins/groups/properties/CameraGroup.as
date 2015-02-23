@@ -1,207 +1,105 @@
 package ide.plugins.groups.properties {
-	
-	import com.adobe.images.PNGEncoder;
-	
+
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
-	import flash.net.FileReference;
-	
-	import L3D.core.camera.Camera3D;
-	import L3D.core.camera.lenses.OrthogrhicLens;
-	import L3D.core.camera.lenses.PerspectiveLens;
-	import L3D.system.Device3D;
-	
-	import ide.plugins.ScenePlugin;
 	
 	import ide.App;
+	
+	import monkey.core.camera.Camera3D;
+	import monkey.core.camera.lens.OrthogrhicLens;
+	import monkey.core.camera.lens.PerspectiveLens;
+	
+	import ui.core.container.Box;
 	import ui.core.controls.CheckBox;
-	import ui.core.controls.Image;
-	import ui.core.controls.InputText;
-	import ui.core.controls.Separator;
+	import ui.core.controls.ComboBox;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
 
+	/**
+	 * 相机group
+	 * @author Neil
+	 *
+	 */
 	public class CameraGroup extends PropertiesGroup {
+
+		[Embed(source = "menuicon.png")]
+		private static const MenuIcon : Class;
+		private static const menuIcon : BitmapData = new MenuIcon().bitmapData;
 		
+		/** 透视投影矩阵 */
+		private static const PERSPECTIVE : String = "Perspective";
+		/** 正交投影 */
+		private static const ORTHOGRHIC  : String = "Orthogrhic";
 		
-		private var _app : App;
-		private var _camera : Camera3D;
-		
-		private var _near : Spinner;
-		private var _far : Spinner;
-		private var _fieldOfView : Spinner;
-		private var _image : Image;
-		private var _useCamera : CheckBox;
-		private var _lookAtX : Spinner;
-		private var _lookAtY : Spinner;
-		private var _lookAtZ : Spinner;
-		private var _orthogrhCamera : CheckBox;
-		private var _perspectCamera : CheckBox;
-		private var _widthSpinner : Spinner;
-		private var _heightSpinner : Spinner;
-		private var _render : InputText;
-		
-		
+		private var _app 		: App;
+		private var _camera 	: Camera3D;
+		private var _mainCamera : CheckBox;
+		private var _lens		: ComboBox;
+		private var _near 		: Spinner;
+		private var _far 		: Spinner;
+		private var _fieldOfView: Spinner;				// 透视投影
+		private var _left		: Spinner;				// 正交:left
+		private var _right		: Spinner;				// 正交:right
+		private var _top		: Spinner;				// 正交:top
+		private var _bottom		: Spinner;				// 正交:bottom
+		private var _baseGroup	: Box;
+		private var _persGroup  : Box;
+		private var _orthGroup	: Box;
+				
 		public function CameraGroup() {
 			super("Camera");
-			accordion.contentHeight = 250;
-			layout.margins = 5;
+			this.accordion.contentHeight = 140;
+			this.layout.margins = 5;
+			// base
+			this._baseGroup = this.layout.addVerticalGroup();
+			this._mainCamera = this.layout.addControl(new CheckBox(), "MainCamera:") as CheckBox;
+			this._lens = this.layout.addControl(new ComboBox([PERSPECTIVE, ORTHOGRHIC], [PERSPECTIVE, ORTHOGRHIC]), "Lens:") as ComboBox;
+			this._lens.addEventListener(ControlEvent.CHANGE, changeLens);
+			this._near = layout.addControl(new Spinner(), "Near:") as Spinner;
+			this._far = layout.addControl(new Spinner(), "Far:") as Spinner;
+			this.layout.endGroup();
+			// perspective
+			this._persGroup = this.layout.addVerticalGroup();
+			this._fieldOfView = layout.addControl(new Spinner(), "Field Of View:") as Spinner;
+			this.layout.endGroup();
+			// orth
+			this._orthGroup = this.layout.addVerticalGroup();
+			this._left 	 = layout.addControl(new Spinner(), "Left:") as Spinner;
+			this._right  = layout.addControl(new Spinner(), "Right:") as Spinner;
+			this._bottom = layout.addControl(new Spinner(), "Bottom:") as Spinner;
+			this._top 	 = layout.addControl(new Spinner(), "Top:") as Spinner;
+			this.layout.endGroup();
 			
-			layout.addHorizontalGroup();
-			_useCamera = layout.addControl(new CheckBox(), "UseCamera:") as CheckBox;
-			_render = layout.addControl(new InputText("Render")) as InputText;
-			_render.textField.selectable = false;
-			layout.endGroup();
-			
-			layout.addControl(new Separator(Separator.HORIZONTAL));
-			layout.addHorizontalGroup();
-			_orthogrhCamera = layout.addControl(new CheckBox(), "OrthogrhicLens") as CheckBox;
-			_perspectCamera = layout.addControl(new CheckBox(), "PerspectiveLens") as CheckBox;
-			layout.endGroup();
-			layout.addControl(new Separator(Separator.HORIZONTAL));
-			
-			_near = layout.addControl(new Spinner(), "Near:") as Spinner;
-			_far = layout.addControl(new Spinner(), "Far:") as Spinner;
-			_fieldOfView = layout.addControl(new Spinner(), "Field Of View:") as Spinner;
-			
-			layout.addHorizontalGroup("LookAt:");
-			_lookAtX = layout.addControl(new Spinner()) as Spinner;
-			_lookAtY = layout.addControl(new Spinner()) as Spinner;
-			_lookAtZ = layout.addControl(new Spinner()) as Spinner;
-			layout.endGroup();
-			
-			layout.addHorizontalGroup();
-			layout.labelWidth = 55;
-			_widthSpinner = layout.addControl(new Spinner(), "Width:") as Spinner;
-			_heightSpinner = layout.addControl(new Spinner(), "Height:") as Spinner;
-			layout.endGroup();
-			
-			_image = layout.addControl(new Image(Device3D.nullBitmapData, true, 220, 120)) as Image;
-			_image.x = 10;
-			
-			_near.addEventListener(ControlEvent.STOP, changeCamera);
-			_far.addEventListener(ControlEvent.STOP, changeCamera);
-			_fieldOfView.addEventListener(ControlEvent.STOP, changeCamera);
-			_lookAtX.addEventListener(ControlEvent.STOP, changeLookAt);
-			_lookAtY.addEventListener(ControlEvent.STOP, changeLookAt);
-			_lookAtZ.addEventListener(ControlEvent.STOP, changeLookAt);
-			
-			_useCamera.addEventListener(ControlEvent.CHANGE, useThisCamera);
-			_orthogrhCamera.addEventListener(ControlEvent.CHANGE, changeCameraLens);
-			_perspectCamera.addEventListener(ControlEvent.CHANGE, changeCameraLens);
-			_widthSpinner.addEventListener(ControlEvent.CHANGE, changeOrLens);
-			_heightSpinner.addEventListener(ControlEvent.CHANGE, changeOrLens);
-			_render.addEventListener(ControlEvent.CLICK, render);
+			this._near.addEventListener(ControlEvent.CHANGE, changeNearFar);
+			this._far.addEventListener(ControlEvent.CHANGE, changeNearFar);
+			this._fieldOfView.addEventListener(ControlEvent.CHANGE, changeFieldOfView);
+			this._left.addEventListener(ControlEvent.CHANGE, changeOrth);
+			this._mainCamera.addEventListener(ControlEvent.CHANGE, setMainCamera);
 		}
 		
-		protected function render(event:Event) : void {
-			var rect : Rectangle = _camera.viewPort == null ? _app.scene.viewPort : _camera.viewPort;
-			var bitmap : BitmapData = new BitmapData(rect.width, rect.height, true, 0);
-			ScenePlugin(this._app.scene).renderToBitmapData(this._camera, bitmap);	
-			var file : FileReference = new FileReference();
-			file.save(PNGEncoder.encode(bitmap));
-		}
-		
-		protected function changeOrLens(event:Event) : void {
-			OrthogrhicLens(_camera.lens).viewPort = new Rectangle(0, 0, _widthSpinner.value, _heightSpinner.value);
-		}
-		
-		protected function changeCameraLens(event:Event) : void {
-			switch(event.target) {
-				case _orthogrhCamera: {
-					_orthogrhCamera.enabled = false;
-					_perspectCamera.enabled = true;
-					_widthSpinner.enabled = true;
-					_heightSpinner.enabled = true;
-					_perspectCamera.value = false;
-					var w : Number = _app.scene.viewPort.width;
-					var h : Number = _app.scene.viewPort.height;
-					_widthSpinner.value = w;
-					_heightSpinner.value = h;
-					_camera.lens = new OrthogrhicLens(-w/2, w/2, -h/2, h/2, _camera.near, _camera.far);
-					break;
-				}
-				case _perspectCamera: {
-					_perspectCamera.enabled = false;
-					_widthSpinner.enabled = false;
-					_heightSpinner.enabled = false;
-					_orthogrhCamera.enabled = true;
-					_orthogrhCamera.value = false;
-					break;
-				}
-				default: {
-					break;
-				}
-			}
-		}
-		
-		protected function useThisCamera(event:Event) : void {
-			if (_useCamera.value) {
-				if (this._app.scene.camera != this._camera) {
-					this._app.scene.camera = this._camera;
-				}
+		private function setMainCamera(event:Event) : void {
+			if (this._mainCamera.value) {
+				this._app.scene.camera = this._camera;
 			} else {
-				if (this._app.scene.camera == this._camera) {
-					this._app.scene.camera = ScenePlugin(this._app.scene).sceneCamera;
-				}
-			}
-		}
-		
-		protected function changeLookAt(event:Event) : void {
-			_camera.lookAt(_lookAtX.value, _lookAtY.value, _lookAtZ.value);			
-		}
-		
-		protected function changeCamera(event:Event) : void {
-			_camera.near = _near.value;
-			_camera.far = _far.value;
-			if (_camera.lens is PerspectiveLens) {
-				(_camera.lens as PerspectiveLens).fieldOfView = _fieldOfView.value;
-			}
-		}
-		
-		private function updateCamera() : void {
-			
-			if (this._app.scene.camera == this._camera) {
-				_useCamera.value = true;
-			} else {
-				_useCamera.value = false;
-			}
-			
-			if (this._camera.lens is PerspectiveLens) {
-				_perspectCamera.value = true;
-				_perspectCamera.enabled = false;
-				_orthogrhCamera.value = false;
-				_widthSpinner.enabled = false;
-				_heightSpinner.enabled = false;
-			} else if (this._camera.lens is OrthogrhicLens) {
-				_orthogrhCamera.value = true;
-				_orthogrhCamera.enabled = false;
-				_perspectCamera.value = false;
-				_widthSpinner.enabled = true;
-				_heightSpinner.enabled = true;
 				
-				_widthSpinner.value = OrthogrhicLens(_camera.lens).right * 2;
-				_heightSpinner.value = OrthogrhicLens(_camera.lens).bottom * 2;
-			}
-			
-			var rect : Rectangle = null;
-			if (this._camera.viewPort == null) {
-				rect = this._app.scene.viewPort;
-			} else {
-				rect = this._camera.viewPort;
-			}
-			var bitmap : BitmapData = new BitmapData(rect.width || 1, rect.height || 1, true, 0);
-			ScenePlugin(this._app.scene).renderToBitmapData(this._camera, bitmap);			
-			_image.source = bitmap;
-			this._near.value = _camera.near;
-			this._far.value = _camera.far;
-			if (_camera.lens is PerspectiveLens) {
-				this._fieldOfView.value = (_camera.lens as PerspectiveLens).fieldOfView;
 			}
 		}
 		
-		override public function update(app:App):Boolean {
+		private function changeOrth(event:Event) : void {
+			(this._camera.lens as OrthogrhicLens).setOrth(this._left.value, this._right.value, this._bottom.value, this._top.value);
+		}
+		
+		private function changeFieldOfView(event:Event) : void {
+			(this._camera.lens as PerspectiveLens).fieldOfView = this._fieldOfView.value;
+		}
+		
+		private function changeNearFar(event:Event) : void {
+			this._camera.near = this._near.value;
+			this._camera.far  = this._far.value;
+		}
+		
+		override public function update(app : App) : Boolean {
 			this._app = app;
 			if (this._app.selection.objects.length == 1 && this._app.selection.objects[0] is Camera3D) {
 				this._camera = this._app.selection.main as Camera3D;
@@ -210,7 +108,45 @@ package ide.plugins.groups.properties {
 			}
 			return false;
 		}
-				
 		
+		private function updateCamera() : void {
+			this.layout.removeAllControls();
+			this.layout.addControl(this._baseGroup);
+			this._near.value = this._camera.near;
+			this._far.value = this._camera.far;
+			if (this._camera.lens is PerspectiveLens) {
+				this.accordion.contentHeight = 140;
+				this.layout.addControl(this._persGroup);
+				this._fieldOfView.value = (this._camera.lens as PerspectiveLens).fieldOfView;
+			} else if (this._camera.lens is OrthogrhicLens) {
+				this.accordion.contentHeight = 160;
+				this.layout.addControl(this._orthGroup);
+				this._left.value = (this._camera.lens as OrthogrhicLens).left;
+				this._right.value = (this._camera.lens as OrthogrhicLens).right;
+				this._top.value = (this._camera.lens as OrthogrhicLens).top;
+				this._bottom.value = (this._camera.lens as OrthogrhicLens).bottom;
+			}
+			this.layout.draw();
+		}
+		
+		private function changeLens(event:Event) : void {
+			var lensStr : String = this._lens.selectData as String;
+			var viewprot: Rectangle = this._app.scene.viewPort;
+			switch(lensStr) {
+				case PERSPECTIVE: {
+					this._camera.lens = new PerspectiveLens();
+					break;
+				}
+				case ORTHOGRHIC: {
+					this._camera.lens = new OrthogrhicLens(0, 0, 0, 0);
+					break;
+				}
+				default: {
+					break;
+				}
+			}
+			this._camera.setViewPort(0, 0, viewprot.width, viewprot.height);
+			this.updateCamera();
+		}
 	}
 }

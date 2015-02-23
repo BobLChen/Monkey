@@ -20,11 +20,11 @@ package ide.plugins {
 	import monkey.core.entities.DebugCamera;
 	import monkey.core.entities.DebugLight;
 	import monkey.core.entities.DebugWireframe;
-	import monkey.core.entities.Mesh3D;
 	import monkey.core.light.Light3D;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Device3D;
 	import monkey.core.utils.Input3D;
+	import monkey.core.utils.Vector3DUtils;
 	
 	import ui.core.interfaces.IPlugin;
 
@@ -236,15 +236,15 @@ package ide.plugins {
 				}
 				// 显示包围盒
 				if (this._showBoundings) {
-					var bounds : Bounds3D = getBounds(pivot);
+					var bounds : Bounds3D = this._app.selection.getBounds(pivot);
 					var center : Vector3D = bounds.center;
 					var scale  : Vector3D = pivot.transform.getScale();
+					Vector3DUtils.mul(scale, bounds.length, scale);
 					pivot.transform.localToGlobal(center, center);
 					this._boundings.transform.local.copyFrom(pivot.transform.world);
 					this._boundings.transform.setPosition(center.x, center.y, center.z);
-					this._boundings.transform.setScale(scale.x * bounds.length.x + _padding, scale.y * bounds.length.y + _padding, scale.z * bounds.length.z + _padding);
+					this._boundings.transform.setScale(scale.x + _padding, scale.y + _padding, scale.z + _padding);
 					this._boundings.draw(this._app.scene);
-					this._app.selection.bounds = scale;
 				}
 				// 显示坐标轴
 				if (this._showAxis) {
@@ -258,57 +258,8 @@ package ide.plugins {
 			}
 		}
 		
-		private function getBounds(pivot : Object3D) : Bounds3D {
-			
-			var bounds : Bounds3D = new Bounds3D();
-			var mesh : Mesh3D = pivot.getComponent(Mesh3D) as Mesh3D;
-			if (mesh && pivot.children.length == 0) {
-				bounds.copyFrom(mesh.bounds);
-				return bounds;
-			} else if (!mesh && pivot.children.length == 0) {
-				return bounds;
-			}
-			
-			bounds.max.setTo(Number.MIN_VALUE, Number.MIN_VALUE, Number.MIN_VALUE);
-			bounds.min.setTo(Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE);
-			
-			pivot.forEach(function(child : Object3D) : void {
-				mesh = child.getComponent(Mesh3D) as Mesh3D;
-				if (mesh) {
-					if (bounds.min.x > mesh.bounds.min.x) {
-						bounds.min.x = mesh.bounds.min.x;
-					}
-					if (bounds.min.y > mesh.bounds.min.y) {
-						bounds.min.y = mesh.bounds.min.y;
-					}
-					if (bounds.min.z > mesh.bounds.min.z) {
-						bounds.min.z = mesh.bounds.min.z;
-					}
-					if (bounds.max.x < mesh.bounds.max.x) {
-						bounds.max.x = mesh.bounds.max.x;
-					}
-					if (bounds.max.y < mesh.bounds.max.y) {
-						bounds.max.y = mesh.bounds.max.y;
-					}
-					if (bounds.max.z < mesh.bounds.max.z) {
-						bounds.max.z = mesh.bounds.max.z;
-					}					
-				}
-			});
-		
-			bounds.length.x = bounds.max.x - bounds.min.x;
-			bounds.length.y = bounds.max.y - bounds.min.y;
-			bounds.length.z = bounds.max.z - bounds.min.z;
-			bounds.center.x = bounds.length.x * 0.5 + bounds.min.x;
-			bounds.center.y = bounds.length.y * 0.5 + bounds.min.y;
-			bounds.center.z = bounds.length.z * 0.5 + bounds.min.z;
-			bounds.radius = Vector3D.distance(bounds.center, bounds.max);
-			
-			return bounds;
-		}
-		
 		public function start() : void {
-			this._app.studio.stage.addChildAt(this._sprite, 0);
+			this._app.studio.rootLayer.addChild(this._sprite);
 		}
 	}
 }

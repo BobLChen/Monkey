@@ -167,7 +167,7 @@
 			this._current.addControl(spacer);
 			return spacer;
 		}
-
+		
 		public function addControl(control : Control, txt : String = null, name : String = null, tiptxt : String = null, conDescrip : String = null) : Control {
 			if (txt != null) {
 				this.addHorizontalGroup();
@@ -245,6 +245,6 @@
 				this.view.scrollRect = new Rectangle(0, 0, width, height);
 			}
 		}
-
+		
 	}
 }

@@ -107,6 +107,7 @@ package ide.plugins {
 			this._app.studio.scene.addPanel(this._scenePanel);
 			this._app.studio.scene.open();
 			this._app.studio.update();
+			this._app.selection.sceneCamera = this._sceneCamera;
 		}
 		
 		public function start() : void {
