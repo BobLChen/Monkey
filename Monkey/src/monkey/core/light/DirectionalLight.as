@@ -18,16 +18,20 @@ package monkey.core.light {
 		
 		override public function clone():Object3D {
 			var c : DirectionalLight = new DirectionalLight();
-			c.color = color;
-			c.ambient = ambient;
-			c.specular = specular;
-			c.power = power;
+			c.color 	= color;
+			c.ambient 	= ambient;
+			c.specular 	= specular;
+			c.power 	= power;
+			c.intensity = intensity;
 			for each (var icom : IComponent in components) {
 				c.addComponent(icom.clone());
 			}
+			for each (var child : Object3D in children) {
+				c.children.push(child.clone());
+			}
 			return c;
 		}
-				
+		
 		public function get power():Number {
 			return _power;
 		}

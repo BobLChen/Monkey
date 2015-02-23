@@ -6,13 +6,11 @@ package monkey.core.light {
 
 	public class PointLight extends Light3D {
 		
-		private var _radius 	: Number;
-		private var _multiplier : Number;
+		private var _radius : Number;
 		
 		public function PointLight() {
 			super();
-			this.radius 	= 100;
-			this.multiplier = 1;
+			this.radius = 100;
 		}
 		
 		override public function clone():Object3D {
@@ -20,25 +18,14 @@ package monkey.core.light {
 			c.color = color;
 			c.ambient = ambient;
 			c.radius = radius;
-			c.multiplier = multiplier;
+			c.intensity = intensity;
 			for each (var icom : IComponent in components) {
 				c.addComponent(icom.clone());
 			}
+			for each (var child : Object3D in children) {
+				c.children.push(child.clone());
+			}
 			return c;
-		}
-		
-		public function get multiplier():Number {
-			return _multiplier;
-		}
-		
-		/**
-		 * 强度 
-		 * @param value
-		 * 
-		 */		
-		public function set multiplier(value:Number):void {
-			this._multiplier = value;
-			this.dispatchEvent(new Event(Event.CHANGE));
 		}
 		
 		public function get radius():Number {

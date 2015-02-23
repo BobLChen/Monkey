@@ -48,7 +48,7 @@ package monkey.core.components {
 			c._local.copyFrom(this._local);
 			c._world.copyFrom(this._world);
 			c._invWorld.copyFrom(this._invWorld);
-			c._dirty = this._dirty;
+			c._dirty 	= this._dirty;
 			c._dirtyInv = this._dirtyInv;
 			return c;
 		}

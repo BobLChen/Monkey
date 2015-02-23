@@ -356,6 +356,9 @@ package monkey.core.base {
 			for each (var icom : IComponent in components) {
 				c.addComponent(icom.clone());
 			}
+			for each (var child : Object3D in children) {
+				c.children.push(child.clone());
+			}
 			return c;
 		}
 	}

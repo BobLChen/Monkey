@@ -1,59 +1,62 @@
 package ide.plugins.groups.properties {
-	
-	
+		
 	import flash.events.Event;
 	
-	import L3D.core.light.DirectionalLight;
-	
 	import ide.App;
+	
+	import monkey.core.light.DirectionalLight;
+	
 	import ui.core.controls.ColorPicker;
-	import ui.core.controls.Separator;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
-
+	
+	/**
+	 * 平行光 
+	 * @author Neil
+	 * 
+	 */	
 	public class DirectionLightGroup extends PropertiesGroup {
 		
 		private var app : App;
 		
-		private var _lightColor : ColorPicker;
-		private var _ambientColor : ColorPicker;
-		private var _specularColor : ColorPicker;
-		private var _power : Spinner;
+		private var _lightColor 	: ColorPicker;
+		private var _ambientColor 	: ColorPicker;
+		private var _specularColor 	: ColorPicker;
+		private var _intensity		: Spinner;
+		private var _power 			: Spinner;
+		private var _light 			: DirectionalLight;
 		
-		private var _light : DirectionalLight;
-				
 		public function DirectionLightGroup() {
 			super("DirectionLight");
-			accordion.contentHeight = 100;
-			layout.margins = 5;
-			layout.labelWidth = 40;
-			layout.addControl(new Separator(Separator.HORIZONTAL));
-			layout.labelWidth = 100;
-			_lightColor = layout.addControl(new ColorPicker(), "LightColor:") as ColorPicker;
-			_ambientColor = layout.addControl(new ColorPicker(), "Ambient:") as ColorPicker;
-			_specularColor = layout.addControl(new ColorPicker(), "Specular:") as ColorPicker;
-			_power = layout.addControl(new Spinner(), "Power:") as Spinner;
+			this.accordion.contentHeight = 120;
+			this.layout.margins = 5;
+			this.layout.labelWidth = 100;
+			this._lightColor 	= layout.addControl(new ColorPicker(), "LightColor:") as ColorPicker;
+			this._ambientColor 	= layout.addControl(new ColorPicker(), "Ambient:") as ColorPicker;
+			this._specularColor = layout.addControl(new ColorPicker(), "Specular:") as ColorPicker;
+			this._power 		= layout.addControl(new Spinner(), "Power:") as Spinner;
+			this._intensity 	= layout.addControl(new Spinner(), "Intensity:") as Spinner;
 			
-			_lightColor.addEventListener(ControlEvent.CHANGE, change);
-			_ambientColor.addEventListener(ControlEvent.CHANGE, change);
-			_specularColor.addEventListener(ControlEvent.CHANGE, change);
-			_power.addEventListener(ControlEvent.CHANGE, change);
+			this._lightColor.addEventListener(ControlEvent.CHANGE, change);
+			this._ambientColor.addEventListener(ControlEvent.CHANGE, change);
+			this._specularColor.addEventListener(ControlEvent.CHANGE, change);
+			this._power.addEventListener(ControlEvent.CHANGE, change);
 		}
 		
-		protected function change(event:Event) : void {
-			_light.color = _lightColor.color;
-			_light.ambient = _ambientColor.color;
-			_light.specular = _specularColor.color;
-			_light.power = _power.value;
+		private function change(event:Event) : void {
+			this._light.color 	 = _lightColor.color;
+			this._light.ambient  = _ambientColor.color;
+			this._light.specular = _specularColor.color;
+			this._light.power 	 = _power.value;
 		}
 		
 		override public function update(app : App) : Boolean {
 			if (app.selection.main is DirectionalLight) {
-				_light = app.selection.main as DirectionalLight;
-				_lightColor.color = _light.color;
-				_ambientColor.color = _light.ambient;
-				_specularColor.color = _light.specular;
-				_power.value = _light.power;
+				this._light = app.selection.main as DirectionalLight;
+				this._lightColor.color 	  = _light.color;
+				this._ambientColor.color  = _light.ambient;
+				this._specularColor.color = _light.specular;
+				this._power.value 		  = _light.power;
 				return true;
 			}
 			return false;

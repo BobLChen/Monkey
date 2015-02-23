@@ -32,9 +32,8 @@ package monkey.core.components {
 		}
 		
 		public function copyfrom(icom : Component3D) : void {
-			icom._object3D = this._object3D;
-			icom._enable = this._enable;
-			icom._disposed = this._disposed;
+			this._enable   = icom.enable;
+			this._disposed = icom.disposed;
 		}
 				
 		/**

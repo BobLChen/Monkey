@@ -7,11 +7,12 @@ package ide.plugins {
 	import ide.events.SceneEvent;
 	import ide.events.SelectionEvent;
 	import ide.plugins.groups.properties.BoundsGroup;
-	import ide.plugins.groups.properties.CameraGroup;
+	import ide.plugins.groups.properties.DirectionLightGroup;
 	import ide.plugins.groups.properties.GeneralGroup;
 	import ide.plugins.groups.properties.MeshGroup;
 	import ide.plugins.groups.properties.NameGroup;
 	import ide.plugins.groups.properties.NavmeshGroup;
+	import ide.plugins.groups.properties.PointLightGroup;
 	import ide.plugins.groups.properties.PropertiesGroup;
 	import ide.plugins.groups.properties.TransformGroup;
 	
@@ -64,12 +65,11 @@ package ide.plugins {
 			this._groups.push(new MeshGroup());
 			this._groups.push(new BoundsGroup());
 			this._groups.push(new NavmeshGroup());
-			this._groups.push(new CameraGroup());
 //			this._groups.push(new WaterGroup());
 //			this._groups.push(new SkyboxGroup());
 //			this._groups.push(new ParticlesGroup());
-//			this._groups.push(new DirectionLightGroup());
-//			this._groups.push(new PointLightGroup());
+			this._groups.push(new DirectionLightGroup());
+			this._groups.push(new PointLightGroup());
 //			this._groups.push(new AnimationGroup());
 			
 			this._icon.gotoAndStop(0);
@@ -116,6 +116,7 @@ package ide.plugins {
 			}
 			this._layout.removeAllControls();
 			this._layout.addControl(this._nameGroup);
+			
 			var name : String = "";
 			for each (var pivot : Object3D in objects) {
 				name += pivot.name + ",";

@@ -11,7 +11,7 @@ package monkey.core.camera {
 	import monkey.core.interfaces.IComponent;
 	import monkey.core.utils.Device3D;
 	import monkey.core.utils.Matrix3DUtils;
-
+	
 	/**
 	 * 相机 
 	 * @author Neil
@@ -36,7 +36,7 @@ package monkey.core.camera {
 			this.lens.addEventListener(Lens3D.PROJECTION_UPDATE, onLensProjChanged, false, 0, true);
 			this.transform.addEventListener(Transform3D.UPDATE_TRANSFORM, onUpdateTransform, false, 0, true);
 		}
-				
+		
 		override public function clone():Object3D {
 			var c : Camera3D = new Camera3D(lens.clone());
 			for each (var icom : IComponent in components) {
