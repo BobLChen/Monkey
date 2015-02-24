@@ -10,8 +10,6 @@ package monkey.core.scene {
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	
-	import L3D.system.Device3D;
-	
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.camera.Camera3D;

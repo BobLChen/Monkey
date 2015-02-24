@@ -15,11 +15,11 @@ package ide.plugins {
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.entities.Axis3D;
-	import monkey.core.entities.primitives.Cube;
 	import monkey.core.entities.DebugBounds;
 	import monkey.core.entities.DebugCamera;
 	import monkey.core.entities.DebugLight;
 	import monkey.core.entities.DebugWireframe;
+	import monkey.core.entities.primitives.Cube;
 	import monkey.core.light.Light3D;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Device3D;
@@ -136,19 +136,14 @@ package ide.plugins {
 						this._app.selection.push([this._currentGizmo.object]);
 					}
 					this._currentGizmo = null;
-				} 
-//				else if (ScenePlugin(this._app.scene).mouse.test(Studio.stage.mouseX, Studio.stage.mouseY)) {
-//					var pickInfo : CollisionInfo = ScenePlugin(this._app.scene).mouse.data[0];
-//					if (Input3D.keyDown(Input3D.CONTROL)) {
-//						this._selecting = true;
-//					} else if (this._app.selection.objects.indexOf(pickInfo.mesh) == -1) {
-//						this._app.selection.objects = [];
-//						this._app.selection.push([pickInfo.mesh]);
+				} else if (ScenePlugin(this._app.scene).mouse.test(this._app.stage.mouseX, this._app.stage.mouseY, this._app.selection.pickInfo)) {
+					if (Input3D.keyDown(Input3D.CONTROL)) {
+						this._selecting = true;
+					} else if (this._app.selection.objects.indexOf(this._app.selection.pickInfo.object) == -1) {
+						this._app.selection.objects = [this._app.selection.pickInfo.object];
 //						this._app.selection.shader = (pickInfo.mesh as Mesh3D).material.shader;
-//						this._app.selection.surface = pickInfo.geometry;
-//					}
-//				} 
-				else if (!Input3D.keyDown(Input3D.CONTROL) || !Input3D.keyDown(Input3D.ALTERNATE)) {
+					}
+				} else if (!Input3D.keyDown(Input3D.CONTROL) || !Input3D.keyDown(Input3D.ALTERNATE)) {
 					this._app.selection.objects = [];
 				}
 			}
@@ -184,7 +179,12 @@ package ide.plugins {
 						this._sprite.addChildAt(gizmo, 0);
 					}
 				}
+			} else {
+				while (this._sprite.numChildren > 0) {
+					this._sprite.removeChildAt(0);
+				}
 			}
+						
 			this.overlayRender();
 		}
 		

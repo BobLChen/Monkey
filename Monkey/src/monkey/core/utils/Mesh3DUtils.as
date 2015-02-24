@@ -8,7 +8,6 @@ package monkey.core.utils {
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
-	import monkey.core.materials.ColorMaterial;
 
 	/**
 	 * 模型工具 

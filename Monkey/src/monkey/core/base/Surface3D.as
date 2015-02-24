@@ -9,6 +9,7 @@ package monkey.core.base {
 	import flash.utils.Endian;
 	
 	import monkey.core.scene.Scene3D;
+	import monkey.core.utils.Surface3DUtils;
 
 	/**
 	 * 网格数据 
@@ -59,6 +60,7 @@ package monkey.core.base {
 		private var vertexBytes	 : Vector.<ByteArray>;					// 二进制数据源
 		private var ref 		 : Ref;									// 引用计数器
 		private var _bounds		 : Bounds3D								// 包围盒
+		private var _ploys		 : Vector.<Triangle3D>					// 三角形
 		private var _disposed	 : Boolean;								// 是否已经被销毁
 				
 		public function Surface3D() {
@@ -91,6 +93,28 @@ package monkey.core.base {
 			ref.ref++;
 			return c;
 		}
+		
+		/**
+		 * 三角形 
+		 * @return 
+		 * 
+		 */		
+		public function get ploys():Vector.<Triangle3D> {
+			if (!_ploys) {
+				_ploys = Surface3DUtils.buildPolys(this);
+			}
+			return _ploys;
+		}
+		
+		/**
+		 * 三角形 
+		 * @param value
+		 * 
+		 */		
+		public function set ploys(value:Vector.<Triangle3D>):void {
+			_ploys = value;
+		}
+
 		
 		/**
 		 * 包围盒 
@@ -179,6 +203,9 @@ package monkey.core.base {
 			if (this.vertexVector[type]) {
 				return this.vertexVector[type];
 			}
+			if (!this.vertexBytes[type]) {
+				return null;
+			}
 			var bytes : ByteArray = this.vertexBytes[type];
 			var datas : Vector.<Number> = new Vector.<Number>();
 			bytes.position = 0;
@@ -198,6 +225,9 @@ package monkey.core.base {
 		public function getVertexBytes(type : int) : ByteArray {
 			if (this.vertexBytes[type]) {
 				return this.vertexBytes[type];
+			}
+			if (!this.vertexVector[type]) {
+				return null;
 			}
 			var bytes : ByteArray = new ByteArray();
 			bytes.endian = Endian.LITTLE_ENDIAN;

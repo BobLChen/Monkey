@@ -9,9 +9,13 @@ package ide.plugins {
 	import ide.events.SceneEvent;
 	import ide.panel.ScenePanel;
 	
+	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.camera.lens.PerspectiveLens;
+	import monkey.core.collisions.MouseCollision;
+	import monkey.core.collisions.collider.Collider;
 	import monkey.core.entities.Grid3D;
+	import monkey.core.entities.Mesh3D;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.FPSStats;
 	import monkey.core.utils.Input3D;
@@ -28,6 +32,7 @@ package ide.plugins {
 		private var _scenePanel 	: ScenePanel;			// scene panel
 		private var _grid 			: Grid3D;				// 3d网格
 		private var _stats 			: FPSStats;				// fps
+		private var _mouse			: MouseCollision;		// 拾取器
 		private var _app 			: App;					// app
 		private var _lastFrame 		: Number;				// 上一帧
 		private var _cameraMode 	: String;				// 相机模式
@@ -47,6 +52,7 @@ package ide.plugins {
 			this._cameraMode 	= ACTION_ORIBIT;
 			this._action 		= ACTION_NULL;
 			this._showGrid 		= true;
+			this._mouse			= new MouseCollision();
 			this._orbitPoint 	= new Vector3D();
 			this._orbitAxis 	= new Vector3D();
 			this._sceneCamera   = new Camera3D(new PerspectiveLens());
@@ -65,6 +71,10 @@ package ide.plugins {
 			this.addEventListener(Scene3D.POST_RENDER, onPostRender);
 		}
 						
+		public function get mouse():MouseCollision {
+			return _mouse;
+		}
+		
 		private function onPostRender(event:Event) : void {
 			this._app.dispatchEvent(new SceneEvent(SceneEvent.POST_RENDER_EVENT));
 		}
@@ -108,6 +118,18 @@ package ide.plugins {
 			this._app.studio.scene.open();
 			this._app.studio.update();
 			this._app.selection.sceneCamera = this._sceneCamera;
+			this._app.addEventListener(SceneEvent.CHANGE, sceneChangeEvent);
+		}
+		
+		private function sceneChangeEvent(event:Event) : void {
+			this.forEach(function(child:Object3D):void{
+				var collider : Collider = child.getComponent(Collider) as Collider;
+				if (!collider) {
+					child.addComponent(new Collider(child.getComponent(Mesh3D) as Mesh3D));
+				}
+			});
+			this.mouse.removeCollisionWith(this, true);
+			this.mouse.addCollisionWith(this, true);
 		}
 		
 		public function start() : void {
@@ -242,23 +264,6 @@ package ide.plugins {
 						this.camera.transform.translateY((Input3D.mouseYSpeed * this._orbitDistance) / 800);
 						this._orbitAxis = camera.transform.getDir(false);
 						this.camera.transform.localToGlobal(new Vector3D(0, 0, this._orbitDistance), this._orbitPoint);
-					}
-					if (Input3D.middleMouseUp || Input3D.keyUp(Input3D.SPACE)) {
-						this._action = ACTION_NULL;
-//						var max : Vector3D = new Vector3D(1000000, 1000000, 1000000);
-//						var min : Vector3D = new Vector3D(-1000000, -1000000, -1000000);
-//						if (this._mouse.ray.test(camera.transform.getPosition(false), this._orbitAxis, true, true, false)) {
-//							for each (var collisonInfo : CollisionInfo in this._mouse.ray.data) {
-//								if (collisonInfo.mesh == this._mouse.ray.data[0].mesh) {
-//									max = Vector3DUtils.min(max, collisonInfo.point);
-//									min = Vector3DUtils.max(min, collisonInfo.point);
-//								}
-//							}
-//							max.incrementBy(min);
-//							max.scaleBy(0.5);
-//							this._orbitPoint.copyFrom(max);
-//							this._orbitDistance = camera.getPosition(false).subtract(this._orbitPoint).length;
-//						}
 					}
 					this._action = ACTION_NULL;
 					break;

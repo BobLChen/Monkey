@@ -78,7 +78,7 @@ package monkey.core.entities {
 			}
 			this.surfaces = new Vector.<Surface3D>();
 		}
-
+		
 		public function draw(scene : Scene3D, material : Material3D) : void {
 			for each (var surf : Surface3D in surfaces) {
 				material.shader.draw(scene, surf, 0, surf.numTriangles);

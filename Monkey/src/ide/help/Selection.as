@@ -10,8 +10,8 @@ package ide.help {
 	
 	import monkey.core.base.Bounds3D;
 	import monkey.core.base.Object3D;
-	import monkey.core.base.Surface3D;
 	import monkey.core.camera.Camera3D;
+	import monkey.core.collisions.CollisionInfo;
 	import monkey.core.entities.Mesh3D;
 	import monkey.core.materials.Material3D;
 	import monkey.core.utils.Vector3DUtils;
@@ -23,9 +23,9 @@ package ide.help {
 		public static const GLOBAL	: String = "global";
 		
 		public var sceneCamera		: Camera3D;
+		public var pickInfo			: CollisionInfo;
 		
 		private var _material		: Material3D;				// 材质
-		private var _surface 		: Surface3D;				// 网格数据
 		private var _objects 		: Array;					// 所有选中的3d对象
 		private var _transformMode 	: String = GLOBAL;			// 
 		private var _clipboardState : String;					// 剪贴板状态
@@ -34,11 +34,11 @@ package ide.help {
 		private var _main 			: Object3D;					// 选中的pivot
 		private var _bounds			: Vector3D;					// bounds
 		
-				
 		public function Selection(app : App) {
 			this._objects = [];
 			this._app     = app;
 			this._bounds  = new Vector3D();
+			this.pickInfo = new CollisionInfo();
 		}
 		
 		/**
@@ -154,24 +154,6 @@ package ide.help {
 			bounds.radius = Vector3D.distance(bounds.center, bounds.max);
 			
 			return bounds;
-		}
-		
-		/**
-		 * 网格 
-		 * @return 
-		 * 
-		 */		
-		public function get surface() : Surface3D {
-			return _surface;
-		}
-		
-		/**
-		 * 网格 
-		 * @param value
-		 * 
-		 */		
-		public function set surface(value : Surface3D) : void {
-			_surface = value;
 		}
 		
 		/**
