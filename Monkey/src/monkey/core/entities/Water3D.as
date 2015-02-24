@@ -156,7 +156,7 @@ package monkey.core.entities {
 			this._pointArr[1].y = t * _waterSpeed;
 			this._waveBmp.perlinNoise(3, 3, 2, 0, false, true, 7, true, _pointArr);
 			// 柏林噪音图
-			var job : ShaderJob = new ShaderJob(_shader2d, _waveBytes, _waveMesh.segment, _waveMesh.segment);
+			var job : ShaderJob = new ShaderJob(_shader2d, _waveBytes, _waveMesh.segment + 1, _waveMesh.segment + 1);
 			job.addEventListener(ShaderEvent.COMPLETE, onWaterShaderComplete, false, 0, true);
 			job.start();
 		}

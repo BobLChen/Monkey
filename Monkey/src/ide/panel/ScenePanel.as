@@ -135,7 +135,7 @@ package ide.panel {
 			this._layout.endGroup();
 			this._layout.addEventListener(ControlEvent.CHANGE, this.dispatchEvent);
 			// fps
-			this._stats = new FPSStats(null, 0.5);
+			this._stats = new FPSStats(0.5);
 			this._stats.x = this._sceneArea.width - this._stats.width;
 			this._sceneArea.view.addChild(this._stats);
 			

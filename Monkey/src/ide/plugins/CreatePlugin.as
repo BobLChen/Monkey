@@ -7,8 +7,9 @@ package ide.plugins {
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.camera.lens.PerspectiveLens;
-	import monkey.core.entities.primitives.Capsule;
 	import monkey.core.entities.Cone;
+	import monkey.core.entities.Water3D;
+	import monkey.core.entities.primitives.Capsule;
 	import monkey.core.entities.primitives.Cube;
 	import monkey.core.entities.primitives.Cylinder;
 	import monkey.core.entities.primitives.Plane;
@@ -16,6 +17,9 @@ package ide.plugins {
 	import monkey.core.light.DirectionalLight;
 	import monkey.core.light.PointLight;
 	import monkey.core.materials.ColorMaterial;
+	import monkey.core.textures.Bitmap2DTexture;
+	import monkey.core.textures.BitmapCubeTexture;
+	import monkey.core.utils.Device3D;
 	
 	import ui.core.interfaces.IPlugin;
 	
@@ -82,7 +86,12 @@ package ide.plugins {
 		}
 		
 		private function createWater(e : Event) : void {
-			
+			var water : Water3D = new Water3D(
+				new BitmapCubeTexture(Device3D.nullBitmapData.clone()), 
+				new Bitmap2DTexture(Device3D.nullBitmapData.clone())
+			);
+			this._app.scene.addChild(water);
+			this._app.selection.objects = [water];
 		}
 		
 		private function createParticles(e : Event) : void {
