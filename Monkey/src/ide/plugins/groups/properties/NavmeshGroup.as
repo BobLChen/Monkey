@@ -5,7 +5,7 @@ package ide.plugins.groups.properties {
 	
 	import ide.App;
 	
-	import monkey.core.entities.Capsule;
+	import monkey.core.entities.primitives.Capsule;
 	import monkey.core.entities.Lines3D;
 	import monkey.core.utils.Input3D;
 	import monkey.navmesh.NavigationCell;

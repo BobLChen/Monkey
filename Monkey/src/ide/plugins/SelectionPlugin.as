@@ -15,7 +15,7 @@ package ide.plugins {
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.entities.Axis3D;
-	import monkey.core.entities.Cube;
+	import monkey.core.entities.primitives.Cube;
 	import monkey.core.entities.DebugBounds;
 	import monkey.core.entities.DebugCamera;
 	import monkey.core.entities.DebugLight;

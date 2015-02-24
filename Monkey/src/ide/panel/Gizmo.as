@@ -6,7 +6,7 @@
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.entities.Mesh3D;
-	import monkey.core.entities.primitives.particles.ParticleSystem;
+	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.light.Light3D;
 
 	/**

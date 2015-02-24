@@ -1,42 +1,31 @@
 package monkey.core.textures {
-
+	
 	import flash.display.BitmapData;
 	import flash.display3D.Context3DTextureFormat;
-	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.CubeTexture;
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
+	import monkey.core.utils.Texture3DUtils;
 
-	public class Bitmap2DTexture extends Texture3D {
+	public class BitmapCubeTexture extends CubeTextue3D {
 		
-		private var _bitmapData  : BitmapData;
 		private var _transparent : Boolean;
+		private var _bitmapData  : BitmapData;
+		private var _bmps		 : Array;
 		
-		/**
-		 * 必须为2的幂 
-		 * @param bitmapdata
-		 * 
-		 */		
-		public function Bitmap2DTexture(bitmapdata : BitmapData) {
+		public function BitmapCubeTexture(bitmapdata : BitmapData) {
 			super();
 			this.bitmapData 	= bitmapdata;
-			this.typeMode 		= TYPE_2D;
-			this.magMode 		= MAG_LINEAR;
-			this.wrapMode   	= WRAP_REPEAT;
-			this.mipMode		= MIP_LINEAR;
 			this._width			= bitmapdata.width;
 			this._height		= bitmapdata.height;
 			this._transparent 	= bitmapdata.transparent;
+			this._bmps			= Texture3DUtils.extractCubeMap(bitmapdata);
 		}
 		
-		/**
-		 * 克隆 
-		 * @return 
-		 * 
-		 */		
 		override public function clone():Texture3D {
-			var c : Bitmap2DTexture = new Bitmap2DTexture(null);
+			var c : BitmapCubeTexture = new BitmapCubeTexture(null);
 			c.texture		= texture;
 			c.scene			= scene;
 			c.magMode		= magMode;
@@ -50,6 +39,7 @@ package monkey.core.textures {
 			c._height		= _height;
 			c._bitmapData	= _bitmapData;
 			c._transparent	= _transparent;
+			c._bmps			= _bmps;
 			ref.ref++;
 			return c;
 		}
@@ -61,7 +51,11 @@ package monkey.core.textures {
 		 */		
 		override protected function contextEvent(e:Event=null):void {
 			super.contextEvent(e);
-			this.uploadWithMips(this.bitmapData);
+			var i : int = 0;
+			while (i < 6) {
+				this.uploadWithMips(_bmps[i], i);
+				i++;
+			}
 		}
 		
 		/**
@@ -81,9 +75,12 @@ package monkey.core.textures {
 			if (this._bitmapData) {
 				this._bitmapData.dispose();
 			}
+			for each (var bmp : BitmapData in _bmps) {
+				bmp.dispose();
+			}
 		}
-								
-		private function uploadWithMips(bmp : BitmapData) : void {
+		
+		private function uploadWithMips(bmp : BitmapData, side : int = 0) : void {
 			
 			var width 		: int = bmp.width  < 2048 ? bmp.width  : 2048;
 			var height 		: int = bmp.height < 2048 ? bmp.height : 2048;
@@ -97,7 +94,7 @@ package monkey.core.textures {
 				h = h << 1;
 			}
 			if (!this.texture) {
-				this.texture = this.scene.context.createTexture(w, h, Context3DTextureFormat.BGRA, false);
+				this.texture = this.scene.context.createCubeTexture(w, Context3DTextureFormat.BGRA, false);
 			}
 			
 			var matrix : Matrix = new Matrix(w / bmp.width, 0, 0, h / bmp.height);
@@ -110,7 +107,7 @@ package monkey.core.textures {
 				} else {
 					levels = bmp;
 				}
-				Texture(this.texture).uploadFromBitmapData(levels, 0);
+				CubeTexture(this.texture).uploadFromBitmapData(levels, side, 0);
 				if (levels != bmp) {
 					levels.dispose();
 				}
@@ -123,7 +120,7 @@ package monkey.core.textures {
 			
 			while (w >= 1 || h >= 1) {
 				if (w == width && h == height) {
-					Texture(this.texture).uploadFromBitmapData(bmp, level);
+					CubeTexture(this.texture).uploadFromBitmapData(bmp, side, level);
 				} else {
 					mipRect.width  = w;
 					mipRect.height = h;
@@ -133,7 +130,7 @@ package monkey.core.textures {
 						levels.fillRect(mipRect, 0);
 					}
 					levels.draw(mips, matrix, null, null, mipRect, true);
-					Texture(this.texture).uploadFromBitmapData(levels, level);
+					CubeTexture(this.texture).uploadFromBitmapData(levels, side, level);
 				}
 				if (levels) {
 					var oldMips : BitmapData = mips;
@@ -159,10 +156,10 @@ package monkey.core.textures {
 		public function get bitmapData() : BitmapData {
 			return _bitmapData;
 		}
-
+		
 		public function set bitmapData(value : BitmapData) : void {
 			_bitmapData = value;
 		}
-				
+		
 	}
 }

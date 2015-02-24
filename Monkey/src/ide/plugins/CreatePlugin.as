@@ -7,12 +7,12 @@ package ide.plugins {
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.camera.lens.PerspectiveLens;
-	import monkey.core.entities.Capsule;
+	import monkey.core.entities.primitives.Capsule;
 	import monkey.core.entities.Cone;
-	import monkey.core.entities.Cube;
-	import monkey.core.entities.Cylinder;
-	import monkey.core.entities.Plane;
-	import monkey.core.entities.Sphere;
+	import monkey.core.entities.primitives.Cube;
+	import monkey.core.entities.primitives.Cylinder;
+	import monkey.core.entities.primitives.Plane;
+	import monkey.core.entities.primitives.Sphere;
 	import monkey.core.light.DirectionalLight;
 	import monkey.core.light.PointLight;
 	import monkey.core.materials.ColorMaterial;

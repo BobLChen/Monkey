@@ -1,6 +1,7 @@
 package monkey.core.shader.filters {
 	
 	import monkey.core.shader.utils.ShaderRegisterCache;
+	import monkey.core.shader.utils.ShaderRegisterElement;
 	import monkey.core.textures.Texture3D;
 	
 	public class Filter3D {
@@ -34,7 +35,7 @@ package monkey.core.shader.filters {
 		public function getVertexCode(regCache : ShaderRegisterCache, agal : Boolean) : String {
 			return '';
 		}
-		
+				
 		/**
 		 * 纹理描述 
 		 * @param texture

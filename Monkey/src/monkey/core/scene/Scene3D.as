@@ -10,6 +10,8 @@ package monkey.core.scene {
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	
+	import L3D.system.Device3D;
+	
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.camera.Camera3D;
@@ -309,6 +311,8 @@ package monkey.core.scene {
 			Device3D.proj.copyFrom(Device3D.camera.projection);
 			Device3D.view.copyFrom(Device3D.camera.view);
 			Device3D.viewProjection.copyFrom(Device3D.camera.viewProjection);
+			Device3D.camera.transform.getPosition(false, Device3D.cameraPos);
+						
 			if (this.viewPort.equals(camera.lens.viewPort)) {
 				this.context.setScissorRectangle(null);
 			} else {

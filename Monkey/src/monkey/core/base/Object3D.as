@@ -337,6 +337,9 @@ package monkey.core.base {
 		 * 释放 
 		 */		
 		public function dispose() : void {
+			if (this.parent) {
+				this.parent.removeChild(this);
+			}
 			if (disposed) {
 				return;
 			}

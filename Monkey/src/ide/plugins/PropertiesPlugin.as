@@ -18,7 +18,8 @@ package ide.plugins {
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
-	import monkey.core.entities.primitives.particles.ParticleSystem;
+	import monkey.core.entities.Mesh3D;
+	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.light.Light3D;
 	import monkey.core.scene.Scene3D;
 	
@@ -137,10 +138,9 @@ package ide.plugins {
 				this._icon.gotoAndStop(7);
 			} else if (main is Scene3D) {
 				this._icon.gotoAndStop(6);
+			} else if (main.getComponent(Mesh3D)) {
+				this._icon.gotoAndStop(1);
 			} 
-//			else if (main is Mesh3D) {
-//				this._icon.gotoAndStop(1);
-//			} 
 			else if (main is Camera3D) {
 				this._icon.gotoAndStop(4);
 			} else if (main is Light3D) {

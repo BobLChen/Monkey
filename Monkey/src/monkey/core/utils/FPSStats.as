@@ -13,30 +13,25 @@ package monkey.core.utils {
 	
 	public class FPSStats extends Sprite {
 		
-		protected const WIDTH : uint = 70;
-		protected const HEIGHT : uint = 100;
-		
-		protected var xml : XML;
-		
-		protected var text : TextField;
-		protected var style : StyleSheet;
-		
-		protected var timer : uint;
-		protected var fps : uint;
-		protected var ms : uint;
-		protected var ms_prev : uint;
-		protected var mem : Number;
-		protected var mem_max : Number;
-		
-		protected var graph : Bitmap;
-		protected var rectangle : Rectangle;
-		
-		protected var fps_graph : uint;
-		protected var mem_graph : uint;
+		protected var WIDTH 		: uint = 70;
+		protected var HEIGHT 		: uint = 100;
+		protected var xml 			: XML;
+		protected var text 			: TextField;
+		protected var style 		: StyleSheet;
+		protected var timer 		: uint;
+		protected var fps 			: uint;
+		protected var ms 			: uint;
+		protected var ms_prev 		: uint;
+		protected var mem 			: Number;
+		protected var mem_max 		: Number;
+		protected var graph 		: Bitmap;
+		protected var rectangle 	: Rectangle;
+		protected var fps_graph 	: uint;
+		protected var mem_graph 	: uint;
 		protected var mem_max_graph : uint;
-		protected var tri_graph : uint;
-		protected var obj_graph : uint;
-		protected var draws_graph : uint;
+		protected var tri_graph 	: uint;
+		protected var obj_graph 	: uint;
+		protected var draws_graph 	: uint;
 		
 		protected var theme : Object = {
 			bg: 0x000033, 
@@ -46,36 +41,14 @@ package monkey.core.utils {
 			memmax: 0xff0070, 
 			drawCalls: 0xff00ff, 
 			trianglesDrawn: 0xffff00, 
-			objectsDrawn: 0xff00f
+			objectsDrawn: 0xff00f,
+			textures: 0xff00f,
+			surfaces: 0xff00f
 		}
 		
-		/**
-		 * <b>Stats</b> FPS, MS and MEM, all in one.
-		 *
-		 * @param _theme         Example: { bg: 0x202020, fps: 0xC0C0C0, ms: 0x505050, mem: 0x707070, memmax: 0xA0A0A0 }
-		 */
-		public function FPSStats(_theme : Object = null, alpha : Number = 1) : void {
+		public function FPSStats(alpha : Number = 1) : void {
 			
 			this.alpha = alpha;
-			
-			if (_theme) {
-				if (_theme.bg != null)
-					theme.bg = _theme.bg;
-				if (_theme.fps != null)
-					theme.fps = _theme.fps;
-				if (_theme.ms != null)
-					theme.ms = _theme.ms;
-				if (_theme.mem != null)
-					theme.mem = _theme.mem;
-				if (_theme.memmax != null)
-					theme.memmax = _theme.memmax;
-				if (_theme.drawCalls != null)
-					theme.drawCalls = _theme.drawCalls;
-				if (_theme.trianglesDrawn != null)
-					theme.trianglesDrawn = _theme.trianglesDrawn;
-				if (_theme.objectsDrawn != null)
-					theme.objectsDrawn = _theme.objectsDrawn;
-			}
 			
 			mem_max = 0;
 			
@@ -87,6 +60,8 @@ package monkey.core.utils {
 					<drawCalls>DRA:</drawCalls>
 					<trangles>TRI:</trangles>
 					<objects>OBJ:</objects>
+					<textures>TEX:</textures>
+					<surfaces>GEO:</surfaces>
 				  </xml>;
 			
 			style = new StyleSheet();
@@ -98,6 +73,8 @@ package monkey.core.utils {
 			style.setStyle("trangles", {color: hex2css(theme.trianglesDrawn)});
 			style.setStyle("drawCalls", {color: hex2css(theme.drawCalls)});
 			style.setStyle("objects", {color: hex2css(theme.objectsDrawn)});
+			style.setStyle("textures", {color: hex2css(theme.textures)});
+			style.setStyle("surfaces", {color: hex2css(theme.surfaces)});
 			
 			text = new TextField();
 			text.width = WIDTH;
@@ -172,6 +149,11 @@ package monkey.core.utils {
 				xml.trangles = "TRI: " + Device3D.triangles;
 				xml.drawCalls = "DRA: " + Device3D.drawCalls;
 				xml.objects = "OBJ: " + Device3D.drawOBJNum;
+				
+				if (Device3D.scene) {
+					xml.textures = "TEX: " + Device3D.scene.textures.length;
+					xml.surfaces = "GEO: " + Device3D.scene.surfaces.length;
+				}
 				
 				fps = 0;
 			}

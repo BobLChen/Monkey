@@ -7,6 +7,7 @@ package monkey.core.utils {
 	import flash.display3D.Context3DTriangleFace;
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
 	
 	import monkey.core.camera.Camera3D;
 	import monkey.core.scene.Scene3D;
@@ -40,6 +41,8 @@ package monkey.core.utils {
 		public static const mvp					: Matrix3D = new Matrix3D();
 		/** world */
 		public static const world				: Matrix3D = new Matrix3D();
+		/** 相机坐标 */
+		public static const cameraPos			: Vector3D = new Vector3D();
 		
 		/** view projection */		
 		public static var viewProjection 		: Matrix3D = new Matrix3D();

@@ -123,9 +123,6 @@ package monkey.core.textures {
 		 * 
 		 */		
 		public function download(force : Boolean) : void {
-			if (disposed) {
-				return;
-			}
 			if (ref.ref > 0 && !force) {
 				return;
 			}

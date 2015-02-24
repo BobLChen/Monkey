@@ -228,9 +228,6 @@ package monkey.core.base {
 		 * 
 		 */		
 		public function download(force : Boolean = false) : void {
-			if (disposed) {
-				return;
-			}
 			if (ref.ref > 0 && !force) {
 				return;
 			}
