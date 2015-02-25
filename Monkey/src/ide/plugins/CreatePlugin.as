@@ -8,6 +8,7 @@ package ide.plugins {
 	import monkey.core.camera.Camera3D;
 	import monkey.core.camera.lens.PerspectiveLens;
 	import monkey.core.entities.Cone;
+	import monkey.core.entities.Mesh3D;
 	import monkey.core.entities.Water3D;
 	import monkey.core.entities.primitives.Capsule;
 	import monkey.core.entities.primitives.Cube;
@@ -17,6 +18,7 @@ package ide.plugins {
 	import monkey.core.light.DirectionalLight;
 	import monkey.core.light.PointLight;
 	import monkey.core.materials.ColorMaterial;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.textures.Bitmap2DTexture;
 	import monkey.core.textures.BitmapCubeTexture;
 	import monkey.core.utils.Device3D;
@@ -101,17 +103,15 @@ package ide.plugins {
 		private function createSphere(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Sphere"
-			obj.addComponent(new Sphere());
-			obj.addComponent(new ColorMaterial(0x777777));
+			obj.addComponent(new MeshRenderer(new Sphere(), new ColorMaterial(0x777777)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
-				
+						
 		private function createPlaneZY(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Plane"
-			obj.addComponent(new Plane(10, 10, 1, "+yz"));
-			obj.addComponent(new ColorMaterial(0x777777));
+			obj.addComponent(new MeshRenderer(new Plane(10, 10, 1, "+yz"), new ColorMaterial(0x777777)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -119,8 +119,7 @@ package ide.plugins {
 		private function createPlaneXY(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Plane"
-			obj.addComponent(new Plane(10, 10, 1, "+xy"));
-			obj.addComponent(new ColorMaterial(0x777777));
+			obj.addComponent(new MeshRenderer(new Plane(10, 10, 1, "+xy"), new ColorMaterial(0x777777)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -128,8 +127,7 @@ package ide.plugins {
 		private function createPlaneXZ(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Plane";
-			obj.addComponent(new Plane(10, 10, 1, "+xz"));
-			obj.addComponent(new ColorMaterial(0x777777));
+			obj.addComponent(new MeshRenderer(new Plane(10, 10, 1, "+xz"), new ColorMaterial(0x777777)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -137,8 +135,7 @@ package ide.plugins {
 		private function createCylinder(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Cylinder";
-			obj.addComponent(new Cylinder());
-			obj.addComponent(new ColorMaterial(0x777777));
+			obj.addComponent(new MeshRenderer(new Cylinder(), new ColorMaterial(0x777777)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -146,8 +143,7 @@ package ide.plugins {
 		private function createCone(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Cone";
-			obj.addComponent(new Cone());
-			obj.addComponent(new ColorMaterial(0x777777));
+			obj.addComponent(new MeshRenderer(new Cone(), new ColorMaterial(0x777777)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -155,8 +151,7 @@ package ide.plugins {
 		private function createCapsule(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Capsule";
-			obj.addComponent(new Capsule());
-			obj.addComponent(new ColorMaterial(0x777777));
+			obj.addComponent(new MeshRenderer(new Capsule(), new ColorMaterial(0x777777)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -164,12 +159,11 @@ package ide.plugins {
 		private function createCube(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Cube";
-			obj.addComponent(new Cube());
-			obj.addComponent(new ColorMaterial(0x777777));
+			obj.addComponent(new MeshRenderer(new Cube(), new ColorMaterial(0x777777)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
-				
+		
 		private function createObject3D(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Object3D";

@@ -15,6 +15,7 @@ package samples {
 	import monkey.core.entities.particles.prop.value.PropCurves;
 	import monkey.core.entities.primitives.Cube;
 	import monkey.core.materials.ColorMaterial;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Viewer3D;
 
 	public class TestParticles extends Sprite {
@@ -48,8 +49,7 @@ package samples {
 			
 			var mesh : Cube = new Cube();
 			var cube : Object3D = new Object3D();
-			cube.addComponent(mesh);
-			cube.addComponent(new ColorMaterial());
+			cube.addComponent(new MeshRenderer(mesh, new ColorMaterial(0xFFCB00)));
 			cube.addComponent(new Collider(mesh));
 			
 			this.mouse = new MouseCollision();

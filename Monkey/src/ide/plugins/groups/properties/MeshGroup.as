@@ -5,6 +5,7 @@
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
+	import monkey.core.renderer.MeshRenderer;
 	
 	import ui.core.controls.Label;
 	import ui.core.type.Align;
@@ -37,11 +38,11 @@
 			var triCount  : int;
 			var vertCount : int;
 			this.app = app;
-			if (!app.selection.main.getComponent(Mesh3D)) {
+			if (!app.selection.main.getComponent(MeshRenderer)) {
 				return false;
 			}
 			for each (var pivot : Object3D in app.selection.objects) {
-				var mesh : Mesh3D = pivot.getComponent(Mesh3D) as Mesh3D;
+				var mesh : Mesh3D = (pivot.getComponent(MeshRenderer) as MeshRenderer).mesh;
 				if (mesh) {
 					for each (var geo : Surface3D in mesh.surfaces) {
 						geoCount++;

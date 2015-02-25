@@ -1,6 +1,5 @@
 package monkey.core.materials {
 	
-	import monkey.core.interfaces.IComponent;
 	import monkey.core.materials.shader.WaterShader;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.textures.CubeTextue3D;
@@ -37,7 +36,7 @@ package monkey.core.materials {
 			this.blendColor	   = blendColor;
 		}
 		
-		override public function clone():IComponent {
+		override public function clone():Material3D {
 			var c : WaterMaterial = new WaterMaterial(cubeTexture.clone() as CubeTextue3D, normalTexture.clone(), wave, waveHeight, blendColor);
 			return c;
 		}

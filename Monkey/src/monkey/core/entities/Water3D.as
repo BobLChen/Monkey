@@ -13,6 +13,7 @@ package monkey.core.entities {
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.primitives.Plane;
 	import monkey.core.materials.WaterMaterial;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.textures.CubeTextue3D;
 	import monkey.core.textures.Texture3D;
@@ -57,10 +58,9 @@ package monkey.core.entities {
 			this._waveBmp 		= new BitmapData(segment, segment, false); // 柏林噪音图
 			this._shader2d 	    = new Shader(new WaterShader());
 			this._shader2d.data.src.input = _waveBmp;
-			this.addComponent(this._waterMaterial);
-			this.addComponent(this._waveMesh);
+			this.addComponent(new MeshRenderer(this._waveMesh, this._waterMaterial));
 		}
-		
+						
 		/**
 		 * 海水段数 
 		 * @return 

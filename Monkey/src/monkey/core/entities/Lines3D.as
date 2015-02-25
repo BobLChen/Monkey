@@ -3,6 +3,7 @@ package monkey.core.entities {
 	import monkey.core.base.Object3D;
 	import monkey.core.entities.primitives.LinesMesh;
 	import monkey.core.materials.LineMaterial;
+	import monkey.core.renderer.MeshRenderer;
 
 	public class Lines3D extends Object3D {
 		
@@ -11,10 +12,9 @@ package monkey.core.entities {
 		public function Lines3D() {
 			super();
 			this.linesMesh = new LinesMesh();
-			this.addComponent(linesMesh);
-			this.addComponent(new LineMaterial());
+			this.addComponent(new MeshRenderer(linesMesh, new LineMaterial()));
 		}
-				
+								
 		public function clear() : void {
 			this.linesMesh.clear();
 		}

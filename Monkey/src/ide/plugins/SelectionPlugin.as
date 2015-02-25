@@ -21,6 +21,7 @@ package ide.plugins {
 	import monkey.core.entities.DebugWireframe;
 	import monkey.core.entities.primitives.Cube;
 	import monkey.core.light.Light3D;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Device3D;
 	import monkey.core.utils.Input3D;
@@ -55,7 +56,7 @@ package ide.plugins {
 		
 		public function SelectionPlugin() {
 			var cube : Object3D = new Object3D();
-			cube.addComponent(new Cube(1, 1, 1));
+			cube.addComponent(new MeshRenderer(new Cube(1, 1, 1), null));
 			this._boundings   = new DebugBounds(cube);
 			this._light 	  = new DebugLight(null, 0xFFCB00, 0.75);
 			this._selection   = [];

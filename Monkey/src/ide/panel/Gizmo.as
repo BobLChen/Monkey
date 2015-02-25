@@ -5,9 +5,9 @@
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
-	import monkey.core.entities.Mesh3D;
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.light.Light3D;
+	import monkey.core.renderer.MeshRenderer;
 
 	/**
 	 * 图标 
@@ -29,7 +29,7 @@
 			
 			if (object is ParticleSystem) {
 				this.icon.gotoAndStop(7);
-			} else if (object.getComponent(Mesh3D)) {
+			} else if (object.getComponent(MeshRenderer)) {
 				this.icon.gotoAndStop(1);
 			} else if (object is Light3D) {
 				this.icon.gotoAndStop(11);

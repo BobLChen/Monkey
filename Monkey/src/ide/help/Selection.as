@@ -12,8 +12,8 @@ package ide.help {
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.collisions.CollisionInfo;
-	import monkey.core.entities.Mesh3D;
 	import monkey.core.materials.Material3D;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.utils.Vector3DUtils;
 
 	public class Selection {
@@ -110,11 +110,11 @@ package ide.help {
 		public function getBounds(pivot : Object3D) : Bounds3D {
 			
 			var bounds : Bounds3D = new Bounds3D();
-			var mesh : Mesh3D = pivot.getComponent(Mesh3D) as Mesh3D;
-			if (mesh && pivot.children.length == 0) {
-				bounds.copyFrom(mesh.bounds);
+			var renderer : MeshRenderer = (pivot.getComponent(MeshRenderer) as MeshRenderer);
+			if (renderer && renderer.mesh && pivot.children.length == 0) {
+				bounds.copyFrom(renderer.mesh.bounds);
 				return bounds;
-			} else if (!mesh && pivot.children.length == 0) {
+			} else if (!renderer && pivot.children.length == 0) {
 				return bounds;
 			}
 			
@@ -122,25 +122,25 @@ package ide.help {
 			bounds.min.setTo(Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE);
 			
 			pivot.forEach(function(child : Object3D) : void {
-				mesh = child.getComponent(Mesh3D) as Mesh3D;
-				if (mesh) {
-					if (bounds.min.x > mesh.bounds.min.x) {
-						bounds.min.x = mesh.bounds.min.x;
+				renderer = child.getComponent(MeshRenderer) as MeshRenderer;
+				if (renderer && renderer.mesh) {
+					if (bounds.min.x > renderer.mesh.bounds.min.x) {
+						bounds.min.x = renderer.mesh.bounds.min.x;
 					}
-					if (bounds.min.y > mesh.bounds.min.y) {
-						bounds.min.y = mesh.bounds.min.y;
+					if (bounds.min.y > renderer.mesh.bounds.min.y) {
+						bounds.min.y = renderer.mesh.bounds.min.y;
 					}
-					if (bounds.min.z > mesh.bounds.min.z) {
-						bounds.min.z = mesh.bounds.min.z;
+					if (bounds.min.z > renderer.mesh.bounds.min.z) {
+						bounds.min.z = renderer.mesh.bounds.min.z;
 					}
-					if (bounds.max.x < mesh.bounds.max.x) {
-						bounds.max.x = mesh.bounds.max.x;
+					if (bounds.max.x < renderer.mesh.bounds.max.x) {
+						bounds.max.x = renderer.mesh.bounds.max.x;
 					}
-					if (bounds.max.y < mesh.bounds.max.y) {
-						bounds.max.y = mesh.bounds.max.y;
+					if (bounds.max.y < renderer.mesh.bounds.max.y) {
+						bounds.max.y = renderer.mesh.bounds.max.y;
 					}
-					if (bounds.max.z < mesh.bounds.max.z) {
-						bounds.max.z = mesh.bounds.max.z;
+					if (bounds.max.z < renderer.mesh.bounds.max.z) {
+						bounds.max.z = renderer.mesh.bounds.max.z;
 					}					
 				}
 			});

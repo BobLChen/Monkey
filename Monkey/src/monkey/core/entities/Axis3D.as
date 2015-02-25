@@ -2,7 +2,7 @@ package monkey.core.entities {
 	
 	import flash.display3D.Context3DCompareMode;
 	
-	import monkey.core.materials.Material3D;
+	import monkey.core.renderer.MeshRenderer;
 	
 	public class Axis3D extends Lines3D {
 				
@@ -17,8 +17,9 @@ package monkey.core.entities {
 			this.lineStyle(1, 0x0000ff);
 			this.moveTo(0, 0, 0);
 			this.lineTo(0, 0, 20);
-			(getComponent(Material3D) as Material3D).depthWrite = false;
-			(getComponent(Material3D) as Material3D).depthCompare = Context3DCompareMode.ALWAYS;
+			var renderer : MeshRenderer = getComponent(MeshRenderer) as MeshRenderer;
+			renderer.material.depthWrite = false;
+			renderer.material.depthCompare = Context3DCompareMode.ALWAYS;
 		}
 		
 	}

@@ -15,7 +15,7 @@ package ide.plugins {
 	import monkey.core.collisions.MouseCollision;
 	import monkey.core.collisions.collider.Collider;
 	import monkey.core.entities.Grid3D;
-	import monkey.core.entities.Mesh3D;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.FPSStats;
 	import monkey.core.utils.Input3D;
@@ -125,7 +125,7 @@ package ide.plugins {
 			this.forEach(function(child:Object3D):void{
 				var collider : Collider = child.getComponent(Collider) as Collider;
 				if (!collider) {
-					child.addComponent(new Collider(child.getComponent(Mesh3D) as Mesh3D));
+					child.addComponent(new Collider((child.getComponent(MeshRenderer) as MeshRenderer).mesh));
 				}
 			});
 			this.mouse.removeCollisionWith(this, true);

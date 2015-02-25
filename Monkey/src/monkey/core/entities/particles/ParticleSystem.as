@@ -11,7 +11,6 @@ package monkey.core.entities.particles {
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
-	import monkey.core.entities.primitives.Plane;
 	import monkey.core.entities.particles.prop.color.PropColor;
 	import monkey.core.entities.particles.prop.color.PropGridientColor;
 	import monkey.core.entities.particles.prop.value.PropConst;
@@ -19,8 +18,10 @@ package monkey.core.entities.particles {
 	import monkey.core.entities.particles.prop.value.PropRandomTwoConst;
 	import monkey.core.entities.particles.shape.ParticleShape;
 	import monkey.core.entities.particles.shape.SphereShape;
+	import monkey.core.entities.primitives.Plane;
 	import monkey.core.interfaces.IComponent;
 	import monkey.core.materials.ParticleMaterial;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.textures.Bitmap2DTexture;
 	import monkey.core.utils.GridientColor;
@@ -109,10 +110,9 @@ package monkey.core.entities.particles {
 			this.colorLifetime 	 = new GridientColor();
 			this.image			 = new DEFAULT_IMG().bitmapData;
 			this.keyFrames		 = keyframeDatas;
-			this.addComponent(this.mesh);
-			this.addComponent(this.material);
+			this.addComponent(new MeshRenderer(this.mesh, this.material));
 		}
-		
+				
 		/**
 		 * 构建粒子系统 
 		 * 
@@ -355,15 +355,6 @@ package monkey.core.entities.particles {
 		
 		public function set time(value:Number):void {
 			_time = value;
-		}
-
-		
-		override public function addComponent(icom:IComponent):void {
-			// 粒子系统不允许添加新的mesh
-			if (icom is Mesh3D && getComponent(Mesh3D)) {
-				return;
-			}
-			super.addComponent(icom);
 		}
 		
 		/**

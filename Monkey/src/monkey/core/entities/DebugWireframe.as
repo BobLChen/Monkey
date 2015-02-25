@@ -2,6 +2,7 @@ package monkey.core.entities {
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
+	import monkey.core.renderer.MeshRenderer;
 
 	/**
 	 * 线框 
@@ -17,7 +18,9 @@ package monkey.core.entities {
 		public function DebugWireframe(obj : Object3D, color : uint = 0xFFFFFF, alpha : Number = 1) {
 			super();
 			this._alpha = alpha;
-			this._mesh 	= obj.getComponent(Mesh3D) as Mesh3D;
+			if (obj.getComponent(MeshRenderer) as MeshRenderer) {
+				this._mesh 	= (obj.getComponent(MeshRenderer) as MeshRenderer).mesh;
+			}
 			this._color = color;
 			this.config();
 		}

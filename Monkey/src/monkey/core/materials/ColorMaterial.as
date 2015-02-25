@@ -1,6 +1,5 @@
 package monkey.core.materials {
 
-	import monkey.core.interfaces.IComponent;
 	import monkey.core.materials.shader.ColorShader;
 	import monkey.core.scene.Scene3D;
 
@@ -38,7 +37,7 @@ package monkey.core.materials {
 			_red 	= ((value >> 16) & 0xFF) / 0xFF;
 		}
 		
-		override public function clone() : IComponent {
+		override public function clone() : Material3D {
 			var c : ColorMaterial = new ColorMaterial(color);
 			return c;
 		}

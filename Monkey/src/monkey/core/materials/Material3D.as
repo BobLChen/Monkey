@@ -3,9 +3,8 @@ package monkey.core.materials {
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DTriangleFace;
 	
-	import monkey.core.components.Component3D;
+	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
-	import monkey.core.interfaces.IComponent;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.shader.Shader3D;
 	import monkey.core.utils.Device3D;
@@ -15,7 +14,7 @@ package monkey.core.materials {
 	 * @author Neil
 	 * 
 	 */	
-	public class Material3D extends Component3D {
+	public class Material3D {
 		
 		public static const BLEND_NONE 			: String = 'BLEND_NONE';
 		public static const BLEND_ADDITIVE 		: String = 'BLEND_ADDITIVE';
@@ -34,7 +33,6 @@ package monkey.core.materials {
 		protected var _shader 		: Shader3D;								// shader
 				
 		public function Material3D(shader : Shader3D = null) {
-			super();
 			this._shader 		= shader;
 			this._stateDirty	= false;
 			this._depthWrite  	= Device3D.defaultDepthWrite;
@@ -58,16 +56,7 @@ package monkey.core.materials {
 		 * @param scene
 		 * 
 		 */		
-		override public function onDraw(scene : Scene3D) : void {
-			var mesh : Mesh3D = object3D.getComponent(Mesh3D) as Mesh3D;
-			if (!shader || !mesh) {
-				return;
-			}
-			// device
-			Device3D.world.copyFrom(object3D.transform.world);
-			Device3D.mvp.copyFrom(object3D.transform.world);
-			Device3D.mvp.append(scene.camera.viewProjection);
-			Device3D.drawOBJNum++;
+		public function draw(scene : Scene3D, mesh : Mesh3D) : void {
 			// 设置shader当前数据
 			setShaderDatas(scene);
 			// 修改混合、深度测试、裁减
@@ -76,8 +65,9 @@ package monkey.core.materials {
 				scene.context.setDepthTest(depthWrite, depthCompare);
 				scene.context.setCulling(cullFace);
 			}
-			// mesh.draw
-			mesh.draw(scene, this);
+			for each (var surf : Surface3D in mesh.surfaces) {
+				shader.draw(scene, surf, 0, surf.numTriangles);
+			}
 			// 重置回默认状态
 			if (_stateDirty) {
 				scene.context.setBlendFactors(Device3D.defaultSourceFactor, Device3D.defaultDestFactor);
@@ -85,27 +75,26 @@ package monkey.core.materials {
 				scene.context.setCulling(Device3D.defaultCullFace);
 			}
 		}
-						
+					
 		/**
 		 * 克隆材质 
 		 * @return 
 		 * 
 		 */		
-		override public function clone():IComponent {
+		public function clone():Material3D {
 			var c : Material3D = new Material3D();
 			c._shader = shader;
 			return c;
 		}
-				
+		
 		/**
 		 * 销毁材质 
 		 * 
 		 */		
-		override public function dispose():void {
-			super.dispose();
+		public function dispose():void {
 			this._shader = null;
 		}
-		
+				
 		/**
 		 * 更新材质 
 		 * 
