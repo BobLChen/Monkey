@@ -64,7 +64,14 @@ package ide.plugins {
 		}		
 				
 		private static function onImport(data : ByteArray, type : String) : void {
-			
+			if (!_utils[type]) {
+				return;
+			}
+			var func : Function = _utils[type];
+			var obj  : Object3D = func(data);
+			if (obj) {
+				_app.selection.objects = [obj];
+			}
 		}
 		
 		private static function getType(name : String) : String {
