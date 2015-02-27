@@ -9,6 +9,7 @@ package monkey.core.base {
 	import monkey.core.camera.Camera3D;
 	import monkey.core.components.Transform3D;
 	import monkey.core.interfaces.IComponent;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Device3D;
 	
@@ -58,7 +59,7 @@ package monkey.core.base {
 		private var _visible		: Boolean;						// 是否显示
 		private var _disposed		: Boolean;						// 是否已经被销毁
 		private var componentDict   : Dictionary;					// 组件字典，懒汉模式
-		
+				
 		public function Object3D() {
 			super();
 			this.visible	   = true;
@@ -67,6 +68,10 @@ package monkey.core.base {
 			this._transform    = new Transform3D();
 			this._children	   = new Vector.<Object3D>();
 			this.addComponent(_transform);
+		}
+		
+		public function get renderer() : MeshRenderer {
+			return this.getComponent(MeshRenderer) as MeshRenderer;
 		}
 		
 		public function get visible():Boolean {
@@ -122,6 +127,18 @@ package monkey.core.base {
 		 */		
 		public function get parent() : Object3D {
 			return _parent;
+		}
+		
+		public function set parent(value : Object3D) : void {
+			if (this._parent == value) {
+				return;
+			}
+			if (this._parent) {
+				this._parent.removeChild(this);
+			}
+			if (value) {
+				value.addChild(this);
+			}
 		}
 		
 		/**

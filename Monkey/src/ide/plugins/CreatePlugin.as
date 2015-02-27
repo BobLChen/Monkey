@@ -89,8 +89,8 @@ package ide.plugins {
 		
 		private function createWater(e : Event) : void {
 			var water : Water3D = new Water3D(
-				new BitmapCubeTexture(Device3D.nullBitmapData.clone()), 
-				new Bitmap2DTexture(Device3D.nullBitmapData.clone())
+				Device3D.nullBitmapData.clone(), 
+				Device3D.nullBitmapData.clone()
 			);
 			this._app.scene.addChild(water);
 			this._app.selection.objects = [water];

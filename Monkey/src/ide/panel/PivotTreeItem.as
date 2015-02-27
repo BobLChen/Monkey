@@ -4,12 +4,12 @@
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
-	import L3D.core.base.Pivot3D;
-	import L3D.core.camera.Camera3D;
-	import L3D.core.entities.Mesh3D;
-	import L3D.core.entities.primitives.Particles3D;
-	import L3D.core.light.Light3D;
-	import L3D.core.scene.Scene3D;
+	import monkey.core.base.Object3D;
+	import monkey.core.camera.Camera3D;
+	import monkey.core.entities.Mesh3D;
+	import monkey.core.entities.particles.ParticleSystem;
+	import monkey.core.light.Light3D;
+	import monkey.core.scene.Scene3D;
 	
 	import ui.core.Style;
 	import ui.core.controls.Control;
@@ -30,11 +30,11 @@
 		public var label 	: Label;
 		public var icon 	: MovieClip;
 		public var arrow 	: Sprite;
-		public var pivot 	: Pivot3D;
+		public var pivot 	: Object3D;
 		public var closed 	: Boolean = false;
 		public var padding 	: Number;
 		
-		public function PivotTreeItem(pivot : Pivot3D, level : Number) {
+		public function PivotTreeItem(pivot : Object3D, level : Number) {
 			super(pivot.name, 0, 0, 30, 20);
 
 			this.icon  = new McIcons();
@@ -51,9 +51,9 @@
 			this.maxHeight = 18;
 			this.arrow.transform.colorTransform = Style.colorTransform;
 			
-			if (pivot is Particles3D) {
+			if (pivot is ParticleSystem) {
 				this.icon.gotoAndStop(7);
-			} else if (pivot is Mesh3D) {
+			} else if (pivot.renderer) {
 				this.icon.gotoAndStop(1);
 			} else if (pivot is Light3D) {
 				this.icon.gotoAndStop(11);

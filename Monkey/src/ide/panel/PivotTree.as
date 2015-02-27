@@ -5,12 +5,9 @@
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
 	
-	import L3D.core.base.Pivot3D;
-	import L3D.core.entities.Mesh3D;
-	import L3D.core.render.SkeletonRender;
-	import L3D.core.scene.Scene3D;
+	import monkey.core.base.Object3D;
+	import monkey.core.scene.Scene3D;
 	
-	import ui.core.Style;
 	import ui.core.controls.Control;
 	import ui.core.controls.List;
 	import ui.core.event.ControlEvent;
@@ -19,14 +16,14 @@
 	public class PivotTree extends Control {
 		
 		private var _list 		: List;
-		private var _pivot 		: Pivot3D;
+		private var _pivot 		: Object3D;
 		private var _items 		: Dictionary;
 		private var _closed 	: Dictionary;
 		private var _labels 	: Array;
 		private var _lastAction : Boolean;
 		private var _multiSelect: Boolean = true;
 		
-		public function PivotTree(pivot : Pivot3D = null) {
+		public function PivotTree(pivot : Object3D = null) {
 			super();
 			
 			this._list = new List();
@@ -39,8 +36,7 @@
 			this._items  = new Dictionary(true);
 			this._closed = new Dictionary(true);
 			this._labels = [];
-			
-			this._pivot = pivot;
+			this._pivot  = pivot;
 			
 			this.view.addChild(this._list.view);
 			this.view.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent);
@@ -68,7 +64,7 @@
 			this._list.draw();
 		}
 		
-		private function createItems(pivot : Pivot3D, level : int = 0) : void {
+		private function createItems(pivot : Object3D, level : int = 0) : void {
 			var item : PivotTreeItem = this._items[pivot];
 			if (!item) {
 				item = new PivotTreeItem(pivot, 5 + level * 15);
@@ -93,20 +89,16 @@
 			item.closed = this._closed[pivot];
 
 			if (!item.closed) {
-				if ((pivot.frames != null) && (pivot.frames.length > 0)) {
-					item.label.textColor = Style.labelsColor2;
-					item.label.draw();
-				}
 				if (pivot.children.length > 0) {
-					for each (var child : Pivot3D in pivot.children) {
+					for each (var child : Object3D in pivot.children) {
 						this.createItems(child, level + 1);
 					}
 				}
-				if (pivot is Mesh3D) {
-					if (Mesh3D(pivot).render is SkeletonRender) {
-						this.createItems(SkeletonRender(Mesh3D(pivot).render).rootBone, level + 1);
-					}
-				}
+//				if (pivot is Mesh3D) {
+//					if (Mesh3D(pivot).render is SkeletonRender) {
+//						this.createItems(SkeletonRender(Mesh3D(pivot).render).rootBone, level + 1);
+//					}
+//				}
 			} else {
 				item.arrow.rotation = 0;
 			}
@@ -143,20 +135,20 @@
 			}
 		}
 		
-		private function clearCacheAux(pivot : Pivot3D) : void {
+		private function clearCacheAux(pivot : Object3D) : void {
 			delete this._items[pivot];
-			for each (var child : Pivot3D in pivot.children) {
+			for each (var child : Object3D in pivot.children) {
 				this.clearCacheAux(child);
 			}
 		}
 		
-		public function set pivot(pivot : Pivot3D) : void {
+		public function set pivot(pivot : Object3D) : void {
 			this._pivot = pivot;
 			this.clearCache();
 			this.update();
 		}
 
-		public function get pivot() : Pivot3D {
+		public function get pivot() : Object3D {
 			return this._pivot;
 		}
 
@@ -210,7 +202,7 @@
 		
 		public function set selected(items : Array) : void {
 			var arr : Array = [];
-			for each (var child : Pivot3D in items) {
+			for each (var child : Object3D in items) {
 				for each (var item : PivotTreeItem in this._list.items) {
 					if (item.pivot == child) {
 						arr.push(item);

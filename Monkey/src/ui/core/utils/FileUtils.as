@@ -11,12 +11,11 @@ package ui.core.utils {
 
 		public static const IMAGE 	: String = "image";
 		public static const BINARY 	: String = "binary";
-		public static const TXT 		: String = "txt";
+		public static const TXT 	: String = "txt";
 
 		public  var name 	: String;
-		
-		private var _bitmap 	: Bitmap;
-		private var _fr 		: FileReference;
+		private var _bitmap : Bitmap;
+		private var _fr 	: FileReference;
 		private var _type 	: String;
 
 		public function FileUtils() {
@@ -45,8 +44,8 @@ package ui.core.utils {
 				}
 			}
 		}
-
-		protected function onFileLoadCompleted(event : Event) : void {
+		
+		private function onFileLoadCompleted(event : Event) : void {
 			switch (_type) {
 				case IMAGE:  {
 					var loader : Loader = new Loader();
@@ -63,8 +62,8 @@ package ui.core.utils {
 				}
 			}
 		}
-
-		protected function onFileSelected(event : Event) : void {
+		
+		private function onFileSelected(event : Event) : void {
 			name = _fr.name;
 			_fr.load();
 		}

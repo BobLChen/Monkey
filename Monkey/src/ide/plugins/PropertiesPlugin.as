@@ -15,10 +15,10 @@ package ide.plugins {
 	import ide.plugins.groups.properties.PointLightGroup;
 	import ide.plugins.groups.properties.PropertiesGroup;
 	import ide.plugins.groups.properties.TransformGroup;
+	import ide.plugins.groups.properties.WaterGroup;
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
-	import monkey.core.entities.Mesh3D;
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.light.Light3D;
 	import monkey.core.renderer.MeshRenderer;
@@ -67,7 +67,7 @@ package ide.plugins {
 			this._groups.push(new MeshGroup());
 			this._groups.push(new BoundsGroup());
 			this._groups.push(new NavmeshGroup());
-//			this._groups.push(new WaterGroup());
+			this._groups.push(new WaterGroup());
 //			this._groups.push(new SkyboxGroup());
 //			this._groups.push(new ParticlesGroup());
 			this._groups.push(new DirectionLightGroup());

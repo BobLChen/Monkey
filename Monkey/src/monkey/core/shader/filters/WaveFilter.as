@@ -27,7 +27,6 @@ package monkey.core.shader.filters {
 		private var _blendColor : uint;
 		private var _heightData : Vector.<Number>;
 		private var mvpPosVary 	: ShaderRegisterElement;
-		
 		private var _nrmLabel	: FsRegisterLabel;
 		private var _texLabel	: FsRegisterLabel;
 				
@@ -130,6 +129,7 @@ package monkey.core.shader.filters {
 		 */
 		public function set waveHeight(height : Number) : void {
 			this._heightData[0] = height;
+			this._heightData[1] = height * 0.5;
 		}
 		
 		/**
@@ -161,6 +161,7 @@ package monkey.core.shader.filters {
 			
 			code += "mov " + regCache.op + ".y, " + regCache.getVa(Surface3D.CUSTOM3) + ".x \n";
 			code += "mul " + regCache.op + ".y, " + regCache.op + ".y, " + hVc + ".x \n";
+			code += "sub " + regCache.op + ".y, " + regCache.op + ".y, " + hVc + ".y \n";
 			code += "m44 " + mvpPosVary + ", " + regCache.op + ", " + regCache.vcMvp + " \n";
 			
 			code += "mov " + vt0 + ".w, " + regCache.getVa(Surface3D.CUSTOM3) + ".x \n";

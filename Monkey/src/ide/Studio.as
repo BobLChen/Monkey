@@ -4,6 +4,8 @@ package ide {
 	import flash.events.Event;
 	
 	import ide.plugins.CreatePlugin;
+	import ide.plugins.HierarchyPlugin;
+	import ide.plugins.ImportPlugin;
 	import ide.plugins.LogPlugin;
 	import ide.plugins.PropertiesPlugin;
 	import ide.plugins.ScenePlugin;
@@ -17,7 +19,7 @@ package ide {
 
 	public class Studio extends Sprite {
 		
-		private var _rootLayer		: Sprite;
+		private var _rootLayer	: Sprite;
 		private var _ide		: Box;
 		private var _scene  	: TabControl;
 		private var _output	 	: TabControl;
@@ -148,9 +150,9 @@ package ide {
 			app.initPlugin(new CreatePlugin());
 			app.initPlugin(new SelectionPlugin());
 			app.initPlugin(new PropertiesPlugin());
-//			this._app.initPlugin(new HierarchyPlugin());
+			app.initPlugin(new HierarchyPlugin());
 //			this._app.initPlugin(new MaterialPlugin());
-//			this._app.initPlugin(new ImportPlugin());
+			app.initPlugin(new ImportPlugin());
 //			this._app.initPlugin(new ControllerPlugin());
 //			this._app.initPlugin(new ExportPlugin());
 			
