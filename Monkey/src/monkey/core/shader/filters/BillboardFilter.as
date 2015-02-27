@@ -4,7 +4,10 @@ package monkey.core.shader.filters {
 	import flash.geom.Orientation3D;
 	import flash.geom.Vector3D;
 	
+	import monkey.core.base.Surface3D;
 	import monkey.core.shader.utils.ShaderRegisterCache;
+	import monkey.core.shader.utils.ShaderRegisterElement;
+	import monkey.core.shader.utils.VcRegisterLabel;
 	import monkey.core.utils.Device3D;
 
 	/**
@@ -32,7 +35,12 @@ package monkey.core.shader.filters {
 		}
 		
 		override public function getVertexCode(regCache : ShaderRegisterCache, agal : Boolean) : String {
-			return super.getVertexCode(regCache, agal);
+			var rotate : ShaderRegisterElement = regCache.getVc(4, new VcRegisterLabel(matrix));
+			var code : String = "";
+			if (agal) {
+				code += "m33 " + regCache.op + ".xyz, " + regCache.getVa(Surface3D.POSITION) + ".xyz, " + rotate + " \n";				
+			}
+			return code;
 		}
 
 	}

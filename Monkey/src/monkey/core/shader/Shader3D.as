@@ -351,6 +351,9 @@ package monkey.core.shader {
 			for each (var filter : Filter3D in filters) {
 				code += filter.getFragmentCode(regCache, agal);
 			}
+			if (regCache.useNormal()) {
+				code = "mov " + regCache.normalFt + ", " + regCache.getV(Surface3D.NORMAL) + " \n" + code;
+			}
 			code += "mov oc, " + regCache.oc + " \n";
 			return code;
 		}

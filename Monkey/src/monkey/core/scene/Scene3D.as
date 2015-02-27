@@ -310,6 +310,7 @@ package monkey.core.scene {
 			Device3D.view.copyFrom(Device3D.camera.view);
 			Device3D.viewProjection.copyFrom(Device3D.camera.viewProjection);
 			Device3D.camera.transform.getPosition(false, Device3D.cameraPos);
+			Device3D.camera.transform.getDir(false, Device3D.cameraDir);
 			Device3D.defaultDirectLight.transform.copyfrom(Device3D.camera.transform);
 			
 			if (this.viewPort.equals(camera.lens.viewPort)) {

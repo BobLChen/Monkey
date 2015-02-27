@@ -35,6 +35,11 @@ package monkey.core.utils {
 		/** 相机 */
 		public static var camera				: Camera3D;
 		
+		/** 最大矩阵骨骼数 */
+		public static const MAX_MATRIX34_BONE   : int = 36;
+		/** 最大四元数骨骼数 */
+		public static const MAX_QUAT_BONE		: int = 56;
+		
 		/** 默认灯光 */
 		public static const defaultDirectLight  : DirectionalLight = new DirectionalLight();
 		/** 投影 */
@@ -47,6 +52,8 @@ package monkey.core.utils {
 		public static const world				: Matrix3D = new Matrix3D();
 		/** 相机坐标 */
 		public static const cameraPos			: Vector3D = new Vector3D();
+		/** 相机方向 */
+		public static const cameraDir			: Vector3D = new Vector3D();
 		
 		/** view projection */		
 		public static var viewProjection 		: Matrix3D = new Matrix3D();

@@ -3,7 +3,12 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.FcRegisterLabel;
 	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.shader.utils.ShaderRegisterElement;
-
+	
+	/**
+	 * 纯色 
+	 * @author Neil
+	 * 
+	 */	
 	public class ColorFilter extends Filter3D {
 
 		private var data : Vector.<Number>;

@@ -12,28 +12,29 @@ package monkey.core.shader.utils {
 		/** 使用的fc寄存器 */
 		public var fcUsed : Vector.<FcRegisterLabel>;
 		
-		private var _vtPool : RegisterPool;				// vt
-		private var _vcPool : RegisterPool; 			// vc
-		private var _vaPool : RegisterPool; 			// va
-		private var _vPool	: RegisterPool; 			// v
-		private var _ftPool : RegisterPool; 			// ft
-		private var _fcPool : RegisterPool; 			// fc
-		private var _fsPool : RegisterPool;				// fs
-		private var _op 	: ShaderRegisterElement;	// op
-		private var _oc 	: ShaderRegisterElement;	// oc
-		private var _vcMvp  : ShaderRegisterElement;	// mvp vc
-		private var _vc0123 : ShaderRegisterElement;	// 0123常量是我们最经常用到的，因此缓存
-		private var _fc0123 : ShaderRegisterElement;	// 0123常量是我们最经常用到的，因此缓存
-		private var _vas 	: Vector.<ShaderRegisterElement>;	// va寄存器
-		private var _vs  	: Vector.<ShaderRegisterElement>;	// vary寄存器
-		private var _vcWorld: ShaderRegisterElement;
-		private var _fcWorld: ShaderRegisterElement;
-		private var _fcView:ShaderRegisterElement;
-		private var _fcProj:ShaderRegisterElement;
-		private var _fcViewProj:ShaderRegisterElement;
-		private var _vcView:ShaderRegisterElement;
-		private var _vcProj:ShaderRegisterElement;
-		private var _vcViewProj:ShaderRegisterElement;
+		private var _vtPool 	: RegisterPool;				// vt
+		private var _vcPool 	: RegisterPool; 			// vc
+		private var _vaPool 	: RegisterPool; 			// va
+		private var _vPool		: RegisterPool; 			// v
+		private var _ftPool 	: RegisterPool; 			// ft
+		private var _fcPool 	: RegisterPool; 			// fc
+		private var _fsPool 	: RegisterPool;				// fs
+		private var _op 		: ShaderRegisterElement;	// op
+		private var _oc 		: ShaderRegisterElement;	// oc
+		private var _vcMvp  	: ShaderRegisterElement;	// mvp vc
+		private var _vc0123 	: ShaderRegisterElement;	// 0123常量是我们最经常用到的，因此缓存
+		private var _fc0123 	: ShaderRegisterElement;	// 0123常量是我们最经常用到的，因此缓存
+		private var _vas 		: Vector.<ShaderRegisterElement>;	// va寄存器
+		private var _vs  		: Vector.<ShaderRegisterElement>;	// vary寄存器
+		private var _vcWorld	: ShaderRegisterElement;
+		private var _fcWorld	: ShaderRegisterElement;
+		private var _fcView		: ShaderRegisterElement;
+		private var _fcProj		: ShaderRegisterElement;
+		private var _fcViewProj	: ShaderRegisterElement;
+		private var _vcView		: ShaderRegisterElement;
+		private var _vcProj		: ShaderRegisterElement;
+		private var _vcViewProj	: ShaderRegisterElement;
+		private var _normalFt	: ShaderRegisterElement;
 		
 		public function ShaderRegisterCache() {
 			this.fsUsed  = new Vector.<FsRegisterLabel>();
@@ -64,7 +65,28 @@ package monkey.core.shader.utils {
 			this._fcPool.dispose();
 			this._vcPool.dispose();
 		}
-				
+		
+		/**
+		 * 是否使用法线寄存器 
+		 * @return 
+		 * 
+		 */		
+		public function useNormal() : Boolean {
+			return _normalFt != null;
+		}
+		
+		/**
+		 * 法线临时寄存器 
+		 * @return 
+		 * 
+		 */		
+		public function get normalFt() : ShaderRegisterElement {
+			if (_normalFt == null) {
+				_normalFt = getFt();
+			}
+			return _normalFt;
+		}
+		
 		/**
 		 * 获取mvp
 		 * @return 

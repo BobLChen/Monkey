@@ -7,8 +7,7 @@ package monkey.core.shader.utils {
 		public var fs 		: ShaderRegisterElement;
 		public var texture 	: Texture3D;
 		
-		public function FsRegisterLabel(fs : ShaderRegisterElement, texture : Texture3D) {
-			this.fs 		= fs;
+		public function FsRegisterLabel(texture : Texture3D) {
 			this.texture	= texture;
 		}
 	}

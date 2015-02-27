@@ -33,8 +33,8 @@ package monkey.core.shader.filters {
 			super("ParticleSystemFilter");
 			this.priority = 14;
 			this.timeData	  = Vector.<Number>([0, 0, 1, 5]);
-			this.blendedLabel = new FsRegisterLabel(null, null);
-			this.textureLabel = new FsRegisterLabel(null, null);
+			this.blendedLabel = new FsRegisterLabel(null);
+			this.textureLabel = new FsRegisterLabel(null);
 			this.keyframeLabel= new VcRegisterLabel(null);
 		}
 		

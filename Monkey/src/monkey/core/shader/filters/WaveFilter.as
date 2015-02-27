@@ -33,8 +33,8 @@ package monkey.core.shader.filters {
 		public function WaveFilter() {
 			super("WaveFilter");
 			this.priority 	= 15;
-			this._nrmLabel  = new FsRegisterLabel(null, null);
-			this._texLabel	= new FsRegisterLabel(null, null);
+			this._nrmLabel  = new FsRegisterLabel(null);
+			this._texLabel	= new FsRegisterLabel(null);
 			this._camPos 	= Vector.<Number>([0.0, 0.0, 0.0, 0.09]);
 			this._time 		= Vector.<Number>([0.0, 0, 0, 0]);
 			this._fc0Data 	= Vector.<Number>([0, 1.0, 0, 50]);

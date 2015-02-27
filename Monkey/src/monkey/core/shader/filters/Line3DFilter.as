@@ -7,7 +7,12 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.ShaderRegisterElement;
 	import monkey.core.shader.utils.VcRegisterLabel;
 	import monkey.core.utils.Device3D;
-
+	
+	/**
+	 * 线 
+	 * @author Neil
+	 * 
+	 */	
 	public class Line3DFilter extends Filter3D {
 		
 		private var invMvMt : Matrix3D;
