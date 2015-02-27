@@ -1,7 +1,6 @@
 package monkey.core.shader.filters {
 	
 	import monkey.core.shader.utils.ShaderRegisterCache;
-	import monkey.core.shader.utils.ShaderRegisterElement;
 	import monkey.core.textures.Texture3D;
 	
 	public class Filter3D {
@@ -12,6 +11,10 @@ package monkey.core.shader.filters {
 		
 		public function Filter3D(name : String = "Filter3D") {
 			this.name = name;
+		}
+		
+		public function update() : void {
+			
 		}
 		
 		/**

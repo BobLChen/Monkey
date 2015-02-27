@@ -41,6 +41,16 @@ package monkey.core.components {
 			super.onRemove(master);
 			this.updateTransforms(true);
 		}
+				
+		override public function copyfrom(icom : Component3D) : void {
+			super.copyfrom(icom);
+			var transform : Transform3D = icom as Transform3D;
+			if (!transform) {
+				return;
+			}
+			this.local.copyFrom(transform.world);
+			this.updateTransforms(true);
+		}
 		
 		override public function clone():IComponent {
 			var c : Transform3D = new Transform3D();

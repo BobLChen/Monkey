@@ -3,6 +3,8 @@ package ide.plugins {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
 	import flash.net.FileFilter;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
@@ -11,9 +13,10 @@ package ide.plugins {
 	import ide.events.LogEvent;
 	
 	import monkey.core.base.Object3D;
-	import monkey.core.entities.Mesh3D;
 	import monkey.core.materials.ColorMaterial;
-	import monkey.core.renderer.MeshRenderer;
+	import monkey.core.parser.Max3DSParser;
+	import monkey.core.parser.NavMeshParser;
+	import monkey.core.parser.OBJParser;
 	import monkey.core.utils.Mesh3DUtils;
 
 	public class FilePluginUtils extends EventDispatcher {
@@ -52,31 +55,61 @@ package ide.plugins {
 		
 		public static function openFile() : void {
 			var file : File = new File();
-			file.addEventListener(Event.SELECT, onSelected);
+			file.addEventListener(Event.SELECT, onSelectedFile);
 			file.browseForOpen("open", filters);
 		}
 		
-		private static function onSelected(event:Event) : void {
-			var file : File = event.target as File;
+		public static function openFiles() : void {
+			var file : File = new File();
+			file.addEventListener(Event.SELECT, onSelectedFiles);
+			file.browseForDirectory("open");
+		}
+		
+		private static function onSelectedFiles(event:Event) : void {
+			var files : File = event.target as File;
+			for each (var file : File in files.getDirectoryListing()) {
+				if (file.exists && !file.isDirectory) {
+					readFile(file);
+				}
+			}
+		}
+		
+		private static function readFile(file : File) : void {
 			var type : String = getType(file.name);
+			if (TYPES.indexOf(type) == -1) {
+				return;
+			}
+			var stream : FileStream = new FileStream();
+			stream.open(file, FileMode.READ);
+			stream.position = 0;
+			var bytes : ByteArray = new ByteArray();
+			stream.readBytes(bytes, 0, stream.bytesAvailable);
+			onImport(bytes, file.name, type);
 			App.core.dispatchEvent(new LogEvent("file:" + file.nativePath));
-			onImport(file.data, type);
+		}
+		
+		private static function onSelectedFile(event:Event) : void {
+			var file : File = event.target as File;
+			readFile(file);
 		}		
-				
-		private static function onImport(data : ByteArray, type : String) : void {
-			if (!_utils[type]) {
+						
+		private static function onImport(data : ByteArray, name : String, type : String) : void {
+			if (!_utils[type] || !data) {
 				return;
 			}
 			var func : Function = _utils[type];
 			var obj  : Object3D = func(data);
 			if (obj) {
+				obj.name = name;
+				_app.scene.addChild(obj);
 				_app.selection.objects = [obj];
 			}
 		}
 		
 		private static function getType(name : String) : String {
 			var tokens : Array = name.split(".");
-			return tokens.pop();
+			var type : String = tokens.pop();
+			return type.toLowerCase();
 		}
 		
 		private static function get filters() : Array {
@@ -95,21 +128,55 @@ package ide.plugins {
 			_utils = new Dictionary();
 			_utils[MESH] = openMesh;
 			_utils[OBJ]  = openOBJ;
+			_utils[MAX3DS] = open3DS;
 		}
 		
+		/**
+		 * 导入mesh 
+		 * @param bytes
+		 * @return 
+		 * 
+		 */		
 		public static function openMesh(bytes : ByteArray) : Object3D {
-			var obj   : Object3D = new Object3D();
-			var mesh  : Mesh3D = Mesh3DUtils.readMesh(bytes);
-			obj.addComponent(new MeshRenderer(mesh, new ColorMaterial()));			
+			var obj   : Object3D = Mesh3DUtils.readMesh(bytes);
+			obj.renderer.material = new ColorMaterial();
 			return obj;
 		}
 		
+		/**
+		 * 导入obj 
+		 * @param bytes
+		 * @return 
+		 * 
+		 */		
 		public static function openOBJ(bytes : ByteArray) : Object3D {
-			var obj : Object3D = new Object3D();
-			
-			
-			return obj;
+			bytes.position = 0;
+			var txt : String = bytes.readUTFBytes(bytes.length);
+			var parser : OBJParser = new OBJParser();
+			parser.proceedParsing(txt);
+			return parser.pivot;
 		}
 		
+		/**
+		 * 导入3ds 
+		 * @param bytes
+		 * @return 
+		 * 
+		 */		
+		public static function open3DS(bytes : ByteArray) : Object3D {
+			bytes.position = 0;
+			var parser : Max3DSParser = new Max3DSParser(bytes, "");
+			parser.startParsing();
+			return parser.pivot;
+		}
+		
+		public static function openNavmesh(bytes : ByteArray) : Object3D {
+			bytes.position = 0;
+			var parser : NavMeshParser = new NavMeshParser();
+			
+			
+			return null;
+		}
+				
 	}
 }

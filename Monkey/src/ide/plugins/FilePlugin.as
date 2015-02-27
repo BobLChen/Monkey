@@ -28,7 +28,7 @@ package ide.plugins {
 		}
 		
 		private function openFiles(e : Event) : void {
-			
+			FilePluginUtils.openFiles();
 		}
 		
 		private function importAnimation(e : MouseEvent) : void {
@@ -113,48 +113,7 @@ package ide.plugins {
 //			});
 //			file.openForBinary([new FileFilter("Particles","*.particle")]);
 		}
-		
-		private function importMesh(e : MouseEvent) : void {
-//			var file : FileUtils = new FileUtils();
-//			file.addEventListener(FileUtils.BINARY, function(e:Event):void{
-//				var mesh : Mesh3D = Mesh3DUtils.readMesh(file.binary);
-//				mesh.name = file.name;
-//				mesh.userData.meshID = file.name;
-//				_app.scene.addChild(mesh);
-//				setTimeout(function():void{
-//					_app.selection.objects = [mesh];
-//				}, 10);	
-//			});
-//			file.openForBinary([new FileFilter("Mesh","*.mesh")]);
-		}
-		
-		private function importObJ(e : MouseEvent) : void {
-//			var file : FileUtils = new FileUtils();
-//			file.addEventListener(FileUtils.BINARY, function(e:Event):void{
-//				var parser : OBJParser = new OBJParser();
-//				parser.proceedParsing(ParserUtil.toString(file.binary));
-//				parser.pivot..name = file.name;
-//				_app.scene.addChild(parser.pivot);
-//				setTimeout(function():void{
-//					_app.selection.objects = [parser.pivot];
-//				}, 10);	
-//			});
-//			file.openForBinary([new FileFilter("OBJ","*.obj;*.OBJ")]);
-		}
-		
-		private function import3DS(e : MouseEvent) : void {
-//			var file : FileUtils = new FileUtils();
-//			file.addEventListener(FileUtils.BINARY, function(e:Event):void{
-//				var parser : Max3DSParser = new Max3DSParser(file.binary, "");
-//				parser.startParsing();
-//				parser.pivot..name = file.name;
-//				_app.scene.addChild(parser.pivot);
-//				setTimeout(function():void{
-//					_app.selection.objects = [parser.pivot];
-//				}, 10);	
-//			});
-//			file.openForBinary([new FileFilter("3DS","*.3DS;*.3ds")]);
-		}
+	
 		
 		public function start() : void {
 			

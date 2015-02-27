@@ -7,7 +7,7 @@ package {
 	import ide.Studio;
 	
 	public class Monkey extends Sprite {
-				
+		
 		public function Monkey() {
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
 			this.stage.align = StageAlign.TOP_LEFT;

@@ -173,6 +173,9 @@ package monkey.core.shader {
 			if (!surface.scene) {
 				surface.upload(scene3d);
 			}
+			for each (var filter : Filter3D in filters) {
+				filter.update();
+			}
 			var context : Context3D = scene3d.context;
 			Device3D.drawCalls++;
 			Device3D.triangles += count;

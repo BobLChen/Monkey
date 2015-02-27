@@ -10,6 +10,7 @@ package monkey.core.utils {
 	import flash.geom.Vector3D;
 	
 	import monkey.core.camera.Camera3D;
+	import monkey.core.light.DirectionalLight;
 	import monkey.core.scene.Scene3D;
 
 	/**
@@ -30,9 +31,12 @@ package monkey.core.utils {
 		/** 三角形数量 */
 		public static var triangles 			: int = 0;
 		/** 3d对象数量 */
-		public static var drawOBJNum					: int = 0;
+		public static var drawOBJNum			: int = 0;
 		/** 相机 */
 		public static var camera				: Camera3D;
+		
+		/** 默认灯光 */
+		public static const defaultDirectLight  : DirectionalLight = new DirectionalLight();
 		/** 投影 */
 		public static const proj				: Matrix3D = new Matrix3D();
 		/** view */

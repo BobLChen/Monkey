@@ -20,7 +20,7 @@ package monkey.core.shader.filters {
 			this.invMvMt = new Matrix3D();
 		}
 		
-		public function update() : void {
+		override public function update() : void {
 			this.mvMt.copyFrom(Device3D.world);
 			this.mvMt.append(Device3D.view);
 			this.invMvMt.copyFrom(mvMt);

@@ -143,7 +143,7 @@ package monkey.core.shader.filters {
 		/**
 		 * update 
 		 */		
-		public function update() : void {
+		override public function update() : void {
 			this._camPos[0] = Device3D.cameraPos.x;
 			this._camPos[1] = Device3D.cameraPos.y;
 			this._camPos[2] = Device3D.cameraPos.z;

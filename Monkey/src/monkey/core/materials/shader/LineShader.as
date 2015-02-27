@@ -1,7 +1,5 @@
 package monkey.core.materials.shader {
 
-	import monkey.core.base.Surface3D;
-	import monkey.core.scene.Scene3D;
 	import monkey.core.shader.Shader3D;
 	import monkey.core.shader.filters.Line3DFilter;
 
@@ -24,11 +22,6 @@ package monkey.core.materials.shader {
 			}
 			this.filter = new Line3DFilter();
 			this.addFilter(filter);
-		}
-				
-		override public function draw(scene3d:Scene3D, surface:Surface3D, firstIdx:int=0, count:int=-1):void {
-			this.filter.update();
-			super.draw(scene3d, surface, firstIdx, count);
 		}
 		
 		public static function get instance() : LineShader {

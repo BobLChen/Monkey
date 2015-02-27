@@ -8,6 +8,7 @@ package monkey.core.utils {
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
+	import monkey.core.renderer.MeshRenderer;
 
 	/**
 	 * 模型工具 
@@ -26,7 +27,7 @@ package monkey.core.utils {
 		 * @return 
 		 * 
 		 */		
-		public static function readMesh(bytes : ByteArray) : Mesh3D {
+		public static function readMesh(bytes : ByteArray) : Object3D {
 			
 			bytes.endian = Endian.LITTLE_ENDIAN;
 			bytes.uncompress();
@@ -44,7 +45,7 @@ package monkey.core.utils {
 				vec.z = bytes.readFloat();	 
 				vec.w = bytes.readFloat();	 
 				obj3d.transform.local.copyRowFrom(j, vec);
-			}  
+			}
 			// 读取SubMesh数量
 			var subCount : int = bytes.readInt();
 			for (var subIdx : int = 0; subIdx < subCount; subIdx++) {
@@ -132,7 +133,9 @@ package monkey.core.utils {
 			}
 			mesh.bounds = bounds;
 			
-			return mesh;
+			obj3d.addComponent(new MeshRenderer(mesh, null));
+			
+			return obj3d;
 		}
 		
 	}

@@ -1,7 +1,5 @@
 package monkey.core.materials.shader {
 
-	import monkey.core.base.Surface3D;
-	import monkey.core.scene.Scene3D;
 	import monkey.core.shader.Shader3D;
 	import monkey.core.shader.filters.WaveFilter;
 	import monkey.core.textures.CubeTextue3D;
@@ -26,12 +24,7 @@ package monkey.core.materials.shader {
 			this.waterFilter = new WaveFilter();
 			this.addFilter(waterFilter);
 		}
-		
-		override public function draw(scene3d:Scene3D, surface:Surface3D, firstIdx:int=0, count:int=-1):void {
-			this.waterFilter.update();
-			super.draw(scene3d, surface, firstIdx, count);
-		}
-		
+				
 		public function set normalTexture(texture : Texture3D) : void {
 			this.waterFilter.normalTexture = texture;
 		}
