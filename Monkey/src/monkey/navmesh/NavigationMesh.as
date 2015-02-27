@@ -23,16 +23,17 @@ package monkey.navmesh {
 		private var _heap 	: BinaryHeap;
 		private var _mesh	: Mesh3D;
 				
-		public function NavigationMesh(mesh : Mesh3D) {
+		public function NavigationMesh() {
 			this.name   = "NavigationMesh";
+		}
+		
+		public function build(mesh : Mesh3D) : void {
+			
 			this._cells = new Vector.<NavigationCell>();
 			this._heap  = new BinaryHeap(compare);
 			this._mesh  = mesh;
-			this.build(mesh);
 			this.addComponent(new MeshRenderer(this._mesh, new ColorMaterial(0xFFCB00)));
-		}
-		
-		private function build(mesh : Mesh3D) : void {
+			
 			var geo : Surface3D = mesh.surfaces[0];
 			var vertexVector	: Vector.<Number> = geo.getVertexVector(Surface3D.POSITION);
 			var indexVector 	: Vector.<uint>   = geo.indexVector;

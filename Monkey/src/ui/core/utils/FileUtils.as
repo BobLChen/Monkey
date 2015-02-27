@@ -17,7 +17,7 @@ package ui.core.utils {
 		private var _bitmap : Bitmap;
 		private var _fr 	: FileReference;
 		private var _type 	: String;
-
+		
 		public function FileUtils() {
 			_fr = new FileReference();
 			_fr.addEventListener(Event.COMPLETE, onFileLoadCompleted);

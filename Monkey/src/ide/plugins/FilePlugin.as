@@ -1,38 +1,36 @@
 package ide.plugins {
 
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import ide.App;
 	
-	import ui.core.container.MenuCombox;
 	import ui.core.interfaces.IPlugin;
 
-	public class ImportPlugin implements IPlugin {
+	public class FilePlugin implements IPlugin {
 		
 		private var _app : App;
 						
-		public function ImportPlugin() {
+		public function FilePlugin() {
 			
 		}
 		
 		public function init(app : App) : void {
 			this._app = app;
+			this._app.addMenu("File/open file",  openFile);
+			this._app.addMenu("File/open files", openFiles);
 			
-			this._app.addMenu("Import", null);
-			
-			var menu0 : MenuCombox = new MenuCombox("Import");
-			menu0.addMenuItem("OBJ", 		importObJ);
-			menu0.addMenuItem("3DS", 		import3DS);
-			menu0.addMenuItem(".mesh", 		importMesh);
-			menu0.addMenuItem("Particles", 	importParticles);
-			menu0.addMenuItem("Water", 		importWater);
-			menu0.addMenuItem("Skybox", 	importSkybox);
-			menu0.addMenuItem("Navmesh", 	importNavmesh);
-			menu0.addMenuItem(".navmesh", 	importNavmesh1);
-			menu0.addMenuItem(".anim", 		importAnimation);
-			menu0.minWidth = 60;
+			FilePluginUtils.init(app);
 		}
 			
+		private function openFile(e : Event) : void {
+			FilePluginUtils.openFile();
+		}
+		
+		private function openFiles(e : Event) : void {
+			
+		}
+		
 		private function importAnimation(e : MouseEvent) : void {
 //			if (this._app.selection.main is Mesh3D) {
 //				var mesh : Mesh3D = Mesh3D(this._app.selection.main);

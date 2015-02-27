@@ -8,9 +8,9 @@ package monkey.navmesh {
 	public class BinaryHeap {
 		
 		/** 二叉堆，默认1个元素占位，新建元素索引从1开始 */
-		public var heap 		: Array = [null];
+		public var heap 	: Array = [null];
 		
-		private var compare 	: Function;
+		private var compare : Function;
 		private var length 	: int = 0;
 
 		/**

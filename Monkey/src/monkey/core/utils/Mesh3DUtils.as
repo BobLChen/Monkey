@@ -26,7 +26,7 @@ package monkey.core.utils {
 		 * @return 
 		 * 
 		 */		
-		public static function readMesh(bytes : ByteArray) : Object3D {
+		public static function readMesh(bytes : ByteArray) : Mesh3D {
 			
 			bytes.endian = Endian.LITTLE_ENDIAN;
 			bytes.uncompress();
@@ -132,8 +132,7 @@ package monkey.core.utils {
 			}
 			mesh.bounds = bounds;
 			
-			obj3d.addComponent(mesh);
-			return obj3d;
+			return mesh;
 		}
 		
 	}

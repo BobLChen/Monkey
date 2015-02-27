@@ -5,7 +5,7 @@ package ide {
 	
 	import ide.plugins.CreatePlugin;
 	import ide.plugins.HierarchyPlugin;
-	import ide.plugins.ImportPlugin;
+	import ide.plugins.FilePlugin;
 	import ide.plugins.LogPlugin;
 	import ide.plugins.PropertiesPlugin;
 	import ide.plugins.ScenePlugin;
@@ -145,6 +145,7 @@ package ide {
 			var app : App = new App(this);
 			app.stage = this.stage;
 			// 初始化app
+			app.initPlugin(new FilePlugin());
 			app.initPlugin(new ScenePlugin());
 			app.initPlugin(new LogPlugin());
 			app.initPlugin(new CreatePlugin());
@@ -152,7 +153,6 @@ package ide {
 			app.initPlugin(new PropertiesPlugin());
 			app.initPlugin(new HierarchyPlugin());
 //			this._app.initPlugin(new MaterialPlugin());
-			app.initPlugin(new ImportPlugin());
 //			this._app.initPlugin(new ControllerPlugin());
 //			this._app.initPlugin(new ExportPlugin());
 			
