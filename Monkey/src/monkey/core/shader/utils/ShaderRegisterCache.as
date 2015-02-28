@@ -86,7 +86,7 @@ package monkey.core.shader.utils {
 			}
 			return _normalFt;
 		}
-		
+				
 		/**
 		 * 获取mvp
 		 * @return 

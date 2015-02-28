@@ -25,9 +25,9 @@ package monkey.core.animator {
 		public static const ANIMATION_PINT_PONG		: int = 2;
 		
 		/** 动画标签 */
-		public var labels : Dictionary;
-		/** 动画数据 */
-		public var frames : Array;
+		public var labels 			: Dictionary;
+		/** 总帧数 */
+		public var totalFrames 		: int = 0;
 		
 		private var _fps 			: Number;			// 帧频
 		private var _hz  	 		: Number;			// 播放速度
@@ -42,7 +42,6 @@ package monkey.core.animator {
 		public function Animator() {
 			super();
 			this.fps = 60;
-			this.frames = [];
 			this.labels = new Dictionary();
 			this.frameSpeed = 1.0;
 		}
@@ -104,7 +103,7 @@ package monkey.core.animator {
 			// 动画帧位置
 			} else if (frame as Number) {
 				this._from = 0;
-				this._to   = frames.length - 1;
+				this._to   = totalFrames - 1;
 				this.currentFrame = frame as Number;
 			} else {
 				return;
@@ -135,7 +134,7 @@ package monkey.core.animator {
 			} else if (frame as Number) {
 				this._currentLabel = null;
 				this._from = frame as Number;
-				this._to   = frames.length - 1;
+				this._to   = totalFrames - 1;
 				this.currentFrame = frame as Number;
 			} else {
 				return;
@@ -150,7 +149,7 @@ package monkey.core.animator {
 				
 		public function play(animationMode : int = ANIMATION_LOOP_MODE) : void {
 			this._from = 0;
-			this._to   = frames.length - 1;
+			this._to   = totalFrames - 1;
 			this._playing = true;
 			this._animationMode = animationMode;
 		}
