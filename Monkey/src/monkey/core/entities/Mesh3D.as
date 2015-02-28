@@ -71,7 +71,7 @@ package monkey.core.entities {
 		public function set bounds(value : Bounds3D) : void {
 			_bounds = value;
 		}
-		
+				
 		/**
 		 * 克隆mesh
 		 * @return

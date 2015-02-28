@@ -8,6 +8,7 @@
 		
 		/** rawData */
 		public static const RAW_DATA: Vector.<Number> = new Vector.<Number>(16);
+		public static const MATRIX3D: Matrix3D = new Matrix3D();
 		
 		private static var _raw 	: Vector.<Number> = new Vector.<Number>(16, true);
 		private static var _toRad 	: Number = 0.0174532925199433;

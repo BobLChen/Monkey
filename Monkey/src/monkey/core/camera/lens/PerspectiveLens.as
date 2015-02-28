@@ -28,14 +28,9 @@ package monkey.core.camera.lens {
 			c._aspect = this._aspect;
 			return c;
 		}
-				
-		/**
-		 * 横纵比
-		 * @return 
-		 * 
-		 */		
-		public function get aspect() : Number {
-			return _aspect;
+		
+		override public function get aspect():Number {
+			return this._aspect;
 		}
 		
 		/**

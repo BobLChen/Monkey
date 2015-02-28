@@ -158,6 +158,10 @@ package monkey.core.camera {
 			this._lens.far = value;
 		}
 		
+		public function get aspect() : Number {
+			return this._lens.aspect;
+		}
+				
 		/**
 		 * 视口 
 		 * @param rect

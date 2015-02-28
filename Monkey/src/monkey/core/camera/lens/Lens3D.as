@@ -24,7 +24,7 @@ package monkey.core.camera.lens {
 		protected var _invProjDirty	: Boolean;			// 投影逆矩阵需要更新
 		protected var _invProjection: Matrix3D;			// 投影逆矩阵
 		protected var _zoom			: Number;			// 焦距
-		
+						
 		public function Lens3D() {
 			super();
 			this._viewPort		= new Rectangle();
@@ -51,6 +51,10 @@ package monkey.core.camera.lens {
 			this._invProjDirty = lens._invProjDirty;
 			this._invProjection.copyFrom(lens._invProjection);
 			this._zoom = lens.zoom;
+		}
+		
+		public function get aspect():Number {
+			return 1;
 		}
 		
 		/**

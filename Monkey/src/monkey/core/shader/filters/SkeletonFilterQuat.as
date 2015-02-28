@@ -3,6 +3,7 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.shader.utils.ShaderRegisterElement;
 	import monkey.core.shader.utils.VcRegisterLabel;
+	import monkey.core.utils.Device3D;
 	
 	/**
 	 * 四元数骨骼 
@@ -11,20 +12,19 @@ package monkey.core.shader.filters {
 	 */	
 	public class SkeletonFilterQuat extends Filter3D {
 		
-		// 骨骼常量寄存器
-		private var data : Vector.<Number>;
+		private var boneLabel : VcRegisterLabel;
 		
 		public function SkeletonFilterQuat() {
 			super("SkeletonFilterQuat");
-			this.data = Vector.<Number>([1, 0, 0, 0])
 			this.priority = 1000;
+			this.boneLabel = new VcRegisterLabel(null);
 		}
 		
 		override public function getVertexCode(regCache : ShaderRegisterCache, agal : Boolean) : String {
 			
-			// 设置骨骼vc偏移
-			data[3] = regCache.vcBone.index;
-			var vc123 : ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(data));
+			// 56 * 2
+			var bones : ShaderRegisterElement = regCache.getVc(Device3D.MAX_QUAT_BONE * 2, boneLabel);
+			var vc123 : ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(Vector.<Number>([1, 0, 0, bones.index])));
 			var useNormal : Boolean = regCache.useNormal();
 			
 			var indexVa : Vector.<String> = Vector.<String>([
