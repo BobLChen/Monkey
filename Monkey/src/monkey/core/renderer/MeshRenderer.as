@@ -117,7 +117,7 @@ package monkey.core.renderer {
 				return;
 			}
 			Device3D.world.copyFrom(object3D.transform.world);
-			Device3D.mvp.copyFrom(object3D.transform.world);
+			Device3D.mvp.copyFrom(Device3D.world);
 			Device3D.mvp.append(scene.camera.viewProjection);
 			Device3D.drawOBJNum++;
 			material.draw(scene, mesh);

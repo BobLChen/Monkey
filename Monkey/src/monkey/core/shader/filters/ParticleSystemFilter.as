@@ -1,5 +1,8 @@
 package monkey.core.shader.filters {
 
+	import flash.geom.Matrix3D;
+	import flash.geom.Orientation3D;
+	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
 	
 	import monkey.core.base.Surface3D;
@@ -8,20 +11,32 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.ShaderRegisterElement;
 	import monkey.core.shader.utils.VcRegisterLabel;
 	import monkey.core.textures.Texture3D;
+	import monkey.core.utils.Device3D;
 	
 	/**
 	 * 粒子系统filter
-	 * over lifetime属性强制11个关键帧
+	 * 粒子位置由cpu生成
+	 * 粒子的速度和方向绑定到一起
+	 * 粒子的startColor由顶点颜色决定
+	 * 粒子的lifetime color用贴图实现
+	 * 粒子的lifetime transform由11个关键字决帧。强制为11个关键帧。
 	 * @author Neil
 	 *
 	 */
 	public class ParticleSystemFilter extends Filter3D {
-
+		
+		public static const RADIANS_TO_DEGREES : Number = 180 / Math.PI;
+		
+		/** 是否开启广告牌 */
+		public var billboard : Boolean = false;					// 广告牌
+		
 		private var timeData  		: Vector.<Number>;			// 时间数据
 		private var textureLabel    : FsRegisterLabel;			// 粒子贴图
 		private var blendedLabel 	: FsRegisterLabel;			// 混合贴图
 		private var keyframeLabel	: VcRegisterLabel;			// lifetime关键帧
 		private var timeVary 	 	: ShaderRegisterElement;	// 时间v寄存器
+		private var billboardMatrix	: Matrix3D;					// 广告牌
+		private var billboardLabel  : VcRegisterLabel;			// 广告牌
 		
 		/**
 		 * 粒子系统filter 
@@ -36,6 +51,20 @@ package monkey.core.shader.filters {
 			this.blendedLabel = new FsRegisterLabel(null);
 			this.textureLabel = new FsRegisterLabel(null);
 			this.keyframeLabel= new VcRegisterLabel(null);
+			this.billboardMatrix = new Matrix3D();
+			this.billboardLabel  = new VcRegisterLabel(billboardMatrix);
+		}
+		
+		override public function update():void {
+			if (billboard) {
+				this.billboardMatrix.copyFrom(Device3D.world);
+				this.billboardMatrix.append(Device3D.view);
+				var comps : Vector.<Vector3D> = billboardMatrix.decompose(Orientation3D.AXIS_ANGLE);
+				this.billboardMatrix.identity();
+				this.billboardMatrix.appendRotation(-comps[1].w * RADIANS_TO_DEGREES, comps[1]);
+			} else {
+				this.billboardMatrix.identity();
+			}
 		}
 		
 		/**
@@ -114,7 +143,7 @@ package monkey.core.shader.filters {
 			regCache.removeFt(ft0);
 			return code;
 		}
-				
+		
 		/**
 		 * 顶点程序 
 		 * @param regCache
@@ -128,11 +157,13 @@ package monkey.core.shader.filters {
 			// 时间:timeVa.x=>起始时间;timeVa.y=>lifetime
 			var timeVa  : ShaderRegisterElement = regCache.getVa(Surface3D.CUSTOM2);
 			// 当前时间
-			var timeVc  : ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(timeData));						// 当前时间
+			var timeVc  : ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(timeData));
 			// 缩放 旋转 速度关键帧
 			var keysVc 	: ShaderRegisterElement = regCache.getVc(44, keyframeLabel);
 			// step
 			var stepVc 	: ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(Vector.<Number>([10, 4, keysVc.index, 3])));
+			// billboard
+			var billVc  : ShaderRegisterElement = regCache.getVc(4, billboardLabel);
 			
 			var vt0 : ShaderRegisterElement = regCache.getVt();		// 临时变量
 			var vt1 : ShaderRegisterElement = regCache.getVt();		// 粒子时间
@@ -145,7 +176,7 @@ package monkey.core.shader.filters {
 				// 当前时间-延时
 				code += "sub " + vt1 + ".w, " + timeVc + ".x, " + timeVa + ".x \n";				
 				// 计算循环次数
-				// vt1.z = 时间/5
+				// vt1.z = 时间/粒子生命周期
 				code += "div " + vt1 + ".z, " + vt1 + ".w, " + timeVc + ".w \n";
 				code += "frc " + vt1 + ".x, " + vt1 + ".z \n";
 				code += "sub " + vt1 + ".z, " + vt1 + ".z, " + vt1 + ".x \n";
@@ -157,12 +188,11 @@ package monkey.core.shader.filters {
 				code += "sub " + vt1 + ".x, " + vt1 + ".x, " + timeVa + ".x \n";
 				// 计算比率
 				code += "div " + vt1 + ".y, " + vt1 + ".x, " + timeVa + ".y \n";
-				// 根据时间计算出当前关键帧的索引
-				// 比率 * 10 => 0.34 * 10 = 3.4
+				// 根据时间计算出当前关键帧的索引:例如比率 * 10 => 0.34 * 10 = 3.4
 				code += "mul " + vt0 + ".x, " + vt1 + ".y, " + stepVc + ".x \n";
-				// 取分数 3.4 => 0.4
+				// 取分数: 3.4 => 0.4
 				code += "frc " + vt0 + ".y, " + vt0 + ".x \n";
-				// 获取整数部分 => 3.4 - 0.4 = 3.0
+				// 获取整数部分: => 3.4 - 0.4 = 3.0
 				code += "sub " + vt0 + ".x, " + vt0 + ".x, " + vt0 + ".y \n";
 				// 跳转到矩阵
 				// vt0.z = 4
@@ -205,6 +235,8 @@ package monkey.core.shader.filters {
 				code += "mul " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + vt0 + ".x \n";
 				// 将时间参数传递给fragment着色器
 				code += "mov " + timeVary + ", " + vt1 + " \n";	
+				// billboard
+				code += "m33 " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + billVc + " \n";
 			}
 			
 			regCache.removeVt(vt3);

@@ -89,9 +89,9 @@ package monkey.core.entities {
 		 *
 		 *
 		 */
-		public function dispose() : void {
+		public function dispose(force : Boolean = false) : void {
 			for each (var surf : Surface3D in surfaces) {
-				surf.dispose();
+				surf.dispose(force);
 			}
 			this.surfaces = new Vector.<Surface3D>();
 		}

@@ -133,9 +133,11 @@
 				up = _up;
 			}
 			dir.normalize();
-			var rVec : Vector3D = up.crossProduct(dir);
+			var rVec : Vector3D = Vector3DUtils.vec0;
+			Vector3DUtils.cross(up, dir, rVec);
 			rVec.normalize();
-			var uVec : Vector3D = dir.crossProduct(rVec);
+			var uVec : Vector3D = Vector3DUtils.vec1;
+			Vector3DUtils.cross(dir, rVec, uVec);
 			rVec.scaleBy(_scale.x);
 			uVec.scaleBy(_scale.y);
 			dir.scaleBy(_scale.z);
@@ -166,7 +168,7 @@
 			dVec.scaleBy(_scale.z);
 			setVectors(m, rVec, normal, dVec);
 		}
-
+		
 		private static function setVectors(m : Matrix3D, right : Vector3D, up : Vector3D, dir : Vector3D) : void {
 			right.w = 0;
 			up.w = 0;
@@ -175,7 +177,7 @@
 			m.copyColumnFrom(1, up);
 			m.copyColumnFrom(2, dir);
 		}
-
+		
 		public static function lookAt(m : Matrix3D, x : Number, y : Number, z : Number, up : Vector3D = null, smooth : Number = 1) : void {
 			m.copyColumnTo(3, _pos);
 			_vector.x = (x - _pos.x);

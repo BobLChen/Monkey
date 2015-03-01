@@ -4,6 +4,7 @@ package monkey.core.scene {
 	import flash.events.Event;
 	import flash.geom.Vector3D;
 	
+	import monkey.core.base.Object3D;
 	import monkey.core.utils.Input3D;
 	import monkey.core.utils.Vector3DUtils;
 
@@ -20,10 +21,10 @@ package monkey.core.scene {
 		
 		public function Viewer3D(dispObject : DisplayObject, smooth : Number = 1, speedFactor : Number = 0.5) {
 			super(dispObject);
-			this._out 	= new Vector3D();
-			this.smooth = smooth;
+			this._out 		 = new Vector3D();
+			this.smooth 	 = smooth;
 			this.speedFactor = speedFactor;
-			this.addEventListener(ENTER_FRAME, updateEvent);
+			this.addEventListener(Object3D.ENTER_FRAME, updateEvent);
 		}
 		
 		private function updateEvent(event:Event) : void {

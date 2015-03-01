@@ -19,7 +19,6 @@ package monkey.core.entities.particles {
 	import monkey.core.entities.particles.shape.ParticleShape;
 	import monkey.core.entities.particles.shape.SphereShape;
 	import monkey.core.entities.primitives.Plane;
-	import monkey.core.interfaces.IComponent;
 	import monkey.core.materials.ParticleMaterial;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
@@ -51,7 +50,6 @@ package monkey.core.entities.particles {
 		/** 默认关键帧 */
 		private static var _defKeyframe : ByteArray;
 		
-		private var _surface   			: Surface3D;					// 粒子数据
 		private var _duration 			: Number; 						// 持续发射时间
 		private var _loops 				: int; 							// 循环发射模式
 		private var loopCount			: int;							// 循环计数器
@@ -66,7 +64,7 @@ package monkey.core.entities.particles {
 		private var _simulationSpace 	: Boolean; 						// 坐标系。false:本地；true:世界
 		private var _rate 				: int; 							// 发射频率
 		private var _bursts 			: Vector.<Point>; 				// 爆炸
-		private var _num				: int;							// 粒子数量
+		private var _particleNum		: int;							// 粒子数量
 		private var _totalTime			: Number;						// 粒子系统的生命周期
 		private var _needBuild			: Boolean;						// 是否需要build
 		private var _time				: Number = 0;					// 时间
@@ -78,7 +76,7 @@ package monkey.core.entities.particles {
 		private var blendTexture   		: Bitmap2DTexture;				// color over lifetime贴图
 		private var mesh 				: Mesh3D;						// mesh
 		private var material			: ParticleMaterial;				// material
-				
+		
 		/**
 		 *  粒子系统
 		 */		
@@ -98,7 +96,7 @@ package monkey.core.entities.particles {
 			this.rate 			 = 20;											
 			this.bursts 		 = new Vector.<Point>();						
 			this.duration 		 = 5;											
-			this.loops 		 	 = 0;											
+			this.loops 		 	 = 1;											
 			this.startDelay 	 = 0;											
 			this.startSpeed 	 = new PropConst(5);							
 			this.startSize 		 = Vector.<PropData>([new PropConst(1), new PropConst(1), new PropConst(1)]);
@@ -121,52 +119,129 @@ package monkey.core.entities.particles {
 			if (!this._needBuild) {
 				return;
 			}
-			this.mesh.download(true);
-			this._surface = new Surface3D();
-			this._totalTime = 0;
-			this.updateParticleNum();		// 计算所有的粒子数量
-			this.surface.setVertexVector(Surface3D.CUSTOM2, new Vector.<Number>(num * shape.vertNum * 2, true), 2);
-			this.surface.setVertexVector(Surface3D.CUSTOM3, new Vector.<Number>(num * shape.vertNum * 4, true), 4);
-			this.shape.generate(this);		// 生成shape
+			this.mesh.dispose(true);		// 释放所有的数据
+			this.caculateTotalTime();		// 首先计算出粒子的生命周期
+			this.caculateParticleNum();		// 计算所有的粒子数量
+			this.createParticleMesh();		// 生成粒子对应的网格
+			this.shape.generate(this);		// 生成shape对应的数据，包括粒子的位置、方向、uv、索引
+			this.createParticleAttribute();	// 更新粒子属性
+		}
+		
+		/**
+		 *  更新粒子的属性
+		 */		
+		private function createParticleAttribute() : void {
+			// 检测是否需要补齐
+			var fill : Boolean = loops != 1;
 			// 生成正常发射频率的数据
-			var rateNum  : int = rate * duration;
+			var rateNum : int = rate * duration;
+			var idx : int = 0;
 			for (var i:int = 0; i < rateNum; i++) {
-				this.updateParticles(i, i * 1.0 / rate);
+				this.updateParticles(idx++, i * 1.0 / rate);
+			}
+			// 补齐正常发射频率数据
+			var fillSize : int = Math.ceil(this._totalTime / duration) - 1;
+			var delay : Number = 0;
+			if (fill) {
+				for (var m:int = 1; m <= fillSize; m++) {
+					delay = duration * m;
+					for (i = 0; i < rateNum; i++) {
+						this.updateParticles(idx++, delay + i * 1.0 / rate);
+					}
+				}
 			}
 			// 生成burst数据
 			for (var j:int = 0; j < bursts.length; j++) {	
-				var burstNum : int = int(bursts[j].y);
-				for (var n:int = 0; n < burstNum; n++) {	
-					this.updateParticles(rateNum + n, bursts[j].x);
+				for (var n:int = 0; n < bursts[j].y; n++) {	
+					this.updateParticles(idx++, bursts[j].x);
 				}
-				rateNum += burstNum;
 			}
-			this.mesh.surfaces[0] = surface;
+			// 补齐burst数据
+			if (fill) {
+				for (m = 1; m <= fillSize; m++) {
+					delay = duration * m;
+					for (j = 0; j < bursts.length; j++) {
+						for (n = 0; n < bursts[j].y; n++) {	
+							this.updateParticles(idx++, delay + bursts[j].x);
+						}
+					}
+				}
+			}
 			this._needBuild = false;
-			this.material.totalLife = this.duration;
+			if (fill) {
+				this._totalTime = fillSize * duration;
+				this.material.totalLife = fillSize * duration;
+			} else {
+				this.material.totalLife = this._totalTime;
+			}
 		}
-
+		
+		private function createParticleMesh() : void {
+			// 根据粒子数量以及shape顶点数量计算出需要多少个surface
+			var size : int = Math.ceil(maxParticles * shape.vertNum / 65535);
+			// 计算出每个suface的容量
+			var perSize : int = 65535 / shape.vertNum;					
+			for (var i:int = 0; i < size; i++) {
+				var num : int = 0;
+				if (i == size - 1) {
+					num = maxParticles - perSize * i;
+				} else {
+					num = perSize;
+				}
+				var surface : Surface3D = new Surface3D();
+				surface.setVertexVector(Surface3D.CUSTOM2, new Vector.<Number>(num * shape.vertNum * 2, true), 2);
+				surface.setVertexVector(Surface3D.CUSTOM3, new Vector.<Number>(num * shape.vertNum * 4, true), 4);
+				this.mesh.surfaces.push(surface);
+			}
+		}
+		
+		/**
+		 * 计算粒子系统的整个生命周期 
+		 * 
+		 */		
+		private function caculateTotalTime() : void {
+			this._totalTime = 0;
+			// 计算正常发射频率的时间=delay + lifetime
+			var rateNum  : int = rate * duration;
+			var delay 	 : Number = 0;
+			var lifetime : Number = 0;
+			for (var i:int = 0; i < rateNum; i++) {
+				delay 	 = i * 1.0 / rate;
+				lifetime = startLifeTime.getValue(delay);
+				this._totalTime = Math.max(this._totalTime, delay + lifetime);
+			}
+			// 计算burst的时间
+			for (var j:int = 0; j < bursts.length; j++) {	
+				delay = bursts[j].x;
+				lifetime = startLifeTime.getValue(delay);
+				this._totalTime = Math.max(this._totalTime, delay + lifetime);
+			}		
+		}
+		
 		/**
 		 * 更新粒子系统数据 
 		 * @param idx		粒子索引
 		 * @param delay		粒子延时
 		 */		
 		private function updateParticles(idx : int, delay : Number) : void {
+			var perSize  : int = 65535 / shape.vertNum;		
+			var surface  : Surface3D = this.surfaces[int(idx / perSize)];
+			idx = idx % perSize;
 			// 粒子数据
-			var position : Vector.<Number> = this.surface.getVertexVector(Surface3D.POSITION);	// 位置
-			var velocity : Vector.<Number> = this.surface.getVertexVector(Surface3D.CUSTOM1);	// 方向
-			var lifetimes: Vector.<Number> = this.surface.getVertexVector(Surface3D.CUSTOM2);	// 时间
-			var colors	 : Vector.<Number> = this.surface.getVertexVector(Surface3D.CUSTOM3);	// 颜色
-			// 属性
-			var speed : Number = startSpeed.getValue(delay);			// 根据延时获取对应的Speed
-			var sizeX : Number = startSize[0].getValue(delay);			// 根据延时获取对应的SizeX
-			var sizeY : Number = startSize[1].getValue(delay);			// 根据延时获取对应的SizeY
-			var sizeZ : Number = startSize[2].getValue(delay);			// 根据延时获取对应的SizeZ
-			var rotaX : Number = startRotation[0].getValue(delay);		// 根据延时获取对应的RotationX
-			var rotaY : Number = startRotation[1].getValue(delay);		// 根据延时获取对应的RotationY
-			var rotaZ : Number = startRotation[2].getValue(delay);		// 根据延时获取对应的RotationZ
-			var color : Vector3D = startColor.getRGBA(delay / duration);// 根据延时获取对应的Color
-			var lifetime : Number = startLifeTime.getValue(delay);		// 根据延时获取对应的LifeTime
+			var position : Vector.<Number> = surface.getVertexVector(Surface3D.POSITION);	// 位置
+			var velocity : Vector.<Number> = surface.getVertexVector(Surface3D.CUSTOM1);	// 方向
+			var lifetimes: Vector.<Number> = surface.getVertexVector(Surface3D.CUSTOM2);	// 时间
+			var colors	 : Vector.<Number> = surface.getVertexVector(Surface3D.CUSTOM3);	// 颜色
+			var xDelay	 : Number	= delay % duration;
+			var speed 	 : Number 	= startSpeed.getValue(xDelay);					// 根据延时获取对应的Speed
+			var sizeX 	 : Number 	= startSize[0].getValue(xDelay);				// 根据延时获取对应的SizeX
+			var sizeY 	 : Number 	= startSize[1].getValue(xDelay);				// 根据延时获取对应的SizeY
+			var sizeZ 	 : Number 	= startSize[2].getValue(xDelay);				// 根据延时获取对应的SizeZ
+			var rotaX 	 : Number 	= startRotation[0].getValue(xDelay);			// 根据延时获取对应的RotationX
+			var rotaY 	 : Number 	= startRotation[1].getValue(xDelay);			// 根据延时获取对应的RotationY
+			var rotaZ 	 : Number 	= startRotation[2].getValue(xDelay);			// 根据延时获取对应的RotationZ
+			var color 	 : Vector3D = startColor.getRGBA(xDelay);					// 根据延时获取对应的Color
+			var lifetime : Number 	= startLifeTime.getValue(xDelay);				// 根据延时获取对应的LifeTime
 			// 缩放以及旋转
 			matrix3d.identity();
 			Matrix3DUtils.setScale(matrix3d, sizeX, sizeY, sizeZ);
@@ -179,7 +254,7 @@ package monkey.core.entities.particles {
 			var step2 : int = shape.vertNum * idx * 2;
 			var step3 : int = shape.vertNum * idx * 3;
 			var step4 : int = shape.vertNum * idx * 4;
-			
+			// 遍历shape
 			for (var j:int = 0; j < shape.vertNum; j++) {
 				// 转换位置数据
 				var seg2 : int = j * 2;
@@ -213,8 +288,18 @@ package monkey.core.entities.particles {
 				colors[step4 + seg4 + 2] = color.z;
 				colors[step4 + seg4 + 3] = color.w;
 			}
-			// 根据延时和生命周期计算出粒子系统的最大生命时间
-			this._totalTime = Math.max(this._totalTime, delay + lifetime);
+		}
+		
+		public function get surfaces() : Vector.<Surface3D> {
+			return this.mesh.surfaces;
+		}
+		
+		public function get billboard():Boolean {
+			return this.material.billboard;
+		}
+		
+		public function set billboard(value:Boolean):void {
+			this.material.billboard = value;
 		}
 		
 		/**
@@ -334,16 +419,7 @@ package monkey.core.entities.particles {
 			blendTexture = new Bitmap2DTexture(_colorOverLifetime.gridient);
 			material.blendTexture = blendTexture;
 		}
-		
-		/**
-		 * 粒子网格数据 
-		 * @return 
-		 * 
-		 */		
-		public function get surface() : Surface3D {
-			return this._surface;
-		}
-		
+				
 		/**
 		 * 粒子系统当前时间 
 		 * @return 
@@ -381,20 +457,26 @@ package monkey.core.entities.particles {
 		 * @return 
 		 * 
 		 */				
-		public function get num():int {
-			return _num;
+		public function get maxParticles():int {
+			return _particleNum;
 		}
 		
 		/**
 		 * 计算粒子系统的粒子数量
 		 */		
-		private function updateParticleNum() : void {
+		private function caculateParticleNum() : void {
 			var result : int = 0;
 			result += int(rate * duration);							// 发射频率 * 发射时间
 			for (var i:int = 0; i < bursts.length; i++) {
 				result += bursts[i].y;
 			}
-			this._num = result * 3;
+			// 一次循环不做任何处理，无限循环以及多次循环需要补齐粒子
+			if (loops != 1) {
+				var fillNum : int = Math.ceil(this._totalTime / duration);
+				result = result * fillNum;
+			}
+			this._particleNum = result;
+			trace("粒子的实际数量:-->", this.maxParticles);
 		}
 		
 		/**

@@ -3,26 +3,22 @@ package samples {
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	import monkey.core.base.Object3D;
-	import monkey.core.collisions.CollisionInfo;
-	import monkey.core.collisions.MouseCollision;
-	import monkey.core.collisions.collider.Collider;
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.entities.particles.prop.value.PropConst;
 	import monkey.core.entities.particles.prop.value.PropCurves;
-	import monkey.core.entities.primitives.Cube;
-	import monkey.core.materials.ColorMaterial;
-	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Viewer3D;
 
 	public class TestParticles extends Sprite {
 		
 		private var scene : Viewer3D;
-		private var mouse : MouseCollision;
-		
+				
 		public function TestParticles() {
 			super();
 			
@@ -36,36 +32,35 @@ package samples {
 			var particle : ParticleSystem = new ParticleSystem();
 			particle.bursts.push(new Point(0, 100));
 			particle.bursts.push(new Point(2, 100));
-			particle.duration = 5;
+			particle.duration = 3;
+			particle.loops = 0;
+			particle.rate = 100;
 			particle.startSpeed = new PropCurves();
 			(particle.startSpeed as PropCurves).curve.datas.push(new Point(0,   5));
 			(particle.startSpeed as PropCurves).curve.datas.push(new Point(2.5, 5));
 			(particle.startSpeed as PropCurves).curve.datas.push(new Point(5,   5));
-			particle.rate = 50;
 			particle.startLifeTime = new PropConst(5);
+			particle.billboard = true;
 			particle.play();
 			
+			var txt : TextField = new TextField();
+			txt.defaultTextFormat = new TextFormat(null, 24, 0xFFFFFF);
+			addChild(txt);
+			txt.addEventListener(MouseEvent.CLICK, function(e : Event):void{
+				if (particle.playing) {
+					particle.stop();
+				} else {
+					particle.play();
+				}
+			});
+			
+			particle.addEventListener(Object3D.ENTER_DRAW, function(e:Event):void{
+				txt.text = "" + particle.time.toFixed(2);
+//				scene.camera.transform.rotateY(1, false, new Vector3D());
+			});
+			
 			this.scene.addChild(particle);	
-			
-			var mesh : Cube = new Cube();
-			var cube : Object3D = new Object3D();
-			cube.addComponent(new MeshRenderer(mesh, new ColorMaterial(0xFFCB00)));
-			cube.addComponent(new Collider(mesh));
-			
-			this.mouse = new MouseCollision();
-			this.mouse.addCollisionWith(cube);
-			
-			this.scene.addChild(cube);
-			
-			this.stage.addEventListener(MouseEvent.CLICK, onClick);
 		}
-		
-		protected function onClick(event:MouseEvent) : void {
-			var info : CollisionInfo = new CollisionInfo();
-			if (this.mouse.test(event.stageX, event.stageY, info)) {
-				trace("拾取到...");
-			}
-		}		
-				
+						
 	}
 }

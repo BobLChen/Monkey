@@ -267,8 +267,8 @@ package monkey.core.scene {
 			if (this.paused) {
 				return;
 			}
-			this.setupFrame(this.camera);
 			this.update(true);
+			this.setupFrame(this.camera);
 			this.renderScene();
 			if (stage3dIdx == 1) {
 				Input3D.clear();
@@ -312,11 +312,10 @@ package monkey.core.scene {
 			Device3D.camera.transform.getPosition(false, Device3D.cameraPos);
 			Device3D.camera.transform.getDir(false, Device3D.cameraDir);
 			Device3D.defaultDirectLight.transform.copyfrom(Device3D.camera.transform);
-			
-			if (this.viewPort.equals(camera.lens.viewPort)) {
-				this.context.setScissorRectangle(null);
-			} else {
+			if (camera.clipScissor) {
 				this.context.setScissorRectangle(camera.lens.viewPort);
+			} else {
+				this.context.setScissorRectangle(null);
 			}
 		}
 		

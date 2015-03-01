@@ -57,7 +57,7 @@
 			out.z = a.x * b.y - a.y * b.x;
 			return out;
 		}
-
+		
 		public static function sub(a : Vector3D, b : Vector3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();

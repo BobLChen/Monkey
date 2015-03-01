@@ -42,6 +42,14 @@ package monkey.core.materials.shader {
 			this.filter.totalLife = value;
 		}
 		
+		public function set billboard(value : Boolean) : void {
+			this.filter.billboard = value;
+		} 
+		
+		public function get billboard() : Boolean {
+			return this.filter.billboard;
+		}
+		
 		/**
 		 * 贴图 
 		 * @param value

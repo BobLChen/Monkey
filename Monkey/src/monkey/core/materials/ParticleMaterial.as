@@ -18,14 +18,23 @@ package monkey.core.materials {
 		private var _keyframes : ByteArray;
 		private var _time	   : Number;
 		private var _totalLife : Number;
+		private var _billboard : Boolean;
 		
 		public function ParticleMaterial() {
 			super();
-			this._shader = ParticleShader.instance;
-			this.blendMode = BLEND_SCREEN;
+			this._shader 	= ParticleShader.instance;
+			this.blendMode 	= BLEND_SCREEN;
 			this.depthWrite = false;
 		}
-						
+		
+		public function get billboard():Boolean {
+			return _billboard;
+		}
+		
+		public function set billboard(value:Boolean):void {
+			_billboard = value;
+		}
+		
 		public function get totalLife():Number {
 			return _totalLife;
 		}
@@ -104,10 +113,11 @@ package monkey.core.materials {
 		override protected function setShaderDatas(scene:Scene3D):void {
 			texture.upload(scene);
 			blendTexture.upload(scene);
-			ParticleShader(shader).time = time;
-			ParticleShader(shader).texture = texture;
-			ParticleShader(shader).keyframe = keyframes;
-			ParticleShader(shader).totalLife = totalLife;
+			ParticleShader(shader).time 		= time;
+			ParticleShader(shader).texture 		= texture;
+			ParticleShader(shader).keyframe 	= keyframes;
+			ParticleShader(shader).billboard	= billboard;
+			ParticleShader(shader).totalLife 	= totalLife;
 			ParticleShader(shader).blendTexture = blendTexture;
 		}
 		

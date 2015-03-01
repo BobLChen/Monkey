@@ -59,21 +59,32 @@ package monkey.core.entities.particles.shape {
 			this.generateUV(particle);
 			this.generateIndices(particle);
 		}
-
+		
 		/**
 		 * 生成索引
 		 * @param particle
 		 *
 		 */
 		public function generateIndices(particle : ParticleSystem) : void {
-			var indices : Vector.<uint> = new Vector.<uint>();
-			var idxSize : int = mode.indexVector.length;
-			for (var i  : int = 0; i < particle.num; i++) {
-				for (var j : int = 0; j < idxSize; j++) {
-					indices.push(mode.indexVector[j] + vertNum * i);
+			var size : int = Math.ceil(particle.maxParticles * vertNum / 65535);
+			var perSize : int = 65535 / vertNum;
+			
+			for (var n:int = 0; n < size; n++) {
+				var num : int = 0;
+				if (n == size - 1) {
+					num = particle.maxParticles - perSize * n;
+				} else {
+					num = perSize;
 				}
+				var indices : Vector.<uint> = new Vector.<uint>();
+				var idxSize : int = mode.indexVector.length;
+				for (var i:int = 0; i < num; i++) {
+					for (var j : int = 0; j < idxSize; j++) {
+						indices.push(mode.indexVector[j] + vertNum * i);
+					}
+				}
+				particle.surfaces[n].indexVector = indices;
 			}
-			particle.surface.indexVector = indices;
 		}
 		
 		/**
@@ -82,24 +93,33 @@ package monkey.core.entities.particles.shape {
 		 *
 		 */
 		public function generateUV(particle : ParticleSystem) : void {
-			// 粒子uv数据
-			var uvBytes : ByteArray = new ByteArray();
-			uvBytes.endian = Endian.LITTLE_ENDIAN;
-			// shape UV数据
-			var modeUV : Vector.<Number> = mode.getVertexVector(Surface3D.UV0);
-			// 组装uv数据
-			var step : int = 0;
-			// 遍历所有的粒子
-			for (var i : int = 0; i < particle.num; i++) {
-				// 遍历shape的所有顶点
-				for (var j : int = 0; j < vertNum; j++) {
-					step = 2 * j;
-					uvBytes.writeFloat(modeUV[step + 0]);
-					uvBytes.writeFloat(modeUV[step + 1]);
+			var size : int = Math.ceil(particle.maxParticles * vertNum / 65535);
+			var perSize : int = 65535 / vertNum;			
+			for (var n:int = 0; n < size; n++) {
+				var num : int = 0;
+				if (n == size - 1) {
+					num = particle.maxParticles - perSize * n;
+				} else {
+					num = perSize;
 				}
+				// 粒子uv数据
+				var uvBytes : ByteArray = new ByteArray();
+				uvBytes.endian = Endian.LITTLE_ENDIAN;
+				// shape UV数据
+				var modeUV : Vector.<Number> = mode.getVertexVector(Surface3D.UV0);
+				// 组装uv数据
+				var step : int = 0;
+				for (var i:int = 0; i < num; i++) {
+					// 遍历shape的所有顶点
+					for (var j : int = 0; j < vertNum; j++) {
+						step = 2 * j;
+						uvBytes.writeFloat(modeUV[step + 0]);
+						uvBytes.writeFloat(modeUV[step + 1]);
+					}
+				}
+				particle.surfaces[n].setVertexBytes(Surface3D.UV0, uvBytes, 2);
 			}
-			particle.surface.setVertexBytes(Surface3D.UV0, uvBytes, 2);
 		}
-		
+				
 	}
 }
