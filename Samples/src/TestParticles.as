@@ -1,5 +1,5 @@
-package samples {
-
+package  {
+	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -14,18 +14,19 @@ package samples {
 	import monkey.core.entities.particles.prop.value.PropConst;
 	import monkey.core.entities.particles.prop.value.PropCurves;
 	import monkey.core.scene.Viewer3D;
-
+	import monkey.core.utils.FPSStats;
+	
 	public class TestParticles extends Sprite {
 		
 		private var scene : Viewer3D;
-				
+		
 		public function TestParticles() {
 			super();
 			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
-			this.stage.align = StageAlign.TOP_LEFT;
-			this.stage.nativeWindow.maximize();
-			
+			this.stage.align 	 = StageAlign.TOP_LEFT;
+			this.stage.frameRate = 60;
+						
 			this.scene = new Viewer3D(this);
 			this.scene.autoResize = true;
 			
@@ -60,8 +61,9 @@ package samples {
 				txt.text = "" + particle.time.toFixed(2);
 			});
 			
+			this.addChild(new FPSStats());
 			this.scene.addChild(particle);	
 		}
-						
+		
 	}
 }
