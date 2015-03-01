@@ -16,7 +16,7 @@ package monkey.core.shader.filters {
 			super("TextureMapFilter");
 			this.priority = 15;
 			this.data  = Vector.<Number>([1, 1, 0, 0]);
-			this.label = new FsRegisterLabel(null, texture);
+			this.label = new FsRegisterLabel(texture);
 		}
 		
 		public function get repeatX() : Number {

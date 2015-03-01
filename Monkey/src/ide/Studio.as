@@ -4,9 +4,10 @@ package ide {
 	import flash.events.Event;
 	
 	import ide.plugins.CreatePlugin;
-	import ide.plugins.HierarchyPlugin;
 	import ide.plugins.FilePlugin;
+	import ide.plugins.HierarchyPlugin;
 	import ide.plugins.LogPlugin;
+	import ide.plugins.MaterialPlugin;
 	import ide.plugins.PropertiesPlugin;
 	import ide.plugins.ScenePlugin;
 	import ide.plugins.SelectionPlugin;
@@ -152,8 +153,7 @@ package ide {
 			app.initPlugin(new SelectionPlugin());
 			app.initPlugin(new PropertiesPlugin());
 			app.initPlugin(new HierarchyPlugin());
-//			this._app.initPlugin(new MaterialPlugin());
-//			this._app.initPlugin(new ControllerPlugin());
+			app.initPlugin(new MaterialPlugin());
 //			this._app.initPlugin(new ExportPlugin());
 			
 			this.stage.addEventListener(Event.RESIZE, onResize);

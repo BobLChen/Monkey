@@ -37,12 +37,12 @@ package ide.plugins.groups.shader {
 			Context3DCompareMode.NOT_EQUAL];
 
 		private static const BlendList : Array = [
-			Shader3D.BLEND_ADDITIVE,
-			Shader3D.BLEND_ALPHA,
-			Shader3D.BLEND_ALPHA_BLENDED,
-			Shader3D.BLEND_MULTIPLY,
-			Shader3D.BLEND_NONE,
-			Shader3D.BLEND_SCREEN
+//			Shader3D.BLEND_ADDITIVE,
+//			Shader3D.BLEND_ALPHA,
+//			Shader3D.BLEND_ALPHA_BLENDED,
+//			Shader3D.BLEND_MULTIPLY,
+//			Shader3D.BLEND_NONE,
+//			Shader3D.BLEND_SCREEN
 		];
 		
 		private var _blendCombox : ComboBox;
@@ -51,7 +51,7 @@ package ide.plugins.groups.shader {
 		private var _twoSide : CheckBox;
 		private var _depthWrite : CheckBox;
 		private var _depthCompare : ComboBox;
-		private var _material : Shader3D;
+//		private var _material : Shader3D;
 		
 		public function ShaderOptions() {
 			super("AdvancedOptions");

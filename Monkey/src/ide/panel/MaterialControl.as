@@ -3,38 +3,22 @@
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	import L3D.core.light.DirectionalLight;
-	import L3D.core.light.Light3D;
-	import L3D.core.light.PointLight;
-	import L3D.core.shader.Shader3D;
-	import L3D.core.shader.filters.BillboardFilter;
-	import L3D.core.shader.filters.ColorFilter;
-	import L3D.core.shader.filters.FogFilter;
-	import L3D.core.shader.filters.LightMapfilter;
-	import L3D.core.shader.filters.NormalMapFilter;
-	import L3D.core.shader.filters.RimFilter;
-	import L3D.core.shader.filters.TextureMapFilter;
-	import L3D.core.shader.filters.VertColor;
-	import L3D.core.shader.filters.base.Filter3D;
-	import L3D.core.shader.filters.light.DirectionalLightFilter;
-	import L3D.core.shader.filters.light.PointLightFilter;
-	import L3D.core.texture.Texture3D;
-	import L3D.system.Device3D;
-	
+	import ide.App;
 	import ide.events.SelectionEvent;
-	import ide.plugins.groups.shader.BillboardFilterOption;
-	import ide.plugins.groups.shader.ColorFilterOption;
-	import ide.plugins.groups.shader.FogFilterOption;
-	import ide.plugins.groups.shader.LightmapFilterOption;
-	import ide.plugins.groups.shader.NormalMapFilterOption;
-	import ide.plugins.groups.shader.RimFilterOption;
 	import ide.plugins.groups.shader.ShaderOptions;
 	import ide.plugins.groups.shader.ShaderProperties;
-	import ide.plugins.groups.shader.TextureMapOption;
-	import ide.plugins.groups.shader.lights.DirectionLightOption;
-	import ide.plugins.groups.shader.lights.PointLightOption;
 	
-	import ide.App;
+	import monkey.core.materials.Material3D;
+	import monkey.core.shader.Shader3D;
+	import monkey.core.shader.filters.BillboardFilter;
+	import monkey.core.shader.filters.ColorFilter;
+	import monkey.core.shader.filters.Filter3D;
+	import monkey.core.shader.filters.FogFilter;
+	import monkey.core.shader.filters.LightMapfilter;
+	import monkey.core.shader.filters.RimFilter;
+	import monkey.core.shader.filters.TextureMapFilter;
+	import monkey.core.textures.Texture3D;
+	
 	import ui.core.container.Accordion;
 	import ui.core.container.MenuCombox;
 	import ui.core.controls.Layout;
@@ -89,16 +73,16 @@
 		}
 		
 		private function chooseLight(event : Event) : void {
-			if (_tree.selected.length >= 1 && _tree.selected[0] is Light3D) {
-				var light : Light3D = this._tree.selected[0] as Light3D;
-				if (light is PointLight) {
-					this._shader.addFilter(new PointLightFilter(light as PointLight));
-				} else if (light is DirectionalLight) {
-					this._shader.addFilter(new DirectionalLightFilter(light as DirectionalLight));
-				}
-				this._app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE_MATERIAL));
-				this._tree.visible = false;
-			}
+//			if (_tree.selected.length >= 1 && _tree.selected[0] is Light3D) {
+//				var light : Light3D = this._tree.selected[0] as Light3D;
+//				if (light is PointLight) {
+//					this._shader.addFilter(new PointLightFilter(light as PointLight));
+//				} else if (light is DirectionalLight) {
+//					this._shader.addFilter(new DirectionalLightFilter(light as DirectionalLight));
+//				}
+//				this._app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE_MATERIAL));
+//				this._tree.visible = false;
+//			}
 		}
 		
 		private function addRimFilter(e : MouseEvent) : void {
@@ -123,10 +107,10 @@
 		}
 		
 		private function addNormalMapFilter(e : MouseEvent) : void {
-			if (this._shader.getFilterByClass(NormalMapFilter) == null) {
-				this._shader.addFilter(new NormalMapFilter(new Texture3D(Device3D.nullBitmapData)));
-				this._app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE_MATERIAL));
-			}
+//			if (this._shader.getFilterByClass(NormalMapFilter) == null) {
+//				this._shader.addFilter(new NormalMapFilter(new Texture3D(Device3D.nullBitmapData)));
+//				this._app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE_MATERIAL));
+//			}
 		}
 		
 		private function addLightmapFilter(e : MouseEvent) : void {
@@ -144,21 +128,21 @@
 		}
 		
 		private function addPositionColorFilter(e : MouseEvent) : void {
-			if (this._shader.getFilterByClass(VertColor) == null) {
-				this._shader.addFilter(new VertColor());
-				this._app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE_MATERIAL));
-			}
+//			if (this._shader.getFilterByClass(VertColor) == null) {
+//				this._shader.addFilter(new VertColor());
+//				this._app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE_MATERIAL));
+//			}
 		}
 		
 		private function addColorFilter(e : MouseEvent) : void {
-			if (this._shader.getFilterByClass(ColorFilter) == null) {
-				var textureMapFilter : TextureMapFilter = this._shader.getFilterByClass(TextureMapFilter) as TextureMapFilter;
-				if (textureMapFilter != null) {
-					this._shader.removeFilter(textureMapFilter);
-				}
-				this._shader.addFilter(new ColorFilter(0xc8c8c8));
-				this._app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE_MATERIAL));
-			}
+//			if (this._shader.getFilterByClass(ColorFilter) == null) {
+//				var textureMapFilter : TextureMapFilter = this._shader.getFilterByClass(TextureMapFilter) as TextureMapFilter;
+//				if (textureMapFilter != null) {
+//					this._shader.removeFilter(textureMapFilter);
+//				}
+//				this._shader.addFilter(new ColorFilter(0xc8c8c8));
+//				this._app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE_MATERIAL));
+//			}
 		}
 		
 		private function addTextureMapFilter(e : MouseEvent) : void {
@@ -190,27 +174,30 @@
 		}
 		
 		private function filterGroup(filter : Filter3D, shader : Shader3D, app : App) : ShaderProperties {
-			if (filter is TextureMapFilter) {
-				return new TextureMapOption(filter as TextureMapFilter, shader, app);
-			} else if (filter is ColorFilter) {
-				return new ColorFilterOption(filter as ColorFilter, shader, app);
-			} else if (filter is BillboardFilter) {
-				return new BillboardFilterOption(filter as BillboardFilter, shader, app);
-			} else if (filter is FogFilter) {
-				return new FogFilterOption(filter as FogFilter, shader, app);
-			} else if (filter is DirectionalLightFilter) {
-				return new DirectionLightOption(filter as DirectionalLightFilter, shader, app);
-			} else if (filter is PointLightFilter) {
-				return new PointLightOption(filter as PointLightFilter, shader, app);
-			} else if (filter is LightMapfilter) {
-				return new LightmapFilterOption(filter as LightMapfilter, shader, app);
-			} else if (filter is NormalMapFilter) {
-				return new NormalMapFilterOption(filter as NormalMapFilter, shader, app);
-			} else if (filter is RimFilter) {
-				return new RimFilterOption(filter as RimFilter, shader, app);
-			}
+//			if (filter is TextureMapFilter) {
+//				return new TextureMapOption(filter as TextureMapFilter, shader, app);
+//			} else if (filter is ColorFilter) {
+//				return new ColorFilterOption(filter as ColorFilter, shader, app);
+//			} else if (filter is BillboardFilter) {
+//				return new BillboardFilterOption(filter as BillboardFilter, shader, app);
+//			} else if (filter is FogFilter) {
+//				return new FogFilterOption(filter as FogFilter, shader, app);
+//			} else if (filter is DirectionalLightFilter) {
+//				return new DirectionLightOption(filter as DirectionalLightFilter, shader, app);
+//			} else if (filter is PointLightFilter) {
+//				return new PointLightOption(filter as PointLightFilter, shader, app);
+//			} else if (filter is LightMapfilter) {
+//				return new LightmapFilterOption(filter as LightMapfilter, shader, app);
+//			} else if (filter is NormalMapFilter) {
+//				return new NormalMapFilterOption(filter as NormalMapFilter, shader, app);
+//			} else if (filter is RimFilter) {
+//				return new RimFilterOption(filter as RimFilter, shader, app);
+//			}
 			return null;
 		}
 
+		public function update(material:Material3D, app:Object) : void {
+			
+		}
 	}
 }
