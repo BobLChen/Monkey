@@ -12,6 +12,7 @@ package ide.plugins {
 	import ide.plugins.groups.properties.MeshGroup;
 	import ide.plugins.groups.properties.NameGroup;
 	import ide.plugins.groups.properties.NavmeshGroup;
+	import ide.plugins.groups.properties.ParticlesGroup;
 	import ide.plugins.groups.properties.PointLightGroup;
 	import ide.plugins.groups.properties.PropertiesGroup;
 	import ide.plugins.groups.properties.TransformGroup;
@@ -69,7 +70,7 @@ package ide.plugins {
 			this._groups.push(new NavmeshGroup());
 			this._groups.push(new WaterGroup());
 //			this._groups.push(new SkyboxGroup());
-//			this._groups.push(new ParticlesGroup());
+			this._groups.push(new ParticlesGroup());
 			this._groups.push(new DirectionLightGroup());
 			this._groups.push(new PointLightGroup());
 //			this._groups.push(new AnimationGroup());

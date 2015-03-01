@@ -40,20 +40,17 @@
 			super("image");
 			this._array = [];
 			this._border = new Shape();
-			
 			this.source = source;
 			this.toggle = toggle;
-			
 			this.view.buttonMode = true;
 			this.view.addEventListener(MouseEvent.CLICK, 		this.mouseClickEvent);
 			this.view.addEventListener(MouseEvent.MOUSE_OVER, 	this.handleEvents);
 			this.view.addEventListener(MouseEvent.MOUSE_OUT, 	this.handleEvents);
 			this.view.addEventListener(MouseEvent.MOUSE_DOWN, 	this.handleEvents);
 			this.view.addEventListener(MouseEvent.MOUSE_UP, 	this.handleEvents);
-			
 			this.draw();
 		}
-		
+				
 		/**
 		 * 图片源 
 		 * @param value

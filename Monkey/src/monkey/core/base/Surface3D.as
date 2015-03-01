@@ -400,7 +400,6 @@ package monkey.core.base {
 			// 清空内存数据
 			for (var i:int = 0; i < LENGTH; i++) {
 				if (vertexVector[i]) {
-					vertexVector[i].length = 0;
 					vertexVector[i] = null;
 				}
 				if (vertexBytes[i]) {

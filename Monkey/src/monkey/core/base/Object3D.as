@@ -6,6 +6,7 @@ package monkey.core.base {
 	import flash.geom.Vector3D;
 	import flash.utils.Dictionary;
 	
+	import monkey.core.animator.Animator;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.components.Transform3D;
 	import monkey.core.interfaces.IComponent;
@@ -72,6 +73,10 @@ package monkey.core.base {
 		
 		public function get renderer() : MeshRenderer {
 			return this.getComponent(MeshRenderer) as MeshRenderer;
+		}
+		
+		public function get animator() : Animator {
+			return this.getComponent(Animator) as Animator;
 		}
 		
 		public function get visible():Boolean {

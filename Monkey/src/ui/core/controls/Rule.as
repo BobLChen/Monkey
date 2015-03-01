@@ -16,15 +16,15 @@
 
 	public class Rule extends Control {
 
-		private var _gui : Shape;
-		private var _cursor : Shape;
-		private var _bmpHeader : BitmapData;
-		private var _matrix : Matrix;
-		private var _currentFrame : Number = 0;
-		private var _mouse : Point;
-		private var _position : Number = 0;
-		public var step : Number = 5;
-		public var size : Number = 8;
+		private var _gui 			: Shape;
+		private var _cursor 		: Shape;
+		private var _bmpHeader 		: BitmapData;
+		private var _matrix 		: Matrix;
+		private var _currentFrame 	: Number = 0;
+		private var _mouse 			: Point;
+		private var _position 		: Number = 0;
+		public var step 			: Number = 5;
+		public var size 			: Number = 8;
 		
 		public function Rule() {
 			super();
@@ -84,7 +84,7 @@
 			view.stage.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpEvent, false, 0, true);
 			view.stage.addEventListener(Event.ENTER_FRAME, this.enterFrameEvent, false, 0, true);
 			this.currentFrame = int((view.mouseX / this.size) + (this._position / this.size));
-			dispatchEvent(new ControlEvent(ControlEvent.CHANGE, this));
+			this.dispatchEvent(new ControlEvent(ControlEvent.CHANGE, this));
 		}
 		
 		private function mouseUpEvent(e : MouseEvent) : void {
@@ -103,7 +103,7 @@
 			var temp : int = this._currentFrame;
 			this.currentFrame = int((view.mouseX / this.size) + (this._position / this.size));
 			if (temp != this._currentFrame) {
-				dispatchEvent(new ControlEvent(ControlEvent.CHANGE, this));
+				this.dispatchEvent(new ControlEvent(ControlEvent.CHANGE, this));
 			}
 		}
 		
@@ -155,7 +155,7 @@
 		public function get currentFrame() : Number {
 			return this._currentFrame;
 		}
-
+		
 		public function set currentFrame(value : Number) : void {
 			this._currentFrame = value;
 			if (this._currentFrame < 0) {
@@ -163,6 +163,6 @@
 			}
 			this._cursor.x = this._currentFrame * this.size + 1 - this._position;
 		}
-
+		
 	}
 }

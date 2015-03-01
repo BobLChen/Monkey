@@ -33,7 +33,7 @@ package samples {
 			particle.bursts.push(new Point(0, 500));
 			particle.bursts.push(new Point(2, 500));
 			particle.duration = 3;
-			particle.loops = 0;
+			particle.loops = true;
 			particle.rate = 50;
 			particle.startSpeed = new PropCurves();
 			(particle.startSpeed as PropCurves).curve.datas.push(new Point(0,   5));
@@ -62,6 +62,6 @@ package samples {
 			
 			this.scene.addChild(particle);	
 		}
-						
+		
 	}
 }

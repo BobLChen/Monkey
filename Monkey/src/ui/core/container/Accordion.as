@@ -26,12 +26,12 @@
 		protected static var Arrow : Class;
 		protected static var font  : BitmapFont = new BitmapFont(new TextFormat("tahoma", 10, 0x404040, true));
 
-		protected var _header : Sprite;
-		protected var _arrow : Bitmap;
-		protected var _box : Box;
-		protected var _text : String = "";
-		protected var _open : Boolean;
-
+		protected var _header 	: Sprite;
+		protected var _arrow 	: Bitmap;
+		protected var _box 		: Box;
+		protected var _text 	: String = "";
+		protected var _open 	: Boolean;
+		
 		public function Accordion(txt : String = "") {
 			super();
 			this._header = new Sprite();
@@ -64,7 +64,7 @@
 			this._box.update();
 			this._box.draw();
 		}
-
+		
 		public function set margins(margin : Number) : void {
 			this._box.margins = margin;
 			this.draw();

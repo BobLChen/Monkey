@@ -19,6 +19,7 @@ package ide.plugins {
 	import monkey.core.entities.DebugCamera;
 	import monkey.core.entities.DebugLight;
 	import monkey.core.entities.DebugWireframe;
+	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.entities.primitives.Cube;
 	import monkey.core.light.Light3D;
 	import monkey.core.renderer.MeshRenderer;
@@ -142,7 +143,6 @@ package ide.plugins {
 						this._selecting = true;
 					} else if (this._app.selection.objects.indexOf(this._app.selection.pickInfo.object) == -1) {
 						this._app.selection.objects = [this._app.selection.pickInfo.object];
-//						this._app.selection.shader = (pickInfo.mesh as Mesh3D).material.shader;
 					}
 				} else if (!Input3D.keyDown(Input3D.CONTROL) || !Input3D.keyDown(Input3D.ALTERNATE)) {
 					this._app.selection.objects = [];
@@ -154,6 +154,9 @@ package ide.plugins {
 			// 显示线框
 			if (this._showWireframe) {
 				for each (var pivot : Object3D in this._app.selection.objects) {
+					if (pivot is ParticleSystem) {
+						continue;
+					}
 					if (!wires[pivot]) {
 						wires[pivot] = new DebugWireframe(pivot, 0xFFFFFF, 0.25);
 					}

@@ -1,5 +1,7 @@
 package monkey.core.entities.particles.prop.value {
 	
+	import flash.geom.Point;
+	
 	import monkey.core.utils.Curves;
 	
 	/**
@@ -9,11 +11,14 @@ package monkey.core.entities.particles.prop.value {
 	 */	
 	public class PropCurves extends PropData {
 		
-		public var curve : Curves;
+		public var curve  : Curves;
+		public var yValue : Number;
 		
-		public function PropCurves() {
+		public function PropCurves(value : Number = 5) {
 			super();
-			this.curve = new Curves();
+			this.yValue = value;
+			this.curve  = new Curves();
+			this.curve.datas.push(new Point(0, value));
 		}
 		
 		override public function getValue(x : Number) : Number {

@@ -15,11 +15,11 @@ package monkey.core.utils {
 		private static const shape  : Shape = new Shape();
 		private static const matrix : Matrix = new Matrix();
 		
-		public var gridient : BitmapData;
+		public var gridient 	 : BitmapData;
 		
-		private var _rgba   : Vector3D;
-		private var _colors : Array;
-		private var _alphas : Array;
+		private var _rgba   	 : Vector3D;
+		private var _colors 	 : Array;
+		private var _alphas 	 : Array;
 		private var _alphaRatios : Array;
 		private var _colorRatios : Array;
 		

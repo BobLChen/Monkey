@@ -8,8 +8,9 @@ package ide.plugins {
 	import monkey.core.camera.Camera3D;
 	import monkey.core.camera.lens.PerspectiveLens;
 	import monkey.core.entities.Cone;
-	import monkey.core.entities.Mesh3D;
 	import monkey.core.entities.Water3D;
+	import monkey.core.entities.particles.ParticleSystem;
+	import monkey.core.entities.particles.prop.value.PropCurves;
 	import monkey.core.entities.primitives.Capsule;
 	import monkey.core.entities.primitives.Cube;
 	import monkey.core.entities.primitives.Cylinder;
@@ -19,8 +20,6 @@ package ide.plugins {
 	import monkey.core.light.PointLight;
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.renderer.MeshRenderer;
-	import monkey.core.textures.Bitmap2DTexture;
-	import monkey.core.textures.BitmapCubeTexture;
 	import monkey.core.utils.Device3D;
 	
 	import ui.core.interfaces.IPlugin;
@@ -97,7 +96,12 @@ package ide.plugins {
 		}
 		
 		private function createParticles(e : Event) : void {
+			var particle : ParticleSystem = new ParticleSystem();
+			particle.startLifeTime = new PropCurves();
 			
+			particle.play();
+			this._app.scene.addChild(particle);
+			this._app.selection.objects = [particle];
 		}
 		
 		private function createSphere(e : Event) : void {

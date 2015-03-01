@@ -12,8 +12,10 @@ package monkey.core.entities.particles.prop.value {
 		public var minValue : Number = 0;
 		public var maxValue : Number = 0;
 		
-		public function PropRandomTwoConst() {
+		public function PropRandomTwoConst(min : Number = 0, max : Number = 0) {
 			super();
+			this.minValue = min;
+			this.maxValue = max;
 		}
 		
 		override public function getValue(x : Number) : Number {

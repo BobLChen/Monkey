@@ -24,11 +24,11 @@ package monkey.core.utils {
 		public function getY(x : Number) : Number {
 			// 二分法查找关键帧
 			var left  : int = 0;
-			var len	  : int = datas.length;
+			var len	  : Number = datas.length;
 			var right : int = len;
 			var mid   : int = 0;
-			var lp : Point = null;
-			var rp : Point = null;
+			var lp 	  : Point = null;
+			var rp 	  : Point = null;
 			while (left < right) {
 				mid = int((left + right) / 2);
 				if (datas[mid].x == x) {

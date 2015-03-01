@@ -15,9 +15,11 @@ package ide.plugins {
 	import monkey.core.collisions.MouseCollision;
 	import monkey.core.collisions.collider.Collider;
 	import monkey.core.entities.Grid3D;
+	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.FPSStats;
 	import monkey.core.utils.Input3D;
+	import monkey.core.utils.Time3D;
 	
 	import ui.core.interfaces.IPlugin;
 	
@@ -137,9 +139,15 @@ package ide.plugins {
 		}
 		
 		private function changeFrame(event : Event) : void {
-			if (this._app.selection.main != null) {
+			var obj : Object3D = this._app.selection.main;
+			if (obj) {
 				this._lastFrame = this._scenePanel.rule.currentFrame;
-//				this._app.selection.main.gotoAndStop(this._scenePanel.rule.currentFrame);
+				if (obj is ParticleSystem) {
+					(obj as ParticleSystem).gotoAndStop(this._lastFrame * 1 / this._app.stage.frameRate);
+				}
+				if (obj.animator) {
+					obj.animator.gotoAndStop(this._scenePanel.rule.currentFrame);
+				}
 			}
 		}
 		
@@ -162,10 +170,17 @@ package ide.plugins {
 			}
 			
 			if (this._scenePanel.play) {
-//				this._scenePanel.rule.currentFrame = this._lastFrame + deltaTime / 1000 * 60;
-//				this._lastFrame = this._scenePanel.rule.currentFrame;
+				this._scenePanel.rule.currentFrame = this._lastFrame + Time3D.deltaTime * this._app.stage.frameRate;
+				this._lastFrame = this._scenePanel.rule.currentFrame;
+				var obj : Object3D = this._app.selection.main;
+				if (obj && obj.animator) {
+					obj.animator.gotoAndStop(this._scenePanel.rule.currentFrame);
+				}
+				if (obj && obj is ParticleSystem) {
+					(obj as ParticleSystem).gotoAndStop(this._scenePanel.rule.currentFrame * 1.0 / this._app.stage.frameRate);
+				}
 //				this.gotoAndStop(this._scenePanel.rule.currentFrame);
-//				this._app.dispatchEvent(new FrameEvent(FrameEvent.CHANGING));
+				this._app.dispatchEvent(new FrameEvent(FrameEvent.CHANGING));
 			}
 			
 			if (this._action == ACTION_NULL) {

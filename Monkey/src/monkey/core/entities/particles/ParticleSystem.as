@@ -36,8 +36,10 @@ package monkey.core.entities.particles {
 	public class ParticleSystem extends Object3D {
 		
 		/** 粒子动画播放完成 */
-		public static const COMPLETE		: String = "ParticleSystem:COMPLETE";
+		public static const COMPLETE	   : String = "ParticleSystem:COMPLETE";
+		public static const BUILD		   : String = "ParticleSystem:BUILD";
 		
+		private static const buildEvent	   : Event = new Event(BUILD);				
 		private static const completeEvent : Event = new Event(COMPLETE);			// 播放完成事件
 		
 		/** matrix临时变量 */
@@ -51,8 +53,7 @@ package monkey.core.entities.particles {
 		private static var _defKeyframe : ByteArray;
 		
 		private var _duration 			: Number; 						// 持续发射时间
-		private var _loops 				: int; 							// 循环发射模式
-		private var loopCount			: int;							// 循环计数器
+		private var _loops 				: Boolean; 						// 循环发射模式
 		private var _startDelay 		: Number; 						// 开始延迟时间
 		private var _startLifeTime 		: PropData; 					// 生命周期
 		private var _startSpeed 		: PropData; 					// 速度
@@ -89,14 +90,17 @@ package monkey.core.entities.particles {
 		 *  初始化粒子系统参数
 		 */		
 		private function init() : void {
+			this.name			 = "Particle";
 			this.material 		 = new ParticleMaterial();
 			this.mesh			 = new Mesh3D([]);
 			this.shape 			 = new SphereShape();
 			this.shape.mode 	 = new Plane(1, 1, 1).surfaces[0];				
+			this.mesh.bounds	 = shape.mode.bounds;
 			this.rate 			 = 20;											
-			this.bursts 		 = new Vector.<Point>();						
+			this.bursts 		 = new Vector.<Point>();		
+			this.billboard		 = true;
 			this.duration 		 = 5;											
-			this.loops 		 	 = 1;											
+			this.loops 		 	 = true;											
 			this.startDelay 	 = 0;											
 			this.startSpeed 	 = new PropConst(5);							
 			this.startSize 		 = Vector.<PropData>([new PropConst(1), new PropConst(1), new PropConst(1)]);
@@ -110,7 +114,7 @@ package monkey.core.entities.particles {
 			this.keyFrames		 = keyframeDatas;
 			this.addComponent(new MeshRenderer(this.mesh, this.material));
 		}
-				
+		
 		/**
 		 * 构建粒子系统 
 		 * 
@@ -125,6 +129,7 @@ package monkey.core.entities.particles {
 			this.createParticleMesh();		// 生成粒子对应的网格
 			this.shape.generate(this);		// 生成shape对应的数据，包括粒子的位置、方向、uv、索引
 			this.createParticleAttribute();	// 更新粒子属性
+			this.dispatchEvent(buildEvent);
 		}
 		
 		/**
@@ -132,7 +137,6 @@ package monkey.core.entities.particles {
 		 */		
 		private function createParticleAttribute() : void {
 			// 检测是否需要补齐
-			var fill : Boolean = loops != 1;
 			// 生成正常发射频率的数据
 			var rateNum : int = rate * duration;
 			var idx : int = 0;
@@ -142,7 +146,7 @@ package monkey.core.entities.particles {
 			// 补齐正常发射频率数据
 			var fillSize : int = Math.ceil(this._totalTime / duration) - 1;
 			var delay : Number = 0;
-			if (fill) {
+			if (loops) {
 				for (var m:int = 1; m <= fillSize; m++) {
 					delay = duration * m;
 					for (i = 0; i < rateNum; i++) {
@@ -157,7 +161,7 @@ package monkey.core.entities.particles {
 				}
 			}
 			// 补齐burst数据
-			if (fill) {
+			if (loops) {
 				for (m = 1; m <= fillSize; m++) {
 					delay = duration * m;
 					for (j = 0; j < bursts.length; j++) {
@@ -168,7 +172,7 @@ package monkey.core.entities.particles {
 				}
 			}
 			this._needBuild = false;
-			if (fill) {
+			if (loops) {
 				this._totalTime = fillSize * duration;
 				this.material.totalLife = fillSize * duration;
 			} else {
@@ -470,13 +474,12 @@ package monkey.core.entities.particles {
 			for (var i:int = 0; i < bursts.length; i++) {
 				result += bursts[i].y;
 			}
-			// 一次循环不做任何处理，无限循环以及多次循环需要补齐粒子
-			if (loops != 1) {
+			// 无限循环需要补齐粒子
+			if (loops) {
 				var fillNum : int = Math.ceil(this._totalTime / duration);
 				result = result * fillNum;
 			}
 			this._particleNum = result;
-			trace("粒子的实际数量:-->", this.maxParticles);
 		}
 		
 		/**
@@ -672,7 +675,7 @@ package monkey.core.entities.particles {
 		 * @return
 		 *
 		 */
-		public function get loops() : int {
+		public function get loops() : Boolean {
 			return _loops;
 		}
 
@@ -681,11 +684,10 @@ package monkey.core.entities.particles {
 		 * @return
 		 *
 		 */
-		public function set loops(value : int) : void {
+		public function set loops(value : Boolean) : void {
 			_loops = value;
-			loopCount = value;
 		}
-
+		
 		/**
 		 * 发射持续时间
 		 * @return
@@ -731,8 +733,8 @@ package monkey.core.entities.particles {
 			if (this._needBuild) {
 				this.build();
 			}
-			// 有限循环次数且循环尽
-			if (loops != 0 && loopCount <= 0) {
+			// 非循环模式
+			if (!loops && time >= startDelay + _totalTime) {
 				return;
 			}
 			// playing
@@ -747,12 +749,8 @@ package monkey.core.entities.particles {
 			this.material.time = time - startDelay;
 			super.draw(scene, includeChildren);
 			// 检测粒子是否播放完成
-			if (time >= startDelay + _totalTime && loops != 0) {
-				loopCount--;
-				time = 0;
-				if (loopCount <= 0) {
-					this.dispatchEvent(completeEvent);
-				}
+			if (!loops && time >= startDelay + _totalTime) {
+				this.dispatchEvent(completeEvent);
 			}
 		}
 		

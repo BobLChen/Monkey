@@ -30,12 +30,8 @@
 		public static function get toolTip() : ToolTip {
 			return _toolTip;
 		}
-
+		
 		public function ToolTip() {
-			if (_toolTip) {
-				return;
-			}
-			
 			this._sprite = new Sprite();
 			this._info   = new TextField();
 			this._info.selectable = false;
