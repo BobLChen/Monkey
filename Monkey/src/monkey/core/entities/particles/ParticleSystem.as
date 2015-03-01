@@ -172,7 +172,7 @@ package monkey.core.entities.particles {
 				this._totalTime = fillSize * duration;
 				this.material.totalLife = fillSize * duration;
 			} else {
-				this.material.totalLife = this._totalTime;
+				this.material.totalLife = this._totalTime * 2; // * 2防止粒子在结束时又重新出现
 			}
 		}
 		
