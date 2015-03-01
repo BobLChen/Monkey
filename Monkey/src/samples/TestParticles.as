@@ -31,13 +31,13 @@ package samples {
 			
 			var particle : ParticleSystem = new ParticleSystem();
 //			particle.bursts.push(new Point(0, 100));
-//			particle.bursts.push(new Point(2, 100));
+			particle.bursts.push(new Point(2, 500));
 			particle.duration = 3;
 			particle.loops = 0;
 			particle.rate = 10;
 			particle.startSpeed = new PropCurves();
 			(particle.startSpeed as PropCurves).curve.datas.push(new Point(0,   5));
-			(particle.startSpeed as PropCurves).curve.datas.push(new Point(2.5, 5));
+			(particle.startSpeed as PropCurves).curve.datas.push(new Point(2,   50));
 			(particle.startSpeed as PropCurves).curve.datas.push(new Point(5,   5));
 			particle.startLifeTime = new PropConst(5);
 			particle.billboard = true;
