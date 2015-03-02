@@ -11,9 +11,18 @@ package monkey.core.entities.particles.prop.color {
 		
 		private var _color : uint;	// 颜色
 
-		public function PropConstColor(color : uint = 0xFFFFFF) {
+		public function PropConstColor(color : uint = 0xFFFFFF, alpha : Number = 1) {
 			super();
-			this.color = 0xFFFFFF;
+			this.color = color;
+			this.alpha = alpha;
+		}
+		
+		public function get alpha() : Number {
+			return this._rgba.w;
+		}
+		
+		public function set alpha(value : Number) : void {
+			this._rgba.w = value;
 		}
 		
 		public function get color() : uint {

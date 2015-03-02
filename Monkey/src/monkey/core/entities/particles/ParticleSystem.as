@@ -12,18 +12,19 @@ package monkey.core.entities.particles {
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
 	import monkey.core.entities.particles.prop.color.PropColor;
-	import monkey.core.entities.particles.prop.color.PropGridientColor;
+	import monkey.core.entities.particles.prop.color.PropGradientColor;
 	import monkey.core.entities.particles.prop.value.PropConst;
 	import monkey.core.entities.particles.prop.value.PropData;
 	import monkey.core.entities.particles.prop.value.PropRandomTwoConst;
 	import monkey.core.entities.particles.shape.ParticleShape;
 	import monkey.core.entities.particles.shape.SphereShape;
 	import monkey.core.entities.primitives.Plane;
+	import monkey.core.interfaces.IComponent;
 	import monkey.core.materials.ParticleMaterial;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.textures.Bitmap2DTexture;
-	import monkey.core.utils.GridientColor;
+	import monkey.core.utils.GradientColor;
 	import monkey.core.utils.Matrix3DUtils;
 	import monkey.core.utils.Time3D;
 	
@@ -69,7 +70,7 @@ package monkey.core.entities.particles {
 		private var _totalTime			: Number;						// 粒子系统的生命周期
 		private var _needBuild			: Boolean;						// 是否需要build
 		private var _time				: Number = 0;					// 时间
-		private var _colorOverLifetime  : GridientColor;				// color over lifetime
+		private var _colorOverLifetime  : GradientColor;				// color over lifetime
 		private var _matrixOverLifetime : ByteArray;					// 缩放旋转速度 over lifetime
 		private var _image				: BitmapData;					// image
 		private var _playing			: Boolean;						// 是否正在播放
@@ -104,12 +105,12 @@ package monkey.core.entities.particles {
 			this.startDelay 	 = 0;											
 			this.startSpeed 	 = new PropConst(5);							
 			this.startSize 		 = Vector.<PropData>([new PropConst(1), new PropConst(1), new PropConst(1)]);
-			this.startColor 	 = new PropGridientColor();						
+			this.startColor 	 = new PropGradientColor();						
 			this.startLifeTime   = new PropConst(5);							
 			this.startRotation   = Vector.<PropData>([new PropConst(0), new PropConst(0), new PropConst(0)])
 			this.additionalSpeed = Vector.<PropRandomTwoConst>([new PropRandomTwoConst(), new PropRandomTwoConst(), new PropRandomTwoConst()]);;
 			this.simulationSpace = false;										
-			this.colorLifetime 	 = new GridientColor();
+			this.colorLifetime 	 = new GradientColor();
 			this.image			 = new DEFAULT_IMG().bitmapData;
 			this.keyFrames		 = keyframeDatas;
 			this.addComponent(new MeshRenderer(this.mesh, this.material));
@@ -120,9 +121,6 @@ package monkey.core.entities.particles {
 		 * 
 		 */		
 		public function build() : void {
-			if (!this._needBuild) {
-				return;
-			}
 			this.mesh.dispose(true);		// 释放所有的数据
 			this.caculateTotalTime();		// 首先计算出粒子的生命周期
 			this.caculateParticleNum();		// 计算所有的粒子数量
@@ -130,6 +128,7 @@ package monkey.core.entities.particles {
 			this.shape.generate(this);		// 生成shape对应的数据，包括粒子的位置、方向、uv、索引
 			this.createParticleAttribute();	// 更新粒子属性
 			this.dispatchEvent(buildEvent);
+			this._needBuild = false;
 		}
 		
 		/**
@@ -171,7 +170,6 @@ package monkey.core.entities.particles {
 					}
 				}
 			}
-			this._needBuild = false;
 			if (loops) {
 				this._totalTime = fillSize * duration;
 				this.material.totalLife = fillSize * duration;
@@ -244,7 +242,7 @@ package monkey.core.entities.particles {
 			var rotaX 	 : Number 	= startRotation[0].getValue(xDelay);			// 根据延时获取对应的RotationX
 			var rotaY 	 : Number 	= startRotation[1].getValue(xDelay);			// 根据延时获取对应的RotationY
 			var rotaZ 	 : Number 	= startRotation[2].getValue(xDelay);			// 根据延时获取对应的RotationZ
-			var color 	 : Vector3D = startColor.getRGBA(xDelay);					// 根据延时获取对应的Color
+			var color 	 : Vector3D = startColor.getRGBA(xDelay / duration);		// 根据延时获取对应的Color
 			var lifetime : Number 	= startLifeTime.getValue(xDelay);				// 根据延时获取对应的LifeTime
 			// 缩放以及旋转
 			matrix3d.identity();
@@ -406,7 +404,7 @@ package monkey.core.entities.particles {
 		 * @return 
 		 * 
 		 */		 
-		public function get colorLifetime():GridientColor {
+		public function get colorLifetime():GradientColor {
 			return _colorOverLifetime;
 		}
 		
@@ -415,7 +413,7 @@ package monkey.core.entities.particles {
 		 * @param value
 		 * 
 		 */		
-		public function set colorLifetime(value:GridientColor):void {
+		public function set colorLifetime(value:GradientColor):void {
 			_colorOverLifetime = value;
 			if (blendTexture) {
 				blendTexture.dispose(true);
@@ -730,6 +728,11 @@ package monkey.core.entities.particles {
 		}
 		
 		override public function draw(scene:Scene3D, includeChildren:Boolean=true):void {
+			if (!visible) {
+				return;
+			}
+			this.dispatchEvent(enterDrawEvent);
+			// build
 			if (this._needBuild) {
 				this.build();
 			}
@@ -747,11 +750,23 @@ package monkey.core.entities.particles {
 			}
 			// draw
 			this.material.time = time - startDelay;
-			super.draw(scene, includeChildren);
+			// 绘制组件
+			for each (var icom : IComponent in components) {
+				if (icom.enable) {
+					icom.onDraw(scene);
+				}
+			}
+			// 绘制children
+			if (includeChildren) {
+				for each (var child : Object3D in children) {
+					child.draw(scene, includeChildren);
+				}
+			}
 			// 检测粒子是否播放完成
 			if (!loops && time >= startDelay + _totalTime) {
 				this.dispatchEvent(completeEvent);
 			}
+			this.dispatchEvent(exitDrawEvent);
 		}
 		
 	}

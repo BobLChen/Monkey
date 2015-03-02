@@ -132,7 +132,8 @@ package monkey.core.shader.filters {
 				// 粒子贴图
 				code += "tex " + regCache.oc + ", " + regCache.getV(Surface3D.UV0) + ", " + fs0 + "<2d, linear, miplinear, repeat> \n";
 				// 混合顶点颜色
-				code += "mul " + regCache.oc + ", " + regCache.oc + ", " + regCache.getV(Surface3D.CUSTOM3) + " \n";
+				code += "mul " + regCache.oc + ".xyz, " + regCache.oc + ".xyz, " + regCache.getV(Surface3D.CUSTOM3) + ".xyz \n";
+				code += "mul " + regCache.oc + ".xyz, " + regCache.oc + ".xyz, " + regCache.getV(Surface3D.CUSTOM3) + ".w \n";
 				// 采样混合贴图(color over lifetime)
 				code += "mov " + ft0 + ".xyzw, " + regCache.fc0123 + ".xxxx \n";
 				code += "mov " + ft0 + ".x, " + timeVary + ".y \n";

@@ -1,7 +1,7 @@
 ﻿package ui.core.controls {
 
 	import com.greensock.TweenLite;
-
+	
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.GradientType;
@@ -15,7 +15,7 @@
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
-
+	
 	import ui.core.Style;
 	import ui.core.container.Panel;
 	import ui.core.event.ControlEvent;
@@ -101,7 +101,7 @@
 			this.view.tabEnabled = true;
 			this.view.addEventListener(FocusEvent.FOCUS_OUT, this.focusOutEvent);
 		}
-
+		
 		override public function open() : void {
 			if (enabled) {
 				view.alpha = 0;

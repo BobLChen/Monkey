@@ -204,6 +204,7 @@ package ide.plugins {
 				gizmo = new Gizmo(object3d);
 				this.gizmos[object3d] = gizmo;
 			}
+			
 			gizmo.addEventListener(MouseEvent.MOUSE_DOWN, gizmoMouseDown, false, 0, true);
 			gizmo.x = pos.x;
 			gizmo.y = pos.y;

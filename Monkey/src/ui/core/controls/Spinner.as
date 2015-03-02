@@ -38,10 +38,10 @@
 		
 		public function Spinner(value : Number = 0, min : Number = 0, max : Number = 0, decimal : int = 2, increment : Number = 0) {
 
+			this._textColor = Style.labelsColor;
 			this._back 		= new TextField();
 			this._field_txt = new TextField();
-			this._textColor = Style.labelsColor;
-			this._field_txt.autoSize = "left";
+			this._field_txt.autoSize = TextFieldAutoSize.LEFT;
 			this._field_txt.textColor = this._textColor;
 			this._field_txt.backgroundColor = Style.labelsColor;
 			this._field_txt.restrict = "-.0-9";

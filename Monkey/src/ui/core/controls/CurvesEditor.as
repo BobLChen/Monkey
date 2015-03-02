@@ -51,7 +51,7 @@ package ui.core.controls {
 		public function set points(value:Vector.<Point>):void {
 			this.clear();
 			for (var i:int = 0; i < value.length; i++) {
-				this.insertPoint(value[i]);
+				this.insertPoint(value[i].clone());
 			}
 		}
 		

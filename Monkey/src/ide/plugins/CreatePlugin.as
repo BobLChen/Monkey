@@ -97,8 +97,6 @@ package ide.plugins {
 		
 		private function createParticles(e : Event) : void {
 			var particle : ParticleSystem = new ParticleSystem();
-			particle.startLifeTime = new PropCurves();
-			
 			particle.play();
 			this._app.scene.addChild(particle);
 			this._app.selection.objects = [particle];

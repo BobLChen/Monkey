@@ -9,13 +9,13 @@
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	
+
 	import ui.core.Menu;
 	import ui.core.Style;
 	import ui.core.event.ControlEvent;
 	import ui.core.interfaces.IColorControl;
 
-	public class GradientColor extends Control implements IColorControl {
+	public class GradientColorBar extends Control implements IColorControl {
 
 		private static var nullBitmapData : BitmapData;
 		private static var shape : Shape = new Shape();
@@ -33,15 +33,17 @@
 		private var _colorWindow : Window;
 		private var _gradientView : Sprite;
 
-		public function GradientColor() {
+		public function GradientColorBar() {
 			super();
 
 			if (nullBitmapData == null) {
 				nullBitmapData = new BitmapData(64, 64, false, 0xFF0000);
 				var w : int = 8;
 				var h : int = 0;
+
 				while (h < 8) {
 					var v : int = 0;
+
 					while (v < 8) {
 						nullBitmapData.fillRect(new Rectangle(h * w, v * w, w, w), ((h % 2 + v % 2) % 2 == 0) ? 0xFFFFFF : 0xB0B0B0);
 						v++;
@@ -49,18 +51,18 @@
 					h++;
 				}
 			}
-			
+
 			this._gradientView = new Sprite();
 			this.view.addChild(this._gradientView);
-			
+
 			this._keys = new Vector.<ColorKey>();
 			this.addKey(0xFFFFFF, 1, 0);
-			
+
 			this._colorPanel = new ColorPanel();
 			this._colorWindow = new Window(Window.CENTER);
 			this._colorWindow.window = this._colorPanel;
 			this._colorWindow.close();
-			
+
 			this._menu = new Menu();
 			this._menu.addMenuItem("Remove Key", removeKeyEvent);
 			this._menu.menu.hideBuiltInItems();
@@ -70,17 +72,17 @@
 			this.maxHeight = 18;
 			this.height = 18;
 			this.flexible = 1;
-			
+
 			this._gradientView.cacheAsBitmap = true;
 			this._gradientView.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDownEvent, false, 0, true);
-			
+
 			if (this._gradientView.stage != null) {
 				onAddToStage(null);
 			} else {
 				this._gradientView.addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
 			}
 		}
-		
+
 		private function onAddToStage(event : Event) : void {
 			this.view.stage.addChild(_colorWindow.view);
 		}
@@ -88,24 +90,24 @@
 		private function removeKeyEvent(e : Event) : void {
 			this.removeKey(this._keys.indexOf(this.current));
 		}
-		
+
 		private function mouseDownEvent(e : MouseEvent) : void {
 			this.dispatchEvent(new ControlEvent(ControlEvent.UNDO, this));
-						
+
 			var bmp : BitmapData = new BitmapData(width, 5, true, 0);
 			bmp.draw(_gradientView);
 			var opcity : Number = (((bmp.getPixel32(_gradientView.mouseX, 2) >> 24) & 0xFF) / 0xFF);
 			var color : int = bmp.getPixel(_gradientView.mouseX, 2);
 			bmp.dispose();
-			
+
 			this.current = this.addKey(color, opcity, ((_gradientView.mouseX / width) * 0xFF));
 			this._keyMoved = false;
-			
+
 			this._gradientView.stage.addEventListener(MouseEvent.MOUSE_MOVE, this.keyMouseMoveEvent, false, 0, true);
 			this._gradientView.stage.addEventListener(MouseEvent.MOUSE_UP, this.keyMouseUpEvent, false, 0, true);
-			
+
 			this.dispatchEvent(new ControlEvent(ControlEvent.CHANGE, this));
-			
+
 			this._colorWindow.open();
 			this._colorPanel.targetControl = this;
 			this._colorPanel.addEventListener(ControlEvent.CHANGE, this.changeColorEvent, false, 0, true);
@@ -151,25 +153,26 @@
 
 		private function keyMouseDownEvent(e : MouseEvent) : void {
 			e.stopPropagation();
-			
+
 			this._keyMoved = false;
 			this.current = (e.target as ColorKey);
-			
+
 			this._colorPanel.targetControl = this;
 			this._colorPanel.addEventListener(ControlEvent.CHANGE, this.changeColorEvent, false, 0, true);
 			this._colorPanel.addEventListener(ControlEvent.UNDO, dispatchEvent, false, 0, true);
 			this._colorWindow.open();
-			
+
 			this._gradientView.stage.addEventListener(MouseEvent.MOUSE_MOVE, this.keyMouseMoveEvent);
 			this._gradientView.stage.addEventListener(MouseEvent.MOUSE_UP, this.keyMouseUpEvent);
 		}
-		
+
 		private function keyMouseMoveEvent(e : MouseEvent) : void {
 			if (!this._keyMoved) {
 				this.dispatchEvent(new ControlEvent(ControlEvent.UNDO, this));
 			}
 			this._keyMoved = true;
 			this.current.ratio = ((_gradientView.mouseX / width) * 0xFF);
+
 			if ((_gradientView.mouseY < -10) || (_gradientView.mouseY > height + 10) && (this._keys.length > 1)) {
 				this.current.visible = false;
 			} else {
@@ -192,14 +195,14 @@
 		}
 
 		override public function draw() : void {
-			
+
 			matrix.createGradientBox(width, height);
-			
+
 			this._keys.sort(this.sortKeys);
 			this._colors = [];
 			this._alphas = [];
 			this._ratios = [];
-			
+
 			for each (var colorKey : ColorKey in this._keys) {
 				if (colorKey.visible) {
 					this._gradientView.addChild(colorKey);
@@ -210,7 +213,7 @@
 					this._ratios.push(colorKey.ratio);
 				}
 			}
-			
+
 			this._gradientView.graphics.clear();
 			this._gradientView.graphics.beginFill(0, 0);
 			this._gradientView.graphics.drawRect(0, 0, width, height);
@@ -232,9 +235,11 @@
 
 			while (i < ratios.length) {
 				var color : int = 0xFFFFFF;
+
 				if (colors != null)
 					color = colors[i];
 				var opcity : Number = 1;
+
 				if (opcities != null)
 					opcity = opcities[i];
 				var ratio : Number = ratios[i];
@@ -286,9 +291,11 @@
 
 		private function set current(value : ColorKey) : void {
 			this._current = value;
+
 			for each (var key : ColorKey in this._keys) {
 				key.selected = false;
 			}
+
 			if (this._current) {
 				this._current.selected = true;
 			}
@@ -310,6 +317,7 @@
 			if (key0.ratio > key2.ratio) {
 				return 1;
 			}
+
 			if (key0.ratio < key2.ratio) {
 				return -1;
 			}

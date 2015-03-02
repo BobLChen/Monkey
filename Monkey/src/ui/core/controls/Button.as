@@ -1,7 +1,6 @@
 ﻿package ui.core.controls {
 	
 	import flash.display.Loader;
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
@@ -21,8 +20,8 @@
 		private var _text 		: String;			// 文本
 		private var _align 		: uint;				// 对齐方式
 		private var _state 		: String;  			// 状态
-		private var _background : MovieClip;		// 背景
 		private var _foreGround : Sprite;			// ...
+		private var _backGround : Sprite;			// 背景色
 		private var _loader 	: Loader;
 		
 		/**
@@ -38,11 +37,11 @@
 			this._loader 	 = new Loader();
 			this._text 		 = txt;
 			this._align 	 = align;
-			this._background = new MCButton();
 			this._foreGround = new Sprite();  
-			
-			this.view.addChild(this._background);
+			this._backGround = new Sprite();
+			this.view.addChild(this._backGround);
 			this.view.addChild(this._foreGround);
+			
 			this.view.buttonMode = false;
 			this.view.tabEnabled = true;
 			this.view.addEventListener(MouseEvent.CLICK, 		clickEvent);
@@ -113,21 +112,12 @@
 		}
 		
 		override public function draw() : void {
+			this._backGround.graphics.clear();
+			this._backGround.graphics.beginFill(0x000000);
+			this._backGround.graphics.drawRoundRectComplex(0, 0, width, height, 15, 15, 15, 15);
 			this._foreGround.graphics.clear();
-			switch (this._state) {
-				case MouseEvent.MOUSE_DOWN:
-					this._background.gotoAndStop(3);
-					break;
-				case MouseEvent.MOUSE_OVER:
-					this._background.gotoAndStop(2);
-					break;
-				default:
-					this._background.gotoAndStop(3);
-			}
-			this._background.width  = width;
-			this._background.height = height;
 			Style.defaultFont.draw(this._foreGround.graphics, 2, 0, width - 4, height, this.text, this.align);
 		}
-		
+				
 	}
 }

@@ -10,12 +10,12 @@ package ide.plugins.groups.particles {
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
 
-	public class StartDelay extends ParticleAttribute {
+	public class StartDelayGroup extends ParticleAttribute {
 		
 		private var label : Label;
 		private var delay : Spinner;
 		
-		public function StartDelay() {
+		public function StartDelayGroup() {
 			super();
 			
 			this.orientation = Box.HORIZONTAL;

@@ -2,7 +2,7 @@ package monkey.core.entities.particles.prop.color {
 	
 	import flash.geom.Vector3D;
 	
-	import monkey.core.utils.GridientColor;
+	import monkey.core.utils.GradientColor;
 	import monkey.core.utils.MathUtils;
 
 	/**
@@ -12,13 +12,13 @@ package monkey.core.entities.particles.prop.color {
 	 */	
 	public class PropRandomTwoGridient extends PropColor {
 		
-		public var minColor : GridientColor;
-		public var maxColor : GridientColor;
+		public var minColor : GradientColor;
+		public var maxColor : GradientColor;
 		
 		public function PropRandomTwoGridient() {
 			super();
-			this.minColor = new GridientColor();
-			this.maxColor = new GridientColor();
+			this.minColor = new GradientColor();
+			this.maxColor = new GradientColor();
 		}
 		
 		override public function getRGBA(x : Number) : Vector3D {

@@ -40,14 +40,14 @@ package monkey.core.base {
 		public static const REMOVED				: String = "Object3D:REMOVED";
 		
 		// -------------------------------- 所有事件 --------------------------------
-		private static const enterDrawEvent 	: Event = new Event(ENTER_DRAW);
-		private static const exitDrawEvent  	: Event = new Event(EXIT_DRAW);
-		private static const enterFrameEvent	: Event = new Event(ENTER_FRAME);
-		private static const exitFrameEvent		: Event = new Event(EXIT_FRAME);
-		private static const addChildEvent		: Event = new Event(ADD_CHILD);
-		private static const removeChildEvent	: Event = new Event(REMOVE_CHILD);
-		private static const addedEvent			: Event = new Event(ADDED);
-		private static const removedEvent		: Event = new Event(REMOVED);
+		protected static const enterDrawEvent 	: Event = new Event(ENTER_DRAW);
+		protected static const exitDrawEvent  	: Event = new Event(EXIT_DRAW);
+		protected static const enterFrameEvent	: Event = new Event(ENTER_FRAME);
+		protected static const exitFrameEvent	: Event = new Event(EXIT_FRAME);
+		protected static const addChildEvent	: Event = new Event(ADD_CHILD);
+		protected static const removeChildEvent	: Event = new Event(REMOVE_CHILD);
+		protected static const addedEvent		: Event = new Event(ADDED);
+		protected static const removedEvent		: Event = new Event(REMOVED);
 		
 		
 		/** 名称 */

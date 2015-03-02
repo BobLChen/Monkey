@@ -27,7 +27,7 @@
 		private var _mode : int;
 		private var _colorPanel : ColorPanel;
 		private var _colorWindow : Window;
-		
+
 		public function ColorPicker(color : int = 0xFFFFFF, alpha : Number = 1, mode : int = 0) {
 			this._colorPanel = new ColorPanel();
 			this._colorWindow = new Window(Window.CENTER);
@@ -47,18 +47,19 @@
 			this.drawCheckered();
 			this.draw();
 			this.view.addChild(this._picker);
+
 			if (this.view.stage != null) {
 				this.view.stage.addChild(this._colorWindow.view);
 			} else {
 				this.view.addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
 			}
 		}
-		
-		protected function onAddToStage(event:Event) : void {
-			this.view.stage.addChild(this._colorWindow.view);			
+
+		protected function onAddToStage(event : Event) : void {
+			this.view.stage.addChild(this._colorWindow.view);
 			this.view.removeEventListener(Event.ADDED_TO_STAGE, onAddToStage);
 		}
-		
+
 		private function drawCheckered() : void {
 			h = 0;
 
@@ -74,29 +75,30 @@
 		}
 
 		private function clickEvent(e : MouseEvent) : void {
-			_colorWindow.open();
-			_colorPanel.targetControl = this;
-			_colorPanel.addEventListener(ControlEvent.CHANGE, this.changeControlEvent, false, 0, true);
-			_colorPanel.addEventListener(ControlEvent.UNDO, dispatchEvent, false, 0, true);
+			this._colorWindow.open();
+			this._colorPanel.targetControl = this;
+			this._colorPanel.addEventListener(ControlEvent.CHANGE, this.changeControlEvent, false, 0, true);
+			this._colorPanel.addEventListener(ControlEvent.UNDO, dispatchEvent, false, 0, true);
 		}
-		
+
 		private function undoControlEvent(e : ControlEvent) : void {
-			dispatchEvent(new ControlEvent(ControlEvent.UNDO, this));
+			this.dispatchEvent(new ControlEvent(ControlEvent.UNDO, this));
 		}
 
 		private function changeControlEvent(e : ControlEvent) : void {
-			dispatchEvent(new ControlEvent(ControlEvent.CHANGE, this));
+			this._alpha = this._colorPanel.alpha;
+			this.dispatchEvent(new ControlEvent(ControlEvent.CHANGE, this));
 		}
-
+		
 		override public function draw() : void {
-			_picker.graphics.clear();
-			_picker.graphics.lineStyle(1, Style.borderColor2, 1, true);
-			_picker.graphics.beginBitmapFill(nullBitmapData);
-			_picker.graphics.drawRect(0, 0, width, height);
-			_picker.graphics.endFill();
-			_picker.graphics.beginFill(this._color, this._alpha);
-			_picker.graphics.drawRect(0, 0, width, height);
-			_picker.graphics.endFill();
+			this._picker.graphics.clear();
+			this._picker.graphics.lineStyle(1, Style.borderColor2, 1, true);
+			this._picker.graphics.beginBitmapFill(nullBitmapData);
+			this._picker.graphics.drawRect(0, 0, width, height);
+			this._picker.graphics.endFill();
+			this._picker.graphics.beginFill(this._color, this._alpha);
+			this._picker.graphics.drawRect(0, 0, width, height);
+			this._picker.graphics.endFill();
 		}
 
 		public function set color(value : int) : void {

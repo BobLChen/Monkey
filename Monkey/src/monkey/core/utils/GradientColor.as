@@ -10,7 +10,7 @@ package monkey.core.utils {
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 
-	public class GridientColor {
+	public class GradientColor {
 		
 		private static const shape  : Shape = new Shape();
 		private static const matrix : Matrix = new Matrix();
@@ -23,7 +23,7 @@ package monkey.core.utils {
 		private var _alphaRatios : Array;
 		private var _colorRatios : Array;
 		
-		public function GridientColor() {
+		public function GradientColor() {
 			this.gridient = new BitmapData(256, 16, true);
 			this._rgba = new Vector3D();
 			this._alphas = [];
@@ -39,11 +39,11 @@ package monkey.core.utils {
 			} else if (index >= 255) {
 				index = 255;
 			}
-			_rgba.w = ((gridient.getPixel32(index, 2) >> 24) & 0xFF) / 0xFF;
 			var color : uint = gridient.getPixel(index, 2);
-			_rgba.z = (color & 0xFF) / 0xFF;
-			_rgba.y = ((color >> 8)  & 0xFF) / 0xFF;
-			_rgba.x = ((color >> 16) & 0xFF) / 0xFF;
+			this._rgba.w = ((gridient.getPixel32(index, 2) >> 24) & 0xFF) / 0xFF;
+			this._rgba.z = (color & 0xFF) / 0xFF;
+			this._rgba.y = ((color >> 8)  & 0xFF) / 0xFF;
+			this._rgba.x = ((color >> 16) & 0xFF) / 0xFF;
 			return _rgba;
 		}
 		

@@ -85,7 +85,7 @@ package ui.core.controls {
 				if (this.view.stage != null) {
 					this.x = 0;
 					this.y = 0;
-					var point : Point = new Point((this.view.stage.stageWidth - this.width) / 2, (this.view.stage.stageHeight - this.height) / 2);
+					var point : Point = new Point(this.view.stage.stageWidth - this.width, (this.view.stage.stageHeight - this.height) / 2);
 					point = this.view.globalToLocal(point);
 					this.x = point.x;
 					this.y = point.y;
