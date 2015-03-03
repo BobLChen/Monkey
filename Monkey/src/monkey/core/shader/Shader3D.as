@@ -182,7 +182,6 @@ package monkey.core.shader {
 			// 设置program
 			context.setProgram(_program);
 			setContextDatas(context, surface);
-			context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, regCache.vcMvp.index, Device3D.mvp, true);
 			context.drawTriangles(surface.indexBuffer, firstIdx, count);
 			// clear
 			clearContextDatas(context);
