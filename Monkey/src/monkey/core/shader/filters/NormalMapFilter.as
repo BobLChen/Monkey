@@ -18,12 +18,15 @@ package monkey.core.shader.filters {
 		private var v0 		: ShaderRegisterElement;
 		private var v2 		: ShaderRegisterElement;
 		private var v3 		: ShaderRegisterElement;
-		private var camDir 	: Vector.<Number> = Vector.<Number>([1, 1, 1, 1]);
 		private var label	: FsRegisterLabel;
+		private var camDir 	: Vector.<Number>;
+		private var bias	: Vector.<Number>;
 		
 		public function NormalMapFilter(texture : Texture3D) {
 			super("NormalMapFilter");
 			this.priority = 14;
+			this.camDir= Vector.<Number>([1, 1, 1, 1]);
+			this.bias  = Vector.<Number>([2, 1, 1, 0.35]);
 			this.label = new FsRegisterLabel(texture);
 		}
 		
@@ -35,12 +38,28 @@ package monkey.core.shader.filters {
 			label.texture = value;
 		}
 		
+		public function set luminance(value : Number) : void {
+			this.bias[3] = value;
+		}
+		
+		public function get luminance() : Number {
+			return this.bias[3];
+		}
+		
+		public function set intensity(value : Number) : void {
+			
+		}
+		
+		public function get intensity() : Number {
+			return 1;
+		}
+		
 		override public function update() : void {
 			this.camDir[0] = -Device3D.cameraDir.x;
 			this.camDir[1] = -Device3D.cameraDir.y;
 			this.camDir[2] = -Device3D.cameraDir.z;
 		}
-		
+				
 		override public function getFragmentCode(regCache : ShaderRegisterCache, agal:Boolean):String {
 			
 			this.v0 = regCache.getFreeV();
@@ -49,9 +68,9 @@ package monkey.core.shader.filters {
 			
 			var fs  : ShaderRegisterElement = regCache.getFs(label);
 			regCache.fsUsed.push(label);
-			var fc0 : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(Vector.<Number>([2, 1, 0.75, 0.22265625])));
+			var fc0 : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(bias));
 			var fc1 : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(camDir));
-			var fc4 : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(Vector.<Number>([0.45454545454545453,0.45454545454545453,0.45454545454545453,1])));
+			var fc4 : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(Vector.<Number>([2, 2, 2, 2])));
 			var ft0 : ShaderRegisterElement = regCache.getFt();
 			var ft1 : ShaderRegisterElement = regCache.getFt();
 			var ft2 : ShaderRegisterElement = regCache.getFt();
@@ -74,11 +93,19 @@ package monkey.core.shader.filters {
 				code += 'mov ' + regCache.normalFt + ', ' + ft0 + '.xyz \n';
 				// 计算颜色
 				code += 'dp3 ' + ft0 + '.w, ' + ft0 + ', ' + fc1 + ' \n';
-				code += 'max ' + ft0 + '.x, ' + ft0 + '.w, '   + regCache.fc0123 + '.x \n';
-				code += 'mul ' + ft1 + ', ' + ft0 + '.x, ' + fc0 + '.z \n';
-				code += 'add ' + ft1 + ', ' + ft1 + ', ' + fc0 + '.w \n';
-				code += 'pow ' + ft1 + ', ' + ft1 + ', ' + fc4 + ' \n';
-				code += 'mul ' + ft1 + ', ' + ft1 + ', ' + regCache.oc + ' \n';
+				code += 'max ' + ft0 + '.x, ' + ft0 + '.w, ' + regCache.fc0123 + '.x \n';
+				
+//				code += 'mul ' + ft1 + ', ' + ft0 + '.x, ' + fc0 + '.z \n';
+//				code += 'add ' + ft1 + ', ' + ft1 + ', ' + fc0 + '.w \n';
+//				code += 'pow ' + ft1 + ', ' + ft1 + ', ' + fc4 + ' \n';
+//				code += 'mul ' + ft1 + ', ' + ft1 + ', ' + regCache.oc + ' \n';
+//				code += 'mov ' + ft1 + '.w, ' + fc0 + '.y \n';
+//				code += 'sat ' + regCache.oc + ', ' + ft1 + ' \n';
+				
+				code += 'mul ' + ft1 + '.x, ' + ft0 + '.x, ' + fc0 + '.z \n';
+				code += 'add ' + ft1 + '.x, ' + ft1 + '.x, ' + fc0 + '.w \n';
+				code += 'pow ' + ft1 + '.x, ' + ft1 + '.x, ' + fc4 + '.x \n';
+				code += 'mul ' + ft1 + '.xyz, ' + ft1 + '.x, ' + regCache.oc + ' \n';
 				code += 'mov ' + ft1 + '.w, ' + fc0 + '.y \n';
 				code += 'sat ' + regCache.oc + ', ' + ft1 + ' \n';
 			}

@@ -13,7 +13,14 @@ package samples {
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.entities.particles.prop.value.PropConst;
 	import monkey.core.entities.particles.prop.value.PropCurves;
+	import monkey.core.entities.primitives.Cube;
+	import monkey.core.light.DirectionalLight;
+	import monkey.core.materials.Material3D;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Viewer3D;
+	import monkey.core.shader.Shader3D;
+	import monkey.core.shader.filters.ColorFilter;
+	import monkey.core.shader.filters.DirectionalLightFilter;
 
 	public class TestParticles extends Sprite {
 		
@@ -60,6 +67,14 @@ package samples {
 				txt.text = "" + particle.time.toFixed(2);
 			});
 			
+			var shader : Shader3D = new Shader3D([]);
+			shader.addFilter(new ColorFilter(0.6, 0.6, 0.6, 1.0));
+			shader.addFilter(new DirectionalLightFilter(new DirectionalLight()));
+			
+			var cube : Object3D = new Object3D();
+			cube.addComponent(new MeshRenderer(new Cube(), new Material3D(shader)));
+			
+			this.scene.addChild(cube);
 			this.scene.addChild(particle);	
 		}
 		
