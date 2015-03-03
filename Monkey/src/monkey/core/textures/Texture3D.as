@@ -2,11 +2,14 @@ package monkey.core.textures {
 	
 	import flash.display3D.textures.TextureBase;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	
-	import monkey.core.base.Ref;
 	import monkey.core.scene.Scene3D;
 	
-	public class Texture3D {
+	public class Texture3D extends EventDispatcher {
+		
+		public static const DISPOSE : String = "dispose";
+		protected static const disposeEvent : Event = new Event(DISPOSE);
 		
 		/** 倍增常量插值 */
 		public static const MAG_NEAREST 	: String = 'nearest';
@@ -42,13 +45,13 @@ package monkey.core.textures {
 		/** 名称 */
 		public var name			: String = "";
 		
-		protected var ref		: Ref;				// 引用计数
+		protected var ref		: int;				// 引用计数
 		protected var _disposed	: Boolean;			// 是否已经被销毁
 		protected var _width	: int;				// 宽度
 		protected var _height	: int;				// 高度
 		
 		public function Texture3D() {
-			this.ref = new Ref();
+			this.ref = 0;
 			this._disposed = false;
 		}
 		
@@ -58,20 +61,8 @@ package monkey.core.textures {
 		 * 
 		 */		
 		public function clone() : Texture3D {
-			var c : Texture3D = new Texture3D();
-			c.texture	= texture;
-			c.scene		= scene;
-			c.magMode= magMode;
-			c.wrapMode	= wrapMode;
-			c.mipMode	= mipMode;
-			c.typeMode		= typeMode;
-			c.name		= name;
-			c.ref		= ref;
-			c._disposed	= _disposed;
-			c._width	= _width;
-			c._height	= _height;
-			ref.ref++;
-			return c;
+			ref++;
+			return this;
 		}
 		
 		public function get disposed() : Boolean {
@@ -123,7 +114,7 @@ package monkey.core.textures {
 		 * 
 		 */		
 		public function download(force : Boolean) : void {
-			if (ref.ref > 0 && !force) {
+			if (ref > 0 && !force) {
 				return;
 			}
 			if (scene) {
@@ -156,12 +147,13 @@ package monkey.core.textures {
 			if (disposed) {
 				return;
 			}
-			this._disposed = true;
-			if (ref.ref > 0 && !force) {
-				ref.ref--;
+			if (ref > 0 && !force) {
+				ref--;
 				return;
 			}
 			this.download(true);
+			this._disposed = true;
+			this.dispatchEvent(disposeEvent);
 		}
 		
 	}

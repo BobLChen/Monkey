@@ -58,13 +58,13 @@ package monkey.core.base {
 		
 		private var vertexVector : Vector.<Vector.<Number>>;			// 浮点型数据源
 		private var vertexBytes	 : Vector.<ByteArray>;					// 二进制数据源
-		private var ref 		 : Ref;									// 引用计数器
+		private var ref 		 : int;									// 引用计数器
 		private var _bounds		 : Bounds3D								// 包围盒
 		private var _ploys		 : Vector.<Triangle3D>					// 三角形
 		private var _disposed	 : Boolean;								// 是否已经被销毁
 				
 		public function Surface3D() {
-			this.ref 		  = new Ref();
+			this.ref = 0;
 			this.formats 	  = new Vector.<String>(LENGTH, true);
 			this.vertexBuffers= new Vector.<VertexBuffer3D>(LENGTH, true);
 			this.vertexBytes  = new Vector.<ByteArray>(LENGTH, true);
@@ -78,20 +78,8 @@ package monkey.core.base {
 		 * 
 		 */		
 		public function clone() : Surface3D {
-			var c : Surface3D 	= new Surface3D();
-			c.formats 			= formats;
-			c.vertexBuffers 	= vertexBuffers;
-			c.indexBuffer 		= indexBuffer;
-			c.indexVector		= indexVector;
-			c.numTriangles		= numTriangles;
-			c.scene				= scene;
-			c.vertexVector		= vertexVector;
-			c.vertexBytes		= vertexBytes;
-			c.ref				= ref;
-			c._bounds			= _bounds;
-			c._disposed			= _disposed;
-			ref.ref++;
-			return c;
+			this.ref++;
+			return this;
 		}
 		
 		/**
@@ -114,8 +102,7 @@ package monkey.core.base {
 		public function set ploys(value:Vector.<Triangle3D>):void {
 			_ploys = value;
 		}
-
-		
+				
 		/**
 		 * 包围盒 
 		 * @return 
@@ -171,7 +158,7 @@ package monkey.core.base {
 		public function set bounds(value:Bounds3D) : void {
 			_bounds = value;
 		}
-
+		
 		/**
 		 * 是否已经被销毁 
 		 * @return 
@@ -258,7 +245,7 @@ package monkey.core.base {
 		 * 
 		 */		
 		public function download(force : Boolean = false) : void {
-			if (ref.ref > 0 && !force) {
+			if (ref > 0 && !force) {
 				return;
 			}
 			// 从场景中移除
@@ -390,10 +377,9 @@ package monkey.core.base {
 			if (disposed) {
 				return;
 			}
-			this._disposed = true;
 			// 存在克隆对象，引用计数减一
-			if (ref.ref > 0 && !force) {
-				ref.ref--;
+			if (ref > 0 && !force) {
+				ref--;
 				return;
 			}
 			this.download(true);
@@ -407,7 +393,7 @@ package monkey.core.base {
 					vertexBytes[i] = null;
 				}
 			}
-			// 
+			this._disposed = true;
 			this.formats = null;
 			this.vertexBytes = null;
 			this.vertexVector = null;

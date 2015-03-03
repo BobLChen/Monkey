@@ -1,9 +1,12 @@
 package monkey.core.entities {
 
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.geom.Vector3D;
 	
 	import monkey.core.base.Bounds3D;
 	import monkey.core.base.Surface3D;
+	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Vector3DUtils;
 
 	/**
@@ -11,7 +14,10 @@ package monkey.core.entities {
 	 * @author Neil
 	 *
 	 */
-	public class Mesh3D {
+	public class Mesh3D extends EventDispatcher {
+		
+		public static const DISPOSE : String = "DISPOSE_EVENT";
+		protected static const disposeEvent : Event = new Event(DISPOSE);
 		
 		/** 网格数据 */
 		public var surfaces   : Vector.<Surface3D>;
@@ -31,6 +37,12 @@ package monkey.core.entities {
 		public function download(force : Boolean = false) : void {
 			for each (var surf : Surface3D in surfaces) {
 				surf.download(force);
+			}
+		}
+		
+		public function upload(scene : Scene3D) : void {
+			for each (var surf : Surface3D in surfaces) {
+				surf.upload(scene);
 			}
 		}
 		
@@ -94,6 +106,7 @@ package monkey.core.entities {
 				surf.dispose(force);
 			}
 			this.surfaces = new Vector.<Surface3D>();
+			this.dispatchEvent(disposeEvent);
 		}
 		
 	}

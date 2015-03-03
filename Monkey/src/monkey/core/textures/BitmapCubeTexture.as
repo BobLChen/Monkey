@@ -13,7 +13,6 @@ package monkey.core.textures {
 		
 		private var _transparent : Boolean;
 		private var _bitmapData  : BitmapData;
-		private var _bmps		 : Array;
 		
 		public function BitmapCubeTexture(bitmapdata : BitmapData) {
 			super();
@@ -21,27 +20,6 @@ package monkey.core.textures {
 			this._width			= bitmapdata.width;
 			this._height		= bitmapdata.height;
 			this._transparent 	= bitmapdata.transparent;
-			this._bmps			= Texture3DUtils.extractCubeMap(bitmapdata);
-		}
-		
-		override public function clone():Texture3D {
-			var c : BitmapCubeTexture = new BitmapCubeTexture(null);
-			c.texture		= texture;
-			c.scene			= scene;
-			c.magMode		= magMode;
-			c.wrapMode		= wrapMode;
-			c.mipMode		= mipMode;
-			c.typeMode		= typeMode;
-			c.name			= name;
-			c.ref			= ref;
-			c._disposed		= _disposed;
-			c._width		= _width;
-			c._height		= _height;
-			c._bitmapData	= _bitmapData;
-			c._transparent	= _transparent;
-			c._bmps			= _bmps;
-			ref.ref++;
-			return c;
 		}
 		
 		/**
@@ -51,13 +29,17 @@ package monkey.core.textures {
 		 */		
 		override protected function contextEvent(e:Event=null):void {
 			super.contextEvent(e);
+			var bmps : Array = Texture3DUtils.extractCubeMap(bitmapData);
 			var i : int = 0;
 			while (i < 6) {
-				this.uploadWithMips(_bmps[i], i);
+				this.uploadWithMips(bmps[i], i);
 				i++;
 			}
+			for each (var bmp : BitmapData in bmps) {
+				bmp.dispose();
+			}
 		}
-		
+				
 		/**
 		 * 销毁 
 		 * 
@@ -66,18 +48,17 @@ package monkey.core.textures {
 			if (disposed) {
 				return;
 			}
-			this._disposed = true;
-			if (ref.ref > 0 && !force) {
-				ref.ref--;
+			if (ref > 0 && !force) {
+				ref--;
 				return;
 			}
 			this.download(true);
+			this._disposed = true;
 			if (this._bitmapData) {
 				this._bitmapData.dispose();
+				this._bitmapData = null;
 			}
-			for each (var bmp : BitmapData in _bmps) {
-				bmp.dispose();
-			}
+			this.dispatchEvent(disposeEvent);
 		}
 		
 		private function uploadWithMips(bmp : BitmapData, side : int = 0) : void {

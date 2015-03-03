@@ -10,8 +10,8 @@ package monkey.core.textures {
 
 	public class Bitmap2DTexture extends Texture3D {
 		
-		private var _bitmapData  : BitmapData;
-		private var _transparent : Boolean;
+		protected var _bitmapData  : BitmapData;
+		protected var _transparent : Boolean;
 		
 		/**
 		 * 必须为2的幂 
@@ -28,30 +28,6 @@ package monkey.core.textures {
 			this._width			= bitmapdata.width;
 			this._height		= bitmapdata.height;
 			this._transparent 	= bitmapdata.transparent;
-		}
-		
-		/**
-		 * 克隆 
-		 * @return 
-		 * 
-		 */		
-		override public function clone():Texture3D {
-			var c : Bitmap2DTexture = new Bitmap2DTexture(null);
-			c.texture		= texture;
-			c.scene			= scene;
-			c.magMode		= magMode;
-			c.wrapMode		= wrapMode;
-			c.mipMode		= mipMode;
-			c.typeMode		= typeMode;
-			c.name			= name;
-			c.ref			= ref;
-			c._disposed		= _disposed;
-			c._width		= _width;
-			c._height		= _height;
-			c._bitmapData	= _bitmapData;
-			c._transparent	= _transparent;
-			ref.ref++;
-			return c;
 		}
 		
 		/**
@@ -72,15 +48,17 @@ package monkey.core.textures {
 			if (disposed) {
 				return;
 			}
-			this._disposed = true;
-			if (ref.ref > 0 && !force) {
-				ref.ref--;
+			if (ref > 0 && !force) {
+				ref--;
 				return;
 			}
 			this.download(true);
+			this._disposed = true;
 			if (this._bitmapData) {
 				this._bitmapData.dispose();
+				this._bitmapData = null;
 			}
+			this.dispatchEvent(disposeEvent);
 		}
 								
 		private function uploadWithMips(bmp : BitmapData) : void {
@@ -161,7 +139,11 @@ package monkey.core.textures {
 		}
 
 		public function set bitmapData(value : BitmapData) : void {
-			_bitmapData = value;
+			this._bitmapData = value;
+			if (value) {
+				this._width  = value.width;
+				this._height = value.height;
+			}
 		}
 				
 	}
