@@ -121,6 +121,7 @@ package monkey.core.entities.particles {
 		 * 
 		 */		
 		public function build() : void {
+			this._needBuild = false;
 			this.mesh.dispose(true);		// 释放所有的数据
 			this.caculateTotalTime();		// 首先计算出粒子的生命周期
 			this.caculateParticleNum();		// 计算所有的粒子数量
@@ -128,7 +129,6 @@ package monkey.core.entities.particles {
 			this.shape.generate(this);		// 生成shape对应的数据，包括粒子的位置、方向、uv、索引
 			this.createParticleAttribute();	// 更新粒子属性
 			this.dispatchEvent(buildEvent);
-			this._needBuild = false;
 		}
 		
 		/**
@@ -683,7 +683,8 @@ package monkey.core.entities.particles {
 		 *
 		 */
 		public function set loops(value : Boolean) : void {
-			_loops = value;
+			this._loops = value;
+			this._needBuild = true;
 		}
 		
 		/**
@@ -701,8 +702,8 @@ package monkey.core.entities.particles {
 		 *
 		 */
 		public function set duration(value : Number) : void {
-			_duration = value;
-			_needBuild = true;
+			this._duration = value;
+			this._needBuild = true;
 		}
 		
 		public function get playing() : Boolean {

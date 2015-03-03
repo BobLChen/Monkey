@@ -4,9 +4,12 @@ package ide.plugins.groups.properties {
 	
 	import ide.App;
 	import ide.events.LogEvent;
+	import ide.plugins.groups.particles.BurstsGroup;
 	import ide.plugins.groups.particles.DurationGroup;
 	import ide.plugins.groups.particles.LoopsGroup;
+	import ide.plugins.groups.particles.MaxParticleGroup;
 	import ide.plugins.groups.particles.ParticleAttribute;
+	import ide.plugins.groups.particles.RateGroup;
 	import ide.plugins.groups.particles.StartColorGroup;
 	import ide.plugins.groups.particles.StartDelayGroup;
 	import ide.plugins.groups.particles.StartLifetimeGroup;
@@ -43,6 +46,12 @@ package ide.plugins.groups.properties {
 			this.layout.space = 1;
 			this.time = this.layout.addControl(new TimeGroup()) as TimeGroup;
 			this.groups.push(time);
+			this.layout.addControl(new Separator());
+			this.groups.push(this.layout.addControl(new MaxParticleGroup()));
+			this.layout.addControl(new Separator());
+			this.groups.push(this.layout.addControl(new RateGroup()));
+			this.layout.addControl(new Separator());
+			this.groups.push(this.layout.addControl(new BurstsGroup()));
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new DurationGroup()));
 			this.layout.addControl(new Separator());

@@ -223,6 +223,8 @@ package monkey.core.shader.filters {
 				code += "add " + vt2 + ".xyz, " + vt2 + ".xyz, " + speedVa + ".xyz \n";
 				// 速度乘以时间
 				code += "mul " + vt0 + ".xyz, " + vt2 + ".xyz, " + vt1 + ".x \n";
+				// billboard
+				code += "m33 " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + billVc + " \n";
 				// 位置 + 速度
 				code += "add " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + vt0 + ".xyz \n";
 				// 当前时间 < 0 时不显示 vt1.z = vt1.w >= 0 ? 1 : 0;
@@ -236,8 +238,6 @@ package monkey.core.shader.filters {
 				code += "mul " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + vt0 + ".x \n";
 				// 将时间参数传递给fragment着色器
 				code += "mov " + timeVary + ", " + vt1 + " \n";	
-				// billboard
-				code += "m33 " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + billVc + " \n";
 			}
 			
 			regCache.removeVt(vt3);
