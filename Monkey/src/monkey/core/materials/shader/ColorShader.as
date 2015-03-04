@@ -2,6 +2,7 @@ package monkey.core.materials.shader {
 
 	import monkey.core.shader.Shader3D;
 	import monkey.core.shader.filters.ColorFilter;
+	import monkey.core.utils.Color;
 	
 	/**
 	 * 单例模式 
@@ -20,7 +21,7 @@ package monkey.core.materials.shader {
 			if (_instance) {
 				throw new Error("单例...");
 			}
-			this.filter = new ColorFilter(1.0, 1.0, 1.0, 1.0);
+			this.filter = new ColorFilter(Color.WHITE);
 			this.addFilter(filter);
 		}
 		
@@ -31,20 +32,8 @@ package monkey.core.materials.shader {
 			return _instance;
 		}
 		
-		public function setColor(r : Number, g : Number, b : Number) : void {
-			this.filter.setColor(r, g, b);
-		}
-		
-		public function set red(value : Number) : void {
-			this.filter.red = value;
-		}
-		
-		public function set green(value : Number) : void {
-			this.filter.green = value;
-		}
-		
-		public function set blue(value : Number) : void {
-			this.filter.blue = value;
+		public function set color(color : Color) : void {
+			this.filter.color = color;
 		}
 		
 	}

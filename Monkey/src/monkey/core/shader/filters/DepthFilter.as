@@ -19,8 +19,8 @@ package monkey.core.shader.filters {
 		public function DepthFilter() {
 			super("DepthFilter");
 			this.priority 	 = -10000;
-			this._toRgbData0 = Vector.<Number>([1.0, 255.0, 65025.0, 16581375.0]);
-			this._toRgbData1 = Vector.<Number>([1.0 / 255.0, 1.0 / 255.0, 1.0 / 255.0, 0.0]);
+			this._toRgbData0 = Vector.<Number>([1.0, 255.0, 65025.0, 16581375.0]);				// rgb编码
+			this._toRgbData1 = Vector.<Number>([1.0 / 255.0, 1.0 / 255.0, 1.0 / 255.0, 0.0]);	// rgb解码
 		}
 		
 		override public function getFragmentCode(regCache:ShaderRegisterCache, agal:Boolean):String {
@@ -49,8 +49,5 @@ package monkey.core.shader.filters {
 			}
 			return "";
 		}
-		
-		
-		
 	}
 }

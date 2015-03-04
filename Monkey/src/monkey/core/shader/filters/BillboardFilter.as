@@ -20,7 +20,7 @@ package monkey.core.shader.filters {
 		public static const RADIANS_TO_DEGREES : Number = 180 / Math.PI;
 
 		private var matrix : Matrix3D = new Matrix3D();
-
+		
 		public function BillboardFilter() {
 			super("BillboardFilter");
 			this.priority = 10;

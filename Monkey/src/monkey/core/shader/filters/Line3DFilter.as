@@ -9,7 +9,7 @@ package monkey.core.shader.filters {
 	import monkey.core.utils.Device3D;
 	
 	/**
-	 * 线 
+	 * 线段
 	 * @author Neil
 	 * 
 	 */	

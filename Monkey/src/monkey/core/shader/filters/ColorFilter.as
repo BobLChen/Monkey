@@ -3,6 +3,7 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.FcRegisterLabel;
 	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.shader.utils.ShaderRegisterElement;
+	import monkey.core.utils.Color;
 	
 	/**
 	 * 纯色 
@@ -11,7 +12,8 @@ package monkey.core.shader.filters {
 	 */	
 	public class ColorFilter extends Filter3D {
 
-		private var data : Vector.<Number>;
+		private var data 	: Vector.<Number>;
+		private var _color 	: Color;
 		
 		/**
 		 * 
@@ -21,48 +23,22 @@ package monkey.core.shader.filters {
 		 * @param a		alpha
 		 *
 		 */
-		public function ColorFilter(r : Number, g : Number, b : Number, a : Number = 1.0) {
+		public function ColorFilter(color : Color) {
 			super("ColorFilter");
+			this.data = Vector.<Number>([1, 1, 1, 1]);
 			this.priority = 100;
-			this.data = Vector.<Number>([r, g, b, a]);
 		}
 		
-		public function setColor(r : Number, g : Number, b : Number) : void {
-			data[0] = r;
-			data[1] = g;
-			data[2] = b;
+		public function get color():Color {
+			return _color;
 		}
-		
-		public function get red() : Number {
-			return data[0];
-		}
-		
-		public function set red(value : Number) : void {
-			data[0] = value;
-		}
-		
-		public function get green() : Number {
-			return data[1];
-		}
-		
-		public function set green(value : Number) : void {
-			data[1] = value;
-		}
-		
-		public function get blue() : Number {
-			return data[2];
-		}
-		
-		public function set blue(value : Number) : void {
-			data[2] = value;
-		}
-		
-		public function get alpha() : Number {
-			return data[3];
-		}
-		
-		public function set alpha(value : Number) : void {
-			data[3] = value;
+
+		public function set color(value:Color):void {
+			_color = value;
+			this.data[0] = value.r;
+			this.data[1] = value.g;
+			this.data[2] = value.b;
+			this.data[3] = value.alpha;
 		}
 		
 		override public function getFragmentCode(regCache : ShaderRegisterCache, agal : Boolean) : String {

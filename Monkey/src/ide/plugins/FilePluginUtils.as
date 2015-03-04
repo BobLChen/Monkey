@@ -17,6 +17,7 @@ package ide.plugins {
 	import monkey.core.parser.Max3DSParser;
 	import monkey.core.parser.NavMeshParser;
 	import monkey.core.parser.OBJParser;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Mesh3DUtils;
 
 	public class FilePluginUtils extends EventDispatcher {
@@ -139,7 +140,7 @@ package ide.plugins {
 		 */		
 		public static function openMesh(bytes : ByteArray) : Object3D {
 			var obj   : Object3D = Mesh3DUtils.readMesh(bytes);
-			obj.renderer.material = new ColorMaterial();
+			obj.renderer.material = new ColorMaterial(new Color(0x888888));
 			return obj;
 		}
 		

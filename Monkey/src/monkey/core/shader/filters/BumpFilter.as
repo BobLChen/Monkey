@@ -8,7 +8,7 @@ package monkey.core.shader.filters {
 	import monkey.core.textures.Texture3D;
 
 	/**
-	 * 空气扭曲filter。需要多绘制一边场景。
+	 * 空气扭曲filter。
 	 * 1、将plane坐标转换为贴图空间坐标
 	 * 2、对转换后的贴图空间坐标进行偏移
 	 * 3、通过贴图空间坐标对rtt进行采用，获取背景色
@@ -25,6 +25,12 @@ package monkey.core.shader.filters {
 		private var _data 	  : Vector.<Number> = Vector.<Number>([_bumpAmt, 1.0 / 1024, 0.5, -0.5]);
 		private var rttUV 	  : ShaderRegisterElement;
 		
+		/**
+		 *  
+		 * @param rtt	背景图
+		 * @param bump	扭曲贴图
+		 * 
+		 */		
 		public function BumpFilter(rtt : Texture3D, bump : Texture3D) {
 			super("BumpFilter");
 			this._rttLabel = new FsRegisterLabel(rtt);
@@ -35,6 +41,11 @@ package monkey.core.shader.filters {
 			return _bumpAmt;
 		}
 		
+		/**
+		 * 扭曲程序 
+		 * @param value
+		 * 
+		 */		
 		public function set bumpAmt(value : Number) : void {
 			this._bumpAmt = value;
 			this._data[0] = value;

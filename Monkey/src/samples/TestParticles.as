@@ -21,6 +21,7 @@ package samples {
 	import monkey.core.shader.Shader3D;
 	import monkey.core.shader.filters.ColorFilter;
 	import monkey.core.shader.filters.DirectionalLightFilter;
+	import monkey.core.utils.Color;
 
 	public class TestParticles extends Sprite {
 		
@@ -68,7 +69,7 @@ package samples {
 			});
 			
 			var shader : Shader3D = new Shader3D([]);
-			shader.addFilter(new ColorFilter(0.6, 0.6, 0.6, 1.0));
+			shader.addFilter(new ColorFilter(new Color(0x666666)));
 			shader.addFilter(new DirectionalLightFilter(new DirectionalLight()));
 			
 			var cube : Object3D = new Object3D();

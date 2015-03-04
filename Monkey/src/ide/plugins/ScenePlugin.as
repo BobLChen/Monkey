@@ -17,6 +17,7 @@ package ide.plugins {
 	import monkey.core.entities.Grid3D;
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.scene.Scene3D;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.FPSStats;
 	import monkey.core.utils.Input3D;
 	import monkey.core.utils.Time3D;
@@ -67,7 +68,7 @@ package ide.plugins {
 			this.camera.far 	= 50000;
 			this.antialias 		= 4;
 			this.autoResize 	= false;
-			this.background		= 0x505050;
+			this.background		= new Color(0x505050);
 			this.addEventListener(Event.CONTEXT3D_CREATE, contextCreateEvent);
 			this.addEventListener(Scene3D.POST_RENDER, onPostRender);
 		}

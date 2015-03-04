@@ -10,31 +10,43 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.FcRegisterLabel;
 	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.shader.utils.ShaderRegisterElement;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Device3D;
-
+	
+	/**
+	 * 太阳光filter 
+	 * @author Neil
+	 * 
+	 */	
 	public class DirectionalLightFilter extends LightFilter {
 		
 		private var _light 			: DirectionalLight;		// 平行灯
 		private var _dirData		: Vector.<Number>;		// 方向数据
 		private var _eyeData		: Vector.<Number>;		// eye
-		private var _specular 		: uint;					// 高光
+		private var _specular 		: Color;				// 高光
 		private var _specularData	: Vector.<Number>;		// 高光数据
 		private var _power 			: Number = 50;			// 高光强度
 		
+		/**
+		 * 太阳光filter 
+		 * @param light
+		 * 
+		 */		
 		public function DirectionalLightFilter(light : DirectionalLight) {
 			this.priority = 13;
 			this._specularData 	= Vector.<Number>([1, 1, 1, 1]);
 			this._eyeData 		= Vector.<Number>([0, 0, 0, 0]);
 			this._dirData 		= Vector.<Number>([0, 0, 0, 0]);
-			this.specular 		= 0x000000;
+			this._light 		= light;
+			this._light.addEventListener(Event.CHANGE, change);
+			this._light.transform.addEventListener(Transform3D.UPDATE_TRANSFORM, change);
+			
+			this.specular 		= new Color(0x000000);
 			this.dirData 		= light.transform.getDir(false);
 			this.lightColor 	= light.color;
 			this.power 			= light.power;
 			this.ambient 		= light.ambient;
 			this.specular 		= light.specular;
-			this._light 		= light;
-			this._light.addEventListener(Event.CHANGE, change);
-			this._light.transform.addEventListener(Transform3D.UPDATE_TRANSFORM, change);
 		}
 		
 		/**
@@ -69,7 +81,7 @@ package monkey.core.shader.filters {
 		 * @return 
 		 * 
 		 */		
-		public function get specular() : uint {
+		public function get specular() : Color {
 			return _specular;
 		}
 		
@@ -78,11 +90,11 @@ package monkey.core.shader.filters {
 		 * @param value
 		 * 
 		 */		
-		public function set specular(value : uint) : void {
+		public function set specular(value : Color) : void {
 			this._specular = value;
-			this._specularData[0] = (int(value >> 16) & 0xFF) / 0xFF;
-			this._specularData[1] = (int(value >> 8) & 0xFF) / 0xFF;
-			this._specularData[2] = (int(value >> 0) & 0xFF) / 0xFF;
+			this._specularData[0] = value.r;
+			this._specularData[1] = value.g;
+			this._specularData[2] = value.b;
 		}
 		
 		/**
@@ -145,15 +157,15 @@ package monkey.core.shader.filters {
 			code += 'mul ' + ft0 + '.xyz, ' + colorFc + '.xyz, ' + ft0 + '.w \n';
 			// sat 灯光颜色
 			code += 'sat ' + ft0 + '.xyz, ' + ft0 + '.xyz \n';
-			code += 'mul ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + colorFc + '.w \n';
 			// 灯光颜色=灯光颜色+环境色
 			code += 'add ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + ambFc + '.xyz \n';
 			code += 'mul ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + regCache.oc + '.xyz \n';
 			// 高光颜色*高光
 			code += 'mul ' + ft2 + '.xyz, ' + ft2 + '.w, ' + specuFc + '.xyz \n';
 			code += 'add ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + ft2 + '.xyz \n';
-			code += 'mov ' + regCache.oc + '.xyz, ' + ft0 + '.xyz \n';
-			
+			// 强度
+			code += 'mul ' + regCache.oc + '.xyz, ' + ft0 + '.xyz, ' + colorFc + '.w \n';
+						
 			regCache.removeFt(ft0);
 			regCache.removeFt(ft1);
 			regCache.removeFt(ft2);

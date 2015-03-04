@@ -194,11 +194,11 @@ package ide.panel {
 			this._scene.setViewPort(point.x, point.y, _sceneArea.width, _sceneArea.height);
 			this._sceneWidth.value  = this._sceneArea.width;
 			this._sceneHeight.value = this._sceneArea.height;
-			this._clearColor.color  = this._scene.background;	
+			this._clearColor.color  = this._scene.background.color;	
 		}
 				
 		private function changeClearColor(event:Event) : void {
-			this._scene.background = this._clearColor.color;			
+			this._scene.background.color = this._clearColor.color;			
 		}
 		
 		private function changeAntialiasEvent(event:Event) : void {

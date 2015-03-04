@@ -65,7 +65,7 @@ package ide.plugins.groups.properties {
 		}
 		
 		protected function changeBlendColor(event:Event) : void {
-			_water.blendColor = _waterBlendColor.color;
+			_water.blendColor.color = _waterBlendColor.color;
 		}
 		
 		protected function changeWaterDisplayment(event:Event) : void {
@@ -126,7 +126,7 @@ package ide.plugins.groups.properties {
 			this._waveDias.value 		= _water.waterWave;
 			this._waterTexture.source 	= _water.texture.bitmapData;
 			this._waterDisplayment.source= _water.normalTexture.bitmapData;
-			this._waterBlendColor.color = _water.blendColor;
+			this._waterBlendColor.color = _water.blendColor.color;
 			this._waveHeight.value 		= _water.waterHeight;
 		}
 		

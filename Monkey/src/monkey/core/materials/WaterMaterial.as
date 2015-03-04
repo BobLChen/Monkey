@@ -4,6 +4,7 @@ package monkey.core.materials {
 	import monkey.core.scene.Scene3D;
 	import monkey.core.textures.CubeTextue3D;
 	import monkey.core.textures.Texture3D;
+	import monkey.core.utils.Color;
 	
 	/**
 	 * 海水材质 
@@ -16,7 +17,7 @@ package monkey.core.materials {
 		private var _normalTexture : Texture3D;
 		private var _waveHeight	   : Number;
 		private var _wave		   : Number;
-		private var _blendColor	   : uint;
+		private var _blendColor	   : Color;
 		
 		/**
 		 *  
@@ -27,7 +28,7 @@ package monkey.core.materials {
 		 * @param blendColor			波光颜色
 		 * 
 		 */		
-		public function WaterMaterial(cubeTexture : CubeTextue3D, normalTexture : Texture3D, wave : Number = 50, waveHeight : Number = 20, blendColor : uint = 0x668099) {
+		public function WaterMaterial(cubeTexture : CubeTextue3D, normalTexture : Texture3D, wave : Number, waveHeight : Number, blendColor : Color) {
 			super(WaterShader.instance);
 			this.cubeTexture   = cubeTexture;
 			this.normalTexture = normalTexture;
@@ -59,11 +60,11 @@ package monkey.core.materials {
 			WaterShader(shader).blendColor 		= blendColor;
 		}
 		
-		public function get blendColor():uint {
+		public function get blendColor():Color {
 			return _blendColor;
 		}
 
-		public function set blendColor(value:uint):void {
+		public function set blendColor(value:Color):void {
 			_blendColor = value;
 		}
 

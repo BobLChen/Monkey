@@ -18,6 +18,13 @@ package monkey.core.shader.filters {
 		private var offsets : Vector.<Number>;
 		private var _fsLabel : FsRegisterLabel;
 		
+		/**
+		 * 提取亮色filter 
+		 * @param texture	带提取贴图
+		 * @param offsetX	贴图宽度偏移量:例如1/width
+		 * @param offsetY	贴图高度偏移量:例如1/height
+		 * 
+		 */		
 		public function BloomExtractFilter(texture : Texture3D, offsetX : Number, offsetY : Number) {
 			super("BloomExtractFilter");
 			this._fsLabel = new FsRegisterLabel(texture);

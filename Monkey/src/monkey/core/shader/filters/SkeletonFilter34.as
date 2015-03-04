@@ -9,7 +9,7 @@ package monkey.core.shader.filters {
 	import monkey.core.utils.Device3D;
 
 	/**
-	 * 3x4骨骼动画 
+	 * 3x4矩阵骨骼动画 
 	 * @author Neil
 	 * 
 	 */	
@@ -23,6 +23,11 @@ package monkey.core.shader.filters {
 			this.boneLabel = new VcRegisterLabel(null);
 		}
 		
+		/**
+		 * 骨骼数据 
+		 * @param bytes
+		 * 
+		 */		
 		public function set data(bytes : ByteArray) : void {
 			this.boneLabel.bytes = bytes;
 		}

@@ -4,15 +4,16 @@ package monkey.core.light {
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.interfaces.IComponent;
+	import monkey.core.utils.Color;
 
 	public class DirectionalLight extends Light3D {
 		
-		private var _specular : uint;
+		private var _specular : Color;
 		private var _power 	  : Number;
 		
 		public function DirectionalLight() {
 			super();
-			this.specular = 0x333333;
+			this.specular = new Color(0x333333);
 			this.power    = 50;
 		}
 		
@@ -41,11 +42,11 @@ package monkey.core.light {
 			this.dispatchEvent(new Event(Event.CHANGE));
 		}
 		
-		public function get specular():uint {
+		public function get specular():Color {
 			return _specular;
 		}
 		
-		public function set specular(value:uint):void {
+		public function set specular(value:Color):void {
 			this._specular = value;
 			this.dispatchEvent(new Event(Event.CHANGE));
 		}

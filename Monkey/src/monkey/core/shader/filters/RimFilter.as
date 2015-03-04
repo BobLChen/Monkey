@@ -3,6 +3,7 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.FcRegisterLabel;
 	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.shader.utils.ShaderRegisterElement;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Device3D;
 
 	/**
@@ -12,14 +13,19 @@ package monkey.core.shader.filters {
 	 */	
 	public class RimFilter extends Filter3D {
 		
-		private var _color : uint;
+		private var _color : Color;
 		private var _power : Number;
 		private var _data  : Vector.<Number>;
 		private var _dir   : Vector.<Number>;
 		
-		public function RimFilter(color : uint = 0xFF0000, power : Number = 5) {
+		/**
+		 * 边缘光filter 
+		 * @param color	 光颜色
+		 * @param power	 强度
+		 * 
+		 */		
+		public function RimFilter(color : Color, power : Number = 5) {
 			super(name);
-			
 			this._data = Vector.<Number>([0, 0, 0, 0]);
 			this._dir  = Vector.<Number>([0, 0, 0, 0]);
 			this.color = color;
@@ -41,24 +47,22 @@ package monkey.core.shader.filters {
 			this._data[3] = _power;
 		}
 		
-		public function get color():uint {
+		public function get color():Color {
 			return _color;
 		}
 		
-		public function set color(value:uint):void {
-			this._data[0] = ((value >> 16) & 0xFF) / 0xFF;
-			this._data[1] = ((value >> 8) & 0xFF) / 0xFF;
-			this._data[2] = (value & 0xFF) / 0xFF;
+		public function set color(value:Color):void {
+			this._data[0] = value.r;
+			this._data[1] = value.g;
+			this._data[2] = value.b;
 			this._color = value;
 		}
 		
 		override public function getFragmentCode(regCache:ShaderRegisterCache, agal:Boolean):String {
-			var fc0 : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(_dir));
-			var fc1 : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(_data));
-			var ft0 : ShaderRegisterElement = regCache.getFt();
-			
+			var fc0  : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(_dir));
+			var fc1  : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(_data));
+			var ft0  : ShaderRegisterElement = regCache.getFt();
 			var code : String = '';
-			
 			if (agal) {
 				code += 'dp3 ' + ft0 + '.w, ' + regCache.normalFt + '.xyz, ' + fc0 + '.xyz \n';
 				code += 'sat ' + ft0 + '.w, ' + ft0 + '.w \n';
@@ -67,11 +71,9 @@ package monkey.core.shader.filters {
 				code += 'mul ' + ft0 + '.xyz, ' + fc1 + '.xyz, ' + ft0 + '.w \n';
 				code += 'add ' + regCache.oc + '.xyz, ' + regCache.oc + '.xyz, ' + ft0 + '.xyz \n';
 			}
-			
 			regCache.removeFt(ft0);
 			return code;
 		}
-		
 		
 	}
 }

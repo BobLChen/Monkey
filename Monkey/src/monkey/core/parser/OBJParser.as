@@ -11,6 +11,7 @@ package monkey.core.parser {
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.parser.utils.ParserUtil;
 	import monkey.core.renderer.MeshRenderer;
+	import monkey.core.utils.Color;
 
 	public class OBJParser extends EventDispatcher {
 		
@@ -290,7 +291,7 @@ package monkey.core.parser {
 				}
 				
 				var obj : Object3D = new Object3D();
-				obj.addComponent(new MeshRenderer(mesh, new ColorMaterial()));
+				obj.addComponent(new MeshRenderer(mesh, new ColorMaterial(Color.WHITE)));
 				return obj;
 			}
 			return new Object3D();

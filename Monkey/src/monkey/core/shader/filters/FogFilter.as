@@ -5,6 +5,7 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.shader.utils.ShaderRegisterElement;
 	import monkey.core.shader.utils.VcRegisterLabel;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Device3D;
 	
 	/**
@@ -19,9 +20,15 @@ package monkey.core.shader.filters {
 		private var _fogData 	: Vector.<Number>;
 		private var _eyePosData	: Vector.<Number>;
 		private var _fogDistance: Number = 1;
-		private var _fogColor 	: uint = 0;
+		private var _fogColor 	: Color;
 		
-		public function FogFilter(fogDistance : Number, color : uint = 0x808080) {
+		/**
+		 *  
+		 * @param fogDistance	雾气距离
+		 * @param color			雾颜色
+		 * 
+		 */		
+		public function FogFilter(fogDistance : Number, color : Color) {
 			super("FogFilter");
 			this._fogDistance 	= fogDistance;
 			this._fogData 	  	= Vector.<Number>([0, 0, 0, 0]);
@@ -35,8 +42,9 @@ package monkey.core.shader.filters {
 		 * 
 		 */		
 		public function set fogDistance(value : Number) : void {
-			if (value == 0)
+			if (value <= 0) {
 				value = 1;
+			}
 			this._fogDistance = value;
 			this._fogData[3]  = 1 / value;
 		}
@@ -50,15 +58,15 @@ package monkey.core.shader.filters {
 		 * @param value
 		 * 
 		 */		
-		public function set fogColor(value : uint) : void {
+		public function set fogColor(value : Color) : void {
 			this._fogColor = value;
-			this._fogData[0] = ((fogColor >> 16) & 0xff) / 0xff;
-			this._fogData[1] = ((fogColor >> 8) & 0xff) / 0xff;
-			this._fogData[2] = (fogColor & 0xff) / 0xff;
+			this._fogData[0] = value.r;
+			this._fogData[1] = value.g;
+			this._fogData[2] = value.b;
 			this._fogData[3] = 1 / fogDistance;
 		}
 		
-		public function get fogColor() : uint {
+		public function get fogColor() : Color {
 			return _fogColor;
 		}
 		
@@ -107,8 +115,6 @@ package monkey.core.shader.filters {
 			regCache.removeVt(vt0);
 			return code;
 		}
-		
-		
-		
+				
 	}
 }

@@ -17,15 +17,27 @@ package monkey.core.shader.filters {
 		private var offsets : Vector.<Number>;
 		private var _texLabel : FsRegisterLabel;
 		
+		/**
+		 * 高斯模糊 
+		 * @param texture	贴图，贴图寻址模式需要使用Texture3D.WRAP_CLAMP模式。
+		 * @param offsetX	偏移量
+		 * @param offsetY	偏移量
+		 * 
+		 */		
 		public function BlurFilter(texture : Texture3D, offsetX : Number, offsetY : Number) {
 			super("BlurFilter");
 			this.offsets = Vector.<Number>([offsetX, offsetY, 21, 5.0]);
 			this._texLabel = new FsRegisterLabel(texture);
-			texture.wrapMode = Texture3D.WRAP_REPEAT;
+			texture.wrapMode = Texture3D.WRAP_CLAMP;
 		}
 		
+		/**
+		 * 贴图需要使用Texture3D.WRAP_CLAMP模式。
+		 * @param texture
+		 * 
+		 */		
 		public function set texture(texture : Texture3D) : void {
-			texture.wrapMode = Texture3D.WRAP_REPEAT;
+			texture.wrapMode = Texture3D.WRAP_CLAMP;
 			this._texLabel.texture = texture;
 		}
 		

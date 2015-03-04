@@ -15,6 +15,7 @@ package monkey.core.scene {
 	import monkey.core.camera.Camera3D;
 	import monkey.core.camera.lens.PerspectiveLens;
 	import monkey.core.textures.Texture3D;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Device3D;
 	import monkey.core.utils.Input3D;
 	import monkey.core.utils.Time3D;
@@ -62,7 +63,7 @@ package monkey.core.scene {
 		public var skipCurrentRender	: Boolean;
 						
 		private var _container 			: DisplayObject;		// 2d容器
-		private var _backgroundColor 	: uint;					// 背景色
+		private var _backgroundColor 	: Color;				// 背景色
 		private var _clearColor			: Vector3D;				// 后台缓冲区颜色
 		private var _stage3d			: Stage3D;				// stage3d
 		private var _context3d			: Context3D;			// context3d
@@ -81,8 +82,7 @@ package monkey.core.scene {
 			this.textures   = new Vector.<Texture3D>();
 			this.container  = dispObject;
 			this.antialias  = 4;
-			this.clearColor = new Vector3D();
-			this.background = 0x333333;
+			this.background = new Color(0x333333);
 			this.camera     = new Camera3D(new PerspectiveLens());
 			this.camera.transform.setPosition(0, 0, -100);
 			if (this.container.stage) {
@@ -114,24 +114,6 @@ package monkey.core.scene {
 		}
 		
 		/**
-		 * clear颜色:w分量为alpha 
-		 * @return 
-		 * 
-		 */		
-		public function get clearColor():Vector3D {
-			return _clearColor;
-		}
-		
-		/**
-		 * clear颜色:w分量为alpha 
-		 * @param value
-		 * 
-		 */		
-		public function set clearColor(value:Vector3D):void {
-			_clearColor = value;
-		}
-		
-		/**
 		 * 获取抗锯齿等级 
 		 * @return 
 		 * 
@@ -152,7 +134,7 @@ package monkey.core.scene {
 			_antialias = value;
 			if (viewPort && _stage3d && _stage3d.context3D) {
 				_stage3d.context3D.configureBackBuffer(viewPort.width, viewPort.height, value);
-				_stage3d.context3D.clear(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+				_stage3d.context3D.clear(background.r, background.g, background.b, background.alpha);
 			}
 		}
 		
@@ -202,7 +184,7 @@ package monkey.core.scene {
 				stage3d.x = x;
 				stage3d.y = y;
 				context.configureBackBuffer(width, height, antialias);
-				context.clear(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+				context.clear(background.r, background.g, background.b, background.alpha);
 			}
 		}
 		
@@ -281,7 +263,7 @@ package monkey.core.scene {
 		 */		
 		private function renderScene() : void {
 			if (this.context) {
-				this.context.clear(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+				this.context.clear(background.r, background.g, background.b, background.alpha);
 				this.context.setDepthTest(Device3D.defaultDepthWrite, Device3D.defaultCompare);
 				this.context.setCulling(Device3D.defaultCullFace);
 				this.context.setBlendFactors(Device3D.defaultSourceFactor, Device3D.defaultDestFactor);
@@ -440,7 +422,7 @@ package monkey.core.scene {
 		 * @return 
 		 * 
 		 */		
-		public function get background():uint {
+		public function get background():Color {
 			return _backgroundColor;
 		}
 		
@@ -449,13 +431,10 @@ package monkey.core.scene {
 		 * @param value
 		 * 
 		 */		
-		public function set background(value:uint):void {
+		public function set background(value:Color):void {
 			_backgroundColor = value;
-			clearColor.z = (value & 0xFF) / 0xFF;
-			clearColor.y = ((value >> 8) & 0xFF) / 0xFF;
-			clearColor.x = ((value >> 16) & 0xFF) / 0xFF;
 		}
-		
+				
 		public function show() : void {
 			if (stage3d) {
 				stage3d.visible = true;

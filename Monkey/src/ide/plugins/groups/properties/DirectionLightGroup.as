@@ -44,18 +44,18 @@ package ide.plugins.groups.properties {
 		}
 		
 		private function change(event:Event) : void {
-			this._light.color 	 = _lightColor.color;
-			this._light.ambient  = _ambientColor.color;
-			this._light.specular = _specularColor.color;
-			this._light.power 	 = _power.value;
+			this._light.color.color    = _lightColor.color;
+			this._light.ambient.color  = _ambientColor.color;
+			this._light.specular.color = _specularColor.color;
+			this._light.power 	 	   = _power.value;
 		}
 		
 		override public function update(app : App) : Boolean {
 			if (app.selection.main is DirectionalLight) {
 				this._light = app.selection.main as DirectionalLight;
-				this._lightColor.color 	  = _light.color;
-				this._ambientColor.color  = _light.ambient;
-				this._specularColor.color = _light.specular;
+				this._lightColor.color 	  = _light.color.color;
+				this._ambientColor.color  = _light.ambient.color;
+				this._specularColor.color = _light.specular.color;
 				this._power.value 		  = _light.power;
 				return true;
 			}

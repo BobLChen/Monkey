@@ -17,6 +17,7 @@ package monkey.core.entities {
 	import monkey.core.scene.Scene3D;
 	import monkey.core.textures.Bitmap2DTexture;
 	import monkey.core.textures.BitmapCubeTexture;
+	import monkey.core.utils.Color;
 
 	/**
 	 * 海水 
@@ -54,7 +55,7 @@ package monkey.core.entities {
 			super();
 			this._waterSpeed 	= 0.25;
 			this._pointArr 		= [new Point(), new Point()];
-			this._waterMaterial = new WaterMaterial(new BitmapCubeTexture(cubeTexture), new Bitmap2DTexture(normalTexture));
+			this._waterMaterial = new WaterMaterial(new BitmapCubeTexture(cubeTexture), new Bitmap2DTexture(normalTexture), 30, 20, new Color(0x668099));
 			this._waterDirty	= true;
 			this._meshRenderer  = new MeshRenderer(null, this._waterMaterial);
 			this.addComponent(this._meshRenderer);
@@ -96,11 +97,11 @@ package monkey.core.entities {
 			return this._waterMaterial.normalTexture as Bitmap2DTexture;
 		}
 						
-		public function set blendColor(value : uint) : void {
+		public function set blendColor(value : Color) : void {
 			this._waterMaterial.blendColor = value;
 		}
 		
-		public function get blendColor() : uint {
+		public function get blendColor() : Color {
 			return this._waterMaterial.blendColor;
 		}
 		

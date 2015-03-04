@@ -7,11 +7,21 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.ShaderRegisterElement;
 	import monkey.core.textures.Texture3D;
 
+	/**
+	 * 普通贴图 
+	 * @author Neil
+	 * 
+	 */	
 	public class TextureMapFilter extends Filter3D {
 
 		private var label : FsRegisterLabel;
 		private var data  : Vector.<Number>;
 		
+		/**
+		 * 贴图 
+		 * @param texture
+		 * 
+		 */		
 		public function TextureMapFilter(texture : Texture3D) {
 			super("TextureMapFilter");
 			this.priority = 15;

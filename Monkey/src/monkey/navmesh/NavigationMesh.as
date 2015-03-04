@@ -8,6 +8,7 @@ package monkey.navmesh {
 	import monkey.core.entities.Mesh3D;
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.renderer.MeshRenderer;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Vector3DUtils;
 	
 	/**
@@ -32,7 +33,7 @@ package monkey.navmesh {
 			this._cells = new Vector.<NavigationCell>();
 			this._heap  = new BinaryHeap(compare);
 			this._mesh  = mesh;
-			this.addComponent(new MeshRenderer(this._mesh, new ColorMaterial(0xFFCB00)));
+			this.addComponent(new MeshRenderer(this._mesh, new ColorMaterial(new Color(0xFFCB00))));
 			
 			var geo : Surface3D = mesh.surfaces[0];
 			var vertexVector	: Vector.<Number> = geo.getVertexVector(Surface3D.POSITION);

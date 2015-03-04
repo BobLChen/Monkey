@@ -3,6 +3,11 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.textures.Texture3D;
 	
+	/**
+	 * filter 
+	 * @author Neil
+	 * 
+	 */	
 	public class Filter3D {
 		
 		public var name 	: String;

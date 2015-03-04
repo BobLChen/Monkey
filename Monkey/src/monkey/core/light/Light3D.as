@@ -4,6 +4,7 @@ package monkey.core.light {
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.interfaces.IComponent;
+	import monkey.core.utils.Color;
 	
 	/**
 	 * 灯光 
@@ -12,14 +13,14 @@ package monkey.core.light {
 	 */	
 	public class Light3D extends Object3D {
 		
-		private var _color 		: uint;
-		private var _ambient	: uint;
+		private var _color 		: Color;
+		private var _ambient	: Color;
 		private var _intensity 	: Number;
 		
 		public function Light3D() {
 			super();
-			this.color 		= 0xffffff;
-			this.ambient	= 0x333333;
+			this.color 		= new Color(0xffffff);
+			this.ambient	= new Color(0x333333);
 			this.intensity 	= 1;
 		}
 		
@@ -50,7 +51,7 @@ package monkey.core.light {
 			return c;
 		}
 		
-		public function get ambient() : uint {
+		public function get ambient() : Color {
 			return _ambient;
 		}
 		
@@ -59,7 +60,7 @@ package monkey.core.light {
 		 * @param value
 		 * 
 		 */		
-		public function set ambient(value : uint) : void {
+		public function set ambient(value : Color) : void {
 			this._ambient = value;
 			this.dispatchEvent(new Event(Event.CHANGE));
 		}
@@ -69,7 +70,7 @@ package monkey.core.light {
 		 * @return
 		 *
 		 */
-		public function get color() : uint {
+		public function get color() : Color {
 			return _color;
 		}
 		
@@ -78,7 +79,7 @@ package monkey.core.light {
 		 * @param value
 		 *
 		 */
-		public function set color(value : uint) : void {
+		public function set color(value : Color) : void {
 			this._color = value;
 			this.dispatchEvent(new Event(Event.CHANGE));
 		}

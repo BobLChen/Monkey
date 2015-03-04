@@ -1,4 +1,7 @@
 package monkey.core.shader.filters {
+	
+	import flash.utils.ByteArray;
+	
 	import monkey.core.base.Surface3D;
 	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.shader.utils.ShaderRegisterElement;
@@ -20,8 +23,17 @@ package monkey.core.shader.filters {
 			this.boneLabel = new VcRegisterLabel(null);
 		}
 		
+		
+		/**
+		 * 骨骼数据 
+		 * @param bytes
+		 * 
+		 */		
+		public function set data(bytes : ByteArray) : void {
+			this.boneLabel.bytes = bytes;
+		}
+		
 		override public function getVertexCode(regCache : ShaderRegisterCache, agal : Boolean) : String {
-			
 			// 56 * 2
 			var bones : ShaderRegisterElement = regCache.getVc(Device3D.MAX_QUAT_BONE * 2, boneLabel);
 			var vc123 : ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(Vector.<Number>([1, 0, 0, bones.index])));
@@ -161,7 +173,6 @@ package monkey.core.shader.filters {
 				regCache.removeFt(nrm);
 				regCache.removeFt(res);
 			}
-			
 			
 			return vertexCode;
 		}

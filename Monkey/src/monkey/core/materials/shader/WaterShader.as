@@ -4,6 +4,7 @@ package monkey.core.materials.shader {
 	import monkey.core.shader.filters.WaveFilter;
 	import monkey.core.textures.CubeTextue3D;
 	import monkey.core.textures.Texture3D;
+	import monkey.core.utils.Color;
 	
 	/**
 	 * 水波shader 
@@ -41,7 +42,7 @@ package monkey.core.materials.shader {
 			this.waterFilter.waveHeight = value;
 		}
 		
-		public function set blendColor(value : uint) : void {
+		public function set blendColor(value : Color) : void {
 			this.waterFilter.blendColor = value;
 		}
 		

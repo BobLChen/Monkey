@@ -15,6 +15,7 @@ package monkey.core.parser {
 	import monkey.core.parser.utils.ParserUtil;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.shader.Shader3D;
+	import monkey.core.utils.Color;
 
 	public class Max3DSParser extends EventDispatcher {
 
@@ -560,7 +561,7 @@ package monkey.core.parser {
 					}
 				}
 				
-				object3d.addComponent(new MeshRenderer(mesh, new ColorMaterial()));
+				object3d.addComponent(new MeshRenderer(mesh, new ColorMaterial(Color.WHITE)));
 				
 				return object3d;
 			}

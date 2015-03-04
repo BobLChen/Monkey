@@ -38,17 +38,17 @@ package ide.plugins.groups.properties {
 		}
 
 		private function change(event : Event) : void {
-			this._light.color 		= _lightColor.color;
-			this._light.ambient 	= _ambientColor.color;
-			this._light.radius 		= _radius.value;
-			this._light.intensity   = _intensity.value;
+			this._light.color.color 	= _lightColor.color;
+			this._light.ambient.color 	= _ambientColor.color;
+			this._light.radius 			= _radius.value;
+			this._light.intensity   	= _intensity.value;
 		}
 		
 		override public function update(app : App) : Boolean {
 			if (app.selection.main is PointLight) {
 				this._light = app.selection.main as PointLight;
-				this._lightColor.color 	 = _light.color;
-				this._ambientColor.color = _light.ambient;
+				this._lightColor.color 	 = _light.color.color;
+				this._ambientColor.color = _light.ambient.color;
 				this._radius.value 		 = _light.radius;
 				this._intensity.value 	 = _light.intensity;
 				return true;

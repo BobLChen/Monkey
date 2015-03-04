@@ -10,7 +10,6 @@ package ide.plugins {
 	import monkey.core.entities.Cone;
 	import monkey.core.entities.Water3D;
 	import monkey.core.entities.particles.ParticleSystem;
-	import monkey.core.entities.particles.prop.value.PropCurves;
 	import monkey.core.entities.primitives.Capsule;
 	import monkey.core.entities.primitives.Cube;
 	import monkey.core.entities.primitives.Cylinder;
@@ -20,6 +19,7 @@ package ide.plugins {
 	import monkey.core.light.PointLight;
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.renderer.MeshRenderer;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Device3D;
 	
 	import ui.core.interfaces.IPlugin;
@@ -105,7 +105,7 @@ package ide.plugins {
 		private function createSphere(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Sphere"
-			obj.addComponent(new MeshRenderer(new Sphere(), new ColorMaterial(0x777777)));
+			obj.addComponent(new MeshRenderer(new Sphere(), new ColorMaterial(Color.GRAY)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -113,7 +113,7 @@ package ide.plugins {
 		private function createPlaneZY(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Plane"
-			obj.addComponent(new MeshRenderer(new Plane(10, 10, 1, "+yz"), new ColorMaterial(0x777777)));
+			obj.addComponent(new MeshRenderer(new Plane(10, 10, 1, "+yz"), new ColorMaterial(Color.GRAY)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -121,7 +121,7 @@ package ide.plugins {
 		private function createPlaneXY(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Plane"
-			obj.addComponent(new MeshRenderer(new Plane(10, 10, 1, "+xy"), new ColorMaterial(0x777777)));
+			obj.addComponent(new MeshRenderer(new Plane(10, 10, 1, "+xy"), new ColorMaterial(Color.GRAY)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -129,7 +129,7 @@ package ide.plugins {
 		private function createPlaneXZ(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Plane";
-			obj.addComponent(new MeshRenderer(new Plane(10, 10, 1, "+xz"), new ColorMaterial(0x777777)));
+			obj.addComponent(new MeshRenderer(new Plane(10, 10, 1, "+xz"), new ColorMaterial(Color.GRAY)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -137,7 +137,7 @@ package ide.plugins {
 		private function createCylinder(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Cylinder";
-			obj.addComponent(new MeshRenderer(new Cylinder(), new ColorMaterial(0x777777)));
+			obj.addComponent(new MeshRenderer(new Cylinder(), new ColorMaterial(Color.GRAY)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -145,7 +145,7 @@ package ide.plugins {
 		private function createCone(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Cone";
-			obj.addComponent(new MeshRenderer(new Cone(), new ColorMaterial(0x777777)));
+			obj.addComponent(new MeshRenderer(new Cone(), new ColorMaterial(Color.GRAY)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -153,7 +153,7 @@ package ide.plugins {
 		private function createCapsule(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Capsule";
-			obj.addComponent(new MeshRenderer(new Capsule(), new ColorMaterial(0x777777)));
+			obj.addComponent(new MeshRenderer(new Capsule(), new ColorMaterial(Color.GRAY)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}
@@ -161,7 +161,7 @@ package ide.plugins {
 		private function createCube(e : Event) : void {
 			var obj : Object3D = new Object3D();
 			obj.name = "Cube";
-			obj.addComponent(new MeshRenderer(new Cube(), new ColorMaterial(0x777777)));
+			obj.addComponent(new MeshRenderer(new Cube(), new ColorMaterial(Color.GRAY)));
 			this._app.scene.addChild(obj);
 			this._app.selection.objects = [obj];
 		}

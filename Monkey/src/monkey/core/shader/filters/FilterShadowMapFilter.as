@@ -34,6 +34,12 @@ package monkey.core.shader.filters {
 		private var _shadowLabel	: FsRegisterLabel;
 		private var _light 			: Camera3D;
 		
+		/**
+		 * 阴影shader 
+		 * @param shadowmap		shadowmmap图
+		 * @param light			灯光
+		 * 
+		 */		
 		public function FilterShadowMapFilter(shadowmap : Texture3D, light : Camera3D) {
 			super("FilterShadowMapFilter");
 			this.priority 		= 14;

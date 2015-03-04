@@ -15,11 +15,16 @@ package monkey.core.shader.filters {
 	 */	
 	public class NormalMapFilter extends Filter3D {
 		
-		private var v0 		: ShaderRegisterElement;
-		private var v2 		: ShaderRegisterElement;
-		private var v3 		: ShaderRegisterElement;
-		private var label	: FsRegisterLabel;
+		private var v0 	  : ShaderRegisterElement;
+		private var v2 	  : ShaderRegisterElement;
+		private var v3 	  : ShaderRegisterElement;
+		private var label : FsRegisterLabel;
 			
+		/**
+		 * 法线贴图Filter
+		 * @param texture	法线贴图
+		 * 
+		 */		
 		public function NormalMapFilter(texture : Texture3D) {
 			super("NormalMapFilter");
 			this.priority = 14;

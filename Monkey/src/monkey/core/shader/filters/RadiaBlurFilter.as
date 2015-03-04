@@ -20,6 +20,14 @@ package monkey.core.shader.filters {
 		private var consts 	: Vector.<Number>;
 		private var label   : FsRegisterLabel;
 				
+		/**
+		 * 径向模糊 
+		 * @param texture	贴图
+		 * @param step		步长
+		 * @param xBias		x偏移量
+		 * @param yBias		y偏移量
+		 * 
+		 */		
 		public function RadiaBlurFilter(texture : Texture3D, step : int = 10, xBias : Number = 0.0025, yBias : Number = 0.005) {
 			super("RadiaBlurFilter");
 			this.label	= new FsRegisterLabel(texture);

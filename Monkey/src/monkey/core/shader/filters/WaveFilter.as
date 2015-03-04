@@ -10,6 +10,7 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.VcRegisterLabel;
 	import monkey.core.textures.CubeTextue3D;
 	import monkey.core.textures.Texture3D;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Device3D;
 	
 	/**
@@ -24,7 +25,7 @@ package monkey.core.shader.filters {
 		private var _fc0Data	: Vector.<Number>;
 		private var _fc1Data	: Vector.<Number>;
 		private var _blendData 	: Vector.<Number>;
-		private var _blendColor : uint;
+		private var _blendColor : Color;
 		private var _heightData : Vector.<Number>;
 		private var mvpPosVary 	: ShaderRegisterElement;
 		private var _nrmLabel	: FsRegisterLabel;
@@ -42,7 +43,7 @@ package monkey.core.shader.filters {
 			this._blendData = Vector.<Number>([0.4, 0.5, 0.6, 1.0]);
 			this._heightData= Vector.<Number>([20, 2, 4, 8.0]);
 			this.waveHeight = 20;
-			this.blendColor = 0x668099;
+			this.blendColor = new Color(0x668099);
 		}
 		
 		/**
@@ -86,13 +87,10 @@ package monkey.core.shader.filters {
 		 * @param value
 		 * 
 		 */		
-		public function set blendColor(value : uint) : void {
-			if (_blendColor == value) {
-				return;
-			}
-			this._blendData[0] = ((value >> 16) & 0xFF) / 0xFF;
-			this._blendData[1] = ((value >> 8) & 0xFF) / 0xFF;
-			this._blendData[2] = (value & 0xFF) / 0xFF;
+		public function set blendColor(value : Color) : void {
+			this._blendData[0] = value.r;
+			this._blendData[1] = value.g;
+			this._blendData[2] = value.b;
 			this._blendColor = value;
 		}
 		
@@ -101,7 +99,7 @@ package monkey.core.shader.filters {
 		 * @param value
 		 * 
 		 */		
-		public function get blendColor() : uint {
+		public function get blendColor() : Color {
 			return _blendColor;
 		}
 		

@@ -21,9 +21,9 @@ package monkey.core.shader.filters {
 		 * 全屏泛光bloom
 		 * @param originTexture		原始texture
 		 * @param bloomTexture		叠加texture
-		 *
+		 * @param intensity			模糊强度
 		 */
-		public function CombineFilter(originTexture : Texture3D, bloomTexture : Texture3D, intensity : Number) {
+		public function CombineFilter(originTexture : Texture3D, bloomTexture : Texture3D, intensity : Number = 0.7) {
 			super(name);
 			this._bias		= Vector.<Number>([intensity, 0, 0, 0]);
 			this._baseLabel	= new FsRegisterLabel(originTexture);
@@ -31,6 +31,7 @@ package monkey.core.shader.filters {
 		}
 		
 		override public function getFragmentCode(regCache:ShaderRegisterCache, agal:Boolean):String {
+			
 			var fs0 : ShaderRegisterElement = regCache.getFs(_baseLabel);
 			var fs1 : ShaderRegisterElement = regCache.getFs(_blurLbael);
 			var ft0 : ShaderRegisterElement = regCache.getFt();

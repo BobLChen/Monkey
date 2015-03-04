@@ -20,6 +20,12 @@ package monkey.core.shader.filters {
 		private var _label  : FsRegisterLabel;
 		private var _mode	: String = MUL;
 		
+		/**
+		 *  
+		 * @param texture	lightmap贴图
+		 * @param mode		模式
+		 * 
+		 */		
 		public function LightMapfilter(texture : Texture3D, mode : String = MUL) {
 			super("LightMapfilter");
 			this._mode = mode;

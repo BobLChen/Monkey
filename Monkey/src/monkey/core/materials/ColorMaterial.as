@@ -2,6 +2,7 @@ package monkey.core.materials {
 
 	import monkey.core.materials.shader.ColorShader;
 	import monkey.core.scene.Scene3D;
+	import monkey.core.utils.Color;
 
 	/**
 	 * 纯色材质 
@@ -10,31 +11,25 @@ package monkey.core.materials {
 	 */	
 	public class ColorMaterial extends Material3D {
 
-		private var _color 	: uint;
-		private var _red 	: Number;
-		private var _green 	: Number;
-		private var _blue 	: Number;
-		
+		private var _color 	: Color;
+				
 		/**
 		 *  
 		 * @param color	颜色
 		 * 
 		 */		
-		public function ColorMaterial(color : uint = 0xFFFFFF) {
+		public function ColorMaterial(color : Color) {
 			super();
 			this._shader = ColorShader.instance; 
 			this.color  = color;
 		}
 		
-		public function get color() : uint {
+		public function get color() : Color {
 			return _color;
 		}
 		
-		public function set color(value : uint) : void {
+		public function set color(value : Color) : void {
 			_color 	= value;
-			_blue 	= (value & 0xFF) / 0xFF;
-			_green 	= ((value >> 8) & 0xFF) / 0xFF;
-			_red 	= ((value >> 16) & 0xFF) / 0xFF;
 		}
 		
 		override public function clone() : Material3D {
@@ -43,7 +38,7 @@ package monkey.core.materials {
 		}
 		
 		override protected function setShaderDatas(scene : Scene3D) : void {
-			ColorShader(shader).setColor(_red, _green, _blue);
+			ColorShader(shader).color = _color;
 		}
 		
 	}
