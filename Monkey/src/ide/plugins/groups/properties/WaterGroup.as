@@ -1,110 +1,155 @@
 package ide.plugins.groups.properties {
 
+	import flash.display.BitmapData;
 	import flash.events.Event;
-	import flash.net.FileFilter;
 	
 	import ide.App;
+	import ide.utils.FileUtils;
 	
 	import monkey.core.entities.Water3D;
 	import monkey.core.textures.Bitmap2DTexture;
 	import monkey.core.textures.BitmapCubeTexture;
-	import monkey.core.utils.Device3D;
+	import monkey.core.utils.Texture3DUtils;
 	
 	import ui.core.controls.ColorPicker;
 	import ui.core.controls.Image;
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
-	import ui.core.utils.FileUtils;
 
 	public class WaterGroup extends PropertiesGroup {
 
-		private var _app 				: App;
-		private var _waterSegment 		: Spinner;
-		private var _width 				: Spinner;
-		private var _height 			: Spinner;
-		private var _waterSpeed 		: Spinner;
-		private var _waveDias 			: Spinner;
-		private var _waveHeight 		: Spinner;
-		private var _waterBlendColor	: ColorPicker;
-		private var _waterTexture 		: Image;
-		private var _waterDisplayment 	: Image;
-		private var _water 				: Water3D;
+		private var _app 		: App;
+		private var _segment 	: Spinner;
+		private var _width 		: Spinner;
+		private var _height 	: Spinner;
+		private var _speed 		: Spinner;
+		private var _wave 		: Spinner;
+		private var _waveHeight : Spinner;
+		private var _blendColor	: ColorPicker;
+		private var _texture 	: Image;
+		private var _displayment: Image;
+		private var _water 		: Water3D;
 		
 		public function WaterGroup() {
 			super("Water");
 			this.accordion.contentHeight = 340;
 			this.layout.maxHeight = 340;
 			
-			this._width 		= layout.addControl(new Spinner(3000), "Width:") as Spinner;
-			this._height 		= layout.addControl(new Spinner(3000), "Height:") as Spinner;
-			this._waterSegment 	= layout.addControl(new Spinner(64, 1, 64, 2, 1), "Segment:") as Spinner;
-			this._waterSpeed 	= layout.addControl(new Spinner(0.0025, 0, 10, 5, 0.0002), "WaterSpeed:") as Spinner;
-			this._waveDias 		= layout.addControl(new Spinner(20), "WavePower:") as Spinner;
-			this._waveHeight 	= layout.addControl(new Spinner(20), "WaveHeight:") as Spinner;
-			this._waterBlendColor = layout.addControl(new ColorPicker(), "BlendColor:") as ColorPicker;
+			this._width 	 = layout.addControl(new Spinner(3000), "Width:")  as Spinner;
+			this._height 	 = layout.addControl(new Spinner(3000), "Height:") as Spinner;
+			this._segment 	 = layout.addControl(new Spinner(64, 1, 64, 2, 1), 		"Segment:")    as Spinner;
+			this._speed 	 = layout.addControl(new Spinner(0,  0, 10, 5, 0.0002), "WaterSpeed:") as Spinner;
+			this._wave 		 = layout.addControl(new Spinner(20), 	"WavePower:")  as Spinner;
+			this._waveHeight = layout.addControl(new Spinner(20), 	"WaveHeight:") as Spinner;
+			this._blendColor = layout.addControl(new ColorPicker(), "BlendColor:") as ColorPicker;
 			
 			this.layout.addControl(new Label("WaterTexture:"));
-			this._waterTexture = layout.addControl(new Image(Device3D.nullBitmapData, true, 100, 100)) as Image;
+			this._texture = layout.addControl(new Image(Texture3DUtils.nullBitmapData, true, 100, 100)) as Image;
 			this.layout.addControl(new Label("WaterDisplaymentTexture:"));
-			this._waterDisplayment = layout.addControl(new Image(Device3D.nullBitmapData, true, 100, 100)) as Image;
+			this._displayment = layout.addControl(new Image(Texture3DUtils.nullBitmapData, true, 100, 100)) as Image;
 			
-			this._width.addEventListener(ControlEvent.STOP, 			changeWaterWidth);
-			this._height.addEventListener(ControlEvent.STOP, 			changeWaterHeight);
-			this._waterSegment.addEventListener(ControlEvent.STOP, 		changeWaterSegment);
-			this._waterSpeed.addEventListener(ControlEvent.CHANGE, 		changeWaterSpeed);
-			this._waveDias.addEventListener(ControlEvent.CHANGE, 		changeWavePower);
-			this._waterTexture.addEventListener(ControlEvent.CLICK, 	changeWaterTexture);
-			this._waterDisplayment.addEventListener(ControlEvent.CLICK, changeWaterDisplayment);
-			this._waterBlendColor.addEventListener(ControlEvent.CHANGE, changeBlendColor);
-			this._waveHeight.addEventListener(ControlEvent.CHANGE, 		changeWaveHeight);
+			this._width.addEventListener(ControlEvent.STOP, 		changeWaterWidth);
+			this._height.addEventListener(ControlEvent.STOP, 		changeWaterHeight);
+			this._segment.addEventListener(ControlEvent.STOP, 		changeWaterSegment);
+			this._speed.addEventListener(ControlEvent.CHANGE, 		changeWaterSpeed);
+			this._wave.addEventListener(ControlEvent.CHANGE, 		changeWavePower);
+			this._texture.addEventListener(ControlEvent.CLICK, 		changeWaterTexture);
+			this._displayment.addEventListener(ControlEvent.CLICK, 	changeWaterDisplayment);
+			this._blendColor.addEventListener(ControlEvent.CHANGE, 	changeBlendColor);
+			this._waveHeight.addEventListener(ControlEvent.CHANGE, 	changeWaveHeight);
 		}
 		
-		protected function changeWaveHeight(event:Event) : void {
+		/**
+		 * 水波高度 
+		 * @param event
+		 * 
+		 */		
+		private function changeWaveHeight(event:Event) : void {
 			_water.waterHeight = _waveHeight.value;		
 		}
 		
-		protected function changeBlendColor(event:Event) : void {
-			_water.blendColor.color = _waterBlendColor.color;
+		/**
+		 * 闪光色 
+		 * @param event
+		 * 
+		 */		
+		private function changeBlendColor(event:Event) : void {
+			_water.blendColor.color = _blendColor.color;
 		}
 		
-		protected function changeWaterDisplayment(event:Event) : void {
+		/**
+		 * 扭曲图 
+		 * @param event
+		 * 
+		 */		
+		private function changeWaterDisplayment(event:Event) : void {
 			var file : FileUtils = new FileUtils();
-			file.addEventListener(FileUtils.IMAGE, function(e:Event):void{
-				_waterDisplayment.source = file.bitmap;
-				_water.normalTexture.dispose(true);
-				_water.normalTexture = new Bitmap2DTexture(file.bitmap.bitmapData);
+			file.openForImage(function(bmp : BitmapData):void{
+				_displayment.source = bmp;
+				_water.userData.normal = file.bytes;
+				_water.normalTexture.dispose();
+				_water.normalTexture = new Bitmap2DTexture(bmp);
 			});
-			file.openForImage([new FileFilter("Image","*.png;*.PNG;*.JPG;*.jpg;*.JPEG;*.jpeg")]);
 		}
-		
-		protected function changeWaterTexture(event:Event) : void {
+				
+		/**
+		 * 海水颜色 
+		 * @param event
+		 * 
+		 */		
+		private function changeWaterTexture(event:Event) : void {
 			var file : FileUtils = new FileUtils();
-			file.addEventListener(FileUtils.IMAGE, function(e:Event):void{
-				_waterTexture.source = file.bitmap;
-				_water.texture.dispose(true);
-				_water.texture = new BitmapCubeTexture(file.bitmap.bitmapData);
+			file.openForImage(function(bmp : BitmapData):void{
+				_texture.source = bmp;
+				_water.userData.texture = file.bytes;
+				_water.texture.dispose();
+				_water.texture = new BitmapCubeTexture(bmp);
 			});
-			file.openForImage([new FileFilter("Image","*.png;*.PNG;*.JPG;*.jpg;*.JPEG;*.jpeg")]);
 		}
 		
-		protected function changeWavePower(event:Event) : void {
-			_water.waterWave = _waveDias.value;
+		/**
+		 * 海水等级 
+		 * @param event
+		 * 
+		 */		
+		private function changeWavePower(event:Event) : void {
+			_water.waterWave = _wave.value;
 		}
 		
-		protected function changeWaterSpeed(event:Event) : void {
-			_water.waterSpeed = _waterSpeed.value;			
+		/**
+		 * 海水速度 
+		 * @param event
+		 * 
+		 */		
+		private function changeWaterSpeed(event:Event) : void {
+			_water.waterSpeed = _speed.value;			
 		}
 		
-		protected function changeWaterSegment(event:Event) : void {
-			_water.segment = _waterSegment.value;			
+		/**
+		 * 海水段数 
+		 * @param event
+		 * 
+		 */		
+		private function changeWaterSegment(event:Event) : void {
+			_water.segment = _segment.value;			
 		}
 		
-		protected function changeWaterHeight(event:Event) : void {
+		/**
+		 * 海水高度 
+		 * @param event
+		 * 
+		 */		
+		private function changeWaterHeight(event:Event) : void {
 			_water.height = _height.value;			
 		}
 		
-		protected function changeWaterWidth(event:Event) : void {
+		/**
+		 * 海水宽度 
+		 * @param event
+		 * 
+		 */		
+		private function changeWaterWidth(event:Event) : void {
 			_water.width = _width.value;
 		}
 		
@@ -117,18 +162,18 @@ package ide.plugins.groups.properties {
 			}
 			return false;
 		}
-				
+		
 		private function updateWater() : void {
 			this._width.value 			= _water.width;
 			this._height.height 		= _water.height;
-			this._waterSegment.value 	= _water.segment;
-			this._waterSpeed.value 		= _water.waterSpeed;
-			this._waveDias.value 		= _water.waterWave;
-			this._waterTexture.source 	= _water.texture.bitmapData;
-			this._waterDisplayment.source= _water.normalTexture.bitmapData;
-			this._waterBlendColor.color = _water.blendColor.color;
+			this._segment.value 		= _water.segment;
+			this._speed.value 			= _water.waterSpeed;
+			this._wave.value 			= _water.waterWave;
+			this._texture.source 		= _water.texture.bitmapData;
+			this._displayment.source	= _water.normalTexture.bitmapData;
+			this._blendColor.color 		= _water.blendColor.color;
 			this._waveHeight.value 		= _water.waterHeight;
 		}
-		
+				
 	}
 }

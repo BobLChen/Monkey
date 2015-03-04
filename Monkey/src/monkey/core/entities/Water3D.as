@@ -40,8 +40,7 @@ package monkey.core.entities {
 		private var _width			: Number;
 		private var _height			: Number;
 		private var _segment		: int;
-		private var _meshRenderer	: MeshRenderer;
-		
+				
 		/**
 		 *  
 		 * @param cubeTexture			海水材质贴图
@@ -53,12 +52,12 @@ package monkey.core.entities {
 		 */		
 		public function Water3D(cubeTexture : BitmapData, normalTexture : BitmapData, width : Number = 3000, height : Number = 3000, segment : int = 32) {
 			super();
+			this.name = "Water3D";
 			this._waterSpeed 	= 0.25;
 			this._pointArr 		= [new Point(), new Point()];
 			this._waterMaterial = new WaterMaterial(new BitmapCubeTexture(cubeTexture), new Bitmap2DTexture(normalTexture), 30, 20, new Color(0x668099));
 			this._waterDirty	= true;
-			this._meshRenderer  = new MeshRenderer(null, this._waterMaterial);
-			this.addComponent(this._meshRenderer);
+			this.addComponent(new MeshRenderer(null, this._waterMaterial));
 			this.width 			= width;
 			this.height 		= height;
 			this.segment 		= segment;
@@ -66,8 +65,8 @@ package monkey.core.entities {
 		}
 		
 		private function initWater() : void {
-			if (this._meshRenderer.mesh) {
-				this._meshRenderer.mesh.dispose();
+			if (this.renderer.mesh) {
+				this.renderer.mesh.dispose(true);
 			}
 			this._waterDirty	= false;
 			this._waveBytes 	= new ByteArray();
@@ -78,7 +77,7 @@ package monkey.core.entities {
 			this._waveBmp 		= new BitmapData(segment, segment, false); // 柏林噪音图
 			this._shader2d 	    = new Shader(new WaterShader());
 			this._shader2d.data.src.input = _waveBmp;
-			this._meshRenderer.mesh = this._waveMesh;
+			this.renderer.mesh = this._waveMesh;
 		}
 		
 		public function get texture() : BitmapCubeTexture {

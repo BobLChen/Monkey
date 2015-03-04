@@ -27,6 +27,25 @@ package monkey.core.materials {
 			this.depthWrite = false;
 		}
 		
+		override public function clone():Material3D {
+			var c : ParticleMaterial = new ParticleMaterial();
+			c.texture = texture.clone();
+			c.blendTexture = blendTexture.clone();
+			c.keyframes = new ByteArray();
+			c.keyframes.readBytes(keyframes, 0, keyframes.length);
+			c.time = time;
+			c.totalLife = totalLife;
+			c.billboard = billboard;
+			return c;
+		}
+		
+		override public function dispose():void {
+			super.dispose();
+			this.texture.dispose();
+			this.blendTexture.dispose();
+			this.keyframes.clear();
+		}
+		
 		public function get billboard():Boolean {
 			return _billboard;
 		}

@@ -9,7 +9,7 @@ package monkey.core.utils {
 		private var _dict : Dictionary;
 				
 		public function Zip() {
-			_dict = new Dictionary();
+			this._dict = new Dictionary();
 		}
 		
 		public function loadBytes(bytes : ByteArray) : void {
@@ -27,7 +27,7 @@ package monkey.core.utils {
 				var data : ByteArray = new ByteArray();
 				data.endian = Endian.LITTLE_ENDIAN;
 				bytes.readBytes(data, 0, size);
-				_dict[name] = data;
+				this._dict[name] = data;
 			}
 		}
 		
@@ -38,7 +38,7 @@ package monkey.core.utils {
 		public function addFile(name : String, data : ByteArray) : void {
 			if (_dict[name])
 				return;
-			_dict[name] = data;
+			this._dict[name] = data;
 		}
 		
 		public function addString(name : String, data : String) : void {
@@ -47,7 +47,7 @@ package monkey.core.utils {
 			var byte : ByteArray = new ByteArray();
 			byte.endian = Endian.LITTLE_ENDIAN;
 			byte.writeUTFBytes(data);
-			_dict[name] = byte;
+			this._dict[name] = byte;
 		}
 		
 		public function serialize(output : ByteArray) : void {

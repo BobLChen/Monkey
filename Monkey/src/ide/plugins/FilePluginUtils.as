@@ -11,39 +11,31 @@ package ide.plugins {
 	
 	import ide.App;
 	import ide.events.LogEvent;
+	import ide.events.SceneEvent;
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.parser.Max3DSParser;
 	import monkey.core.parser.NavMeshParser;
 	import monkey.core.parser.OBJParser;
+	import monkey.core.utils.AssetsType;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Mesh3DUtils;
+	import monkey.loader.WaterLoader;
 
 	public class FilePluginUtils extends EventDispatcher {
 		
-		public static const JPEG    : String = "jpeg";
-		public static const JPG		: String = "jpg";
-		public static const PNG		: String = "png";
-		public static const MESH 	: String = "mesh";
-		public static const ANIM 	: String = "anim";
-		public static const OBJ  	: String = "obj";
-		public static const MAX3DS  : String = "3ds";
-		public static const NAV		: String = "nav";
-		public static const WATER	: String = "water";
-		public static const SKYBOX  : String = "sky";
-		
 		public static const TYPES : Array = [
-			JPEG,
-			JPG,
-			PNG,
-			MESH,
-			ANIM,
-			OBJ,
-			MAX3DS,
-			NAV,
-			WATER,
-			SKYBOX
+			AssetsType.JPEG,
+			AssetsType.JPG,
+			AssetsType.PNG,
+			AssetsType.MESH,
+			AssetsType.ANIM,
+			AssetsType.OBJ,
+			AssetsType.MAX3DS,
+			AssetsType.NAV,
+			AssetsType.WATER,
+			AssetsType.SKYBOX
 		];
 		
 		private static var _filters : Array;
@@ -127,9 +119,10 @@ package ide.plugins {
 		public static function init(app:App) : void {
 			_app = app;
 			_utils = new Dictionary();
-			_utils[MESH] = openMesh;
-			_utils[OBJ]  = openOBJ;
-			_utils[MAX3DS] = open3DS;
+			_utils[AssetsType.MESH] 	= openMesh;
+			_utils[AssetsType.OBJ]  	= openOBJ;
+			_utils[AssetsType.MAX3DS] 	= open3DS;
+			_utils[AssetsType.WATER]	= openWater;
 		}
 		
 		/**
@@ -171,13 +164,32 @@ package ide.plugins {
 			return parser.pivot;
 		}
 		
+		/**
+		 * 导入navmesh 
+		 * @param bytes
+		 * @return 
+		 * 
+		 */		
 		public static function openNavmesh(bytes : ByteArray) : Object3D {
 			bytes.position = 0;
 			var parser : NavMeshParser = new NavMeshParser();
-			
-			
 			return null;
 		}
-				
+		
+		/**
+		 * 导入water 
+		 * @param bytes
+		 * @return 
+		 * 
+		 */		
+		public static function openWater(bytes : ByteArray) : Object3D {
+			var loader : WaterLoader = new WaterLoader();
+			loader.loadBytes(bytes);
+			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
+				App.core.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));
+			});
+			return loader;
+		}
+		
 	}
 }

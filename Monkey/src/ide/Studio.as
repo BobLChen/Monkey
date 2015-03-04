@@ -4,6 +4,7 @@ package ide {
 	import flash.events.Event;
 	
 	import ide.plugins.CreatePlugin;
+	import ide.plugins.ExportPlugin;
 	import ide.plugins.FilePlugin;
 	import ide.plugins.HierarchyPlugin;
 	import ide.plugins.LogPlugin;
@@ -154,7 +155,7 @@ package ide {
 			app.initPlugin(new PropertiesPlugin());
 			app.initPlugin(new HierarchyPlugin());
 			app.initPlugin(new MaterialPlugin());
-//			this._app.initPlugin(new ExportPlugin());
+			app.initPlugin(new ExportPlugin());
 			
 			this.stage.addEventListener(Event.RESIZE, onResize);
 		}

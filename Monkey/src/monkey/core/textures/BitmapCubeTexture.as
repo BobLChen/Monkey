@@ -13,13 +13,15 @@ package monkey.core.textures {
 		
 		private var _transparent : Boolean;
 		private var _bitmapData  : BitmapData;
+		private var _bmps		 : Array;
 		
 		public function BitmapCubeTexture(bitmapdata : BitmapData) {
 			super();
-			this.bitmapData 	= bitmapdata;
+			this._bitmapData 	= bitmapdata;
 			this._width			= bitmapdata.width;
 			this._height		= bitmapdata.height;
 			this._transparent 	= bitmapdata.transparent;
+			this._bmps			= Texture3DUtils.extractCubeMap(bitmapData);
 		}
 		
 		/**
@@ -29,17 +31,13 @@ package monkey.core.textures {
 		 */		
 		override protected function contextEvent(e:Event=null):void {
 			super.contextEvent(e);
-			var bmps : Array = Texture3DUtils.extractCubeMap(bitmapData);
 			var i : int = 0;
 			while (i < 6) {
-				this.uploadWithMips(bmps[i], i);
+				this.uploadWithMips(this._bmps[i], i);
 				i++;
 			}
-			for each (var bmp : BitmapData in bmps) {
-				bmp.dispose();
-			}
 		}
-				
+		
 		/**
 		 * 销毁 
 		 * 
@@ -58,15 +56,20 @@ package monkey.core.textures {
 				this._bitmapData.dispose();
 				this._bitmapData = null;
 			}
+			if (this._bmps) {
+				for each (var bmp:BitmapData in this._bmps) {
+					bmp.dispose();
+				}
+			}
 			this.dispatchEvent(disposeEvent);
 		}
 		
 		private function uploadWithMips(bmp : BitmapData, side : int = 0) : void {
 			
-			var width 		: int = bmp.width  < 2048 ? bmp.width  : 2048;
-			var height 		: int = bmp.height < 2048 ? bmp.height : 2048;
-			var w 			: int = 1;
-			var h 			: int = 1;
+			var width 	: int = bmp.width  < 2048 ? bmp.width  : 2048;
+			var height 	: int = bmp.height < 2048 ? bmp.height : 2048;
+			var w 		: int = 1;
+			var h 		: int = 1;
 			
 			while ((w << 1) <= width) {
 				w = w << 1;
@@ -137,10 +140,6 @@ package monkey.core.textures {
 		public function get bitmapData() : BitmapData {
 			return _bitmapData;
 		}
-		
-		public function set bitmapData(value : BitmapData) : void {
-			_bitmapData = value;
-		}
-		
+				
 	}
 }

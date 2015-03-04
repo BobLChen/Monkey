@@ -51,7 +51,8 @@ package monkey.core.base {
 		
 		
 		/** 名称 */
-		public var name : String = "";
+		public var name 	: String = "";
+		public var userData : Object;
 		
 		private var _components 	: Vector.<IComponent>;			// 所有组件
 		private var _transform  	: Transform3D;					// transform
@@ -63,6 +64,7 @@ package monkey.core.base {
 				
 		public function Object3D() {
 			super();
+			this.userData	   = new Object();
 			this.visible	   = true;
 			this.componentDict = new Dictionary();
 			this._components   = new Vector.<IComponent>();
@@ -284,6 +286,12 @@ package monkey.core.base {
 				return;
 			}
 			this.dispatchEvent(enterDrawEvent);
+			
+			Device3D.world.copyFrom(transform.world);
+			Device3D.mvp.copyFrom(Device3D.world);
+			Device3D.mvp.append(scene.camera.viewProjection);
+			Device3D.drawOBJNum++;
+			
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {
 					icom.onDraw(scene);

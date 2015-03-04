@@ -1,12 +1,10 @@
 package monkey.core.utils {
 	
-	import flash.display.BitmapData;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DProfile;
 	import flash.display3D.Context3DTriangleFace;
 	import flash.geom.Matrix3D;
-	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	
 	import monkey.core.camera.Camera3D;
@@ -70,33 +68,7 @@ package monkey.core.utils {
 		
 		/** 最大贴图尺寸 */
 		public static const MAX_TEXTURE_SIZE    : int = 2048;
-			
-		// 默认贴图
-		private static var _nullBitmapData 		: BitmapData;
-		
-		/**
-		 * 黑白格子bitmapdata 
-		 * @return 
-		 * 
-		 */		
-		public static function get nullBitmapData() : BitmapData {
-			if (_nullBitmapData) {
-				return _nullBitmapData;
-			}
-			_nullBitmapData = new BitmapData(64, 64, false, 0xFF0000);
-			var h : int = 0;
-			var v : int = 0;
-			while (h < 8) {
-				v = 0;
-				while (v < 8) {
-					_nullBitmapData.fillRect(new Rectangle(h * 8, v * 8, 8, 8), (((h % 2 + v % 2) % 2) == 0) ? 0xFFFFFF : 0xB0B0B0);
-					v++;
-				}
-				h++;
-			}
-			return _nullBitmapData;
-		}
-		
+					
 		public function Device3D() {
 			
 		}

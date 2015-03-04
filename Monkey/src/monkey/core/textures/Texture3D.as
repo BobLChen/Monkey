@@ -35,13 +35,13 @@ package monkey.core.textures {
 		/** scene */
 		public var scene   		: Scene3D;
 		/** 倍增模式 */
-		public var magMode  	: String = MAG_LINEAR;
+		public var magMode  	: String;
 		/** 寻址模式 */
-		public var wrapMode		: String = WRAP_REPEAT;
+		public var wrapMode		: String;
 		/** 缩减模型 */
-		public var mipMode		: String = MIP_LINEAR;
+		public var mipMode		: String;
 		/** 纹理格式 */
-		public var typeMode		: String = TYPE_2D;
+		public var typeMode		: String;
 		/** 名称 */
 		public var name			: String = "";
 		
@@ -50,9 +50,21 @@ package monkey.core.textures {
 		protected var _width	: int;				// 宽度
 		protected var _height	: int;				// 高度
 		
-		public function Texture3D() {
+		/**
+		 * 
+		 * @param type	贴图格式
+		 * @param mag	倍增模式
+		 * @param wrap	寻址模式
+		 * @param mip	缩减模式
+		 * 
+		 */		
+		public function Texture3D(type : String = TYPE_2D, mag : String = MAG_LINEAR, wrap : String = WRAP_REPEAT, mip : String = MIP_LINEAR) {
 			this.ref = 0;
 			this._disposed = false;
+			this.typeMode= type;
+			this.magMode = mag;
+			this.wrapMode= wrap;
+			this.mipMode = mip;
 		}
 		
 		/**

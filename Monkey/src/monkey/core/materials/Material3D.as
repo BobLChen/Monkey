@@ -23,15 +23,15 @@ package monkey.core.materials {
 		public static const BLEND_SCREEN 		: String = 'BLEND_SCREEN';
 		public static const BLEND_ALPHA 		: String = 'BLEND_ALPHA';
 		
-		private var _sourceFactor	: String;								// 混合模式
-		private var _destFactor		: String;								// 混合模式
-		private var _depthWrite 	: Boolean;								// 开启深度
-		private var _depthCompare 	: String;								// 测试条件
-		private var _cullFace 		: String;								// 裁剪
-		private var _blendMode 		: String = BLEND_NONE;					// 混合模式
-		private var _stateDirty		: Boolean = false;						// context状态
+		protected var _sourceFactor	: String;								// 混合模式
+		protected var _destFactor	: String;								// 混合模式
+		protected var _depthWrite 	: Boolean;								// 开启深度
+		protected var _depthCompare : String;								// 测试条件
+		protected var _cullFace 	: String;								// 裁剪
+		protected var _blendMode 	: String = BLEND_NONE;					// 混合模式
+		protected var _stateDirty	: Boolean = false;						// context状态
 		protected var _shader 		: Shader3D;								// shader
-				
+		
 		public function Material3D(shader : Shader3D = null) {
 			this._shader 		= shader;
 			this._stateDirty	= false;
@@ -75,7 +75,7 @@ package monkey.core.materials {
 				scene.context.setCulling(Device3D.defaultCullFace);
 			}
 		}
-					
+				
 		/**
 		 * 克隆材质 
 		 * @return 

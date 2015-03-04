@@ -60,7 +60,7 @@ package monkey.core.textures {
 			}
 			this.dispatchEvent(disposeEvent);
 		}
-								
+		
 		private function uploadWithMips(bmp : BitmapData) : void {
 			
 			var width 		: int = bmp.width  < 2048 ? bmp.width  : 2048;

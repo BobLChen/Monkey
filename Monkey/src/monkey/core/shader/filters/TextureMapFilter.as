@@ -94,6 +94,6 @@ package monkey.core.shader.filters {
 			regCache.removeFt(ft0);
 			return code;
 		}
-
+		
 	}
 }
