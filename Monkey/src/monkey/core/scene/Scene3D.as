@@ -312,6 +312,7 @@ package monkey.core.scene {
 			Device3D.camera.transform.getPosition(false, Device3D.cameraPos);
 			Device3D.camera.transform.getDir(false, Device3D.cameraDir);
 			Device3D.defaultDirectLight.transform.copyfrom(Device3D.camera.transform);
+			Device3D.defaultDirectLight.transform.updateTransforms(true);
 			if (camera.clipScissor) {
 				this.context.setScissorRectangle(camera.lens.viewPort);
 			} else {

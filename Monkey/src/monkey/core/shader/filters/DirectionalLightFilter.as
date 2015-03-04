@@ -64,6 +64,11 @@ package monkey.core.shader.filters {
 			return _power;
 		}
 		
+		/**
+		 * 高光 
+		 * @return 
+		 * 
+		 */		
 		public function get specular() : uint {
 			return _specular;
 		}
@@ -80,12 +85,22 @@ package monkey.core.shader.filters {
 			this._specularData[2] = (int(value >> 0) & 0xFF) / 0xFF;
 		}
 		
+		/**
+		 * 视角位置 
+		 * @param pos
+		 * 
+		 */		
 		private function set eyeData(pos : Vector3D):void {
 			this._eyeData[0] = pos.x;
 			this._eyeData[1] = pos.y;
 			this._eyeData[2] = pos.z;
 		}
 		
+		/**
+		 * 灯光方向 
+		 * @param dir
+		 * 
+		 */		
 		private function set dirData(dir : Vector3D):void {
 			dir.normalize();
 			this._dirData[0] = -dir.x;
@@ -130,6 +145,7 @@ package monkey.core.shader.filters {
 			code += 'mul ' + ft0 + '.xyz, ' + colorFc + '.xyz, ' + ft0 + '.w \n';
 			// sat 灯光颜色
 			code += 'sat ' + ft0 + '.xyz, ' + ft0 + '.xyz \n';
+			code += 'mul ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + colorFc + '.w \n';
 			// 灯光颜色=灯光颜色+环境色
 			code += 'add ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + ambFc + '.xyz \n';
 			code += 'mul ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + regCache.oc + '.xyz \n';
