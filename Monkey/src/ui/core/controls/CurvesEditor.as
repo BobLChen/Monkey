@@ -1,27 +1,26 @@
 package ui.core.controls {
 	import flash.display.Graphics;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
-	import flash.text.TextFormat;
 	import flash.utils.getTimer;
 	
+	import ui.core.Style;
 	import ui.core.event.ControlEvent;
 
 	public class CurvesEditor extends Control {
 		
 		private var _points	: Vector.<Point>;
 		private var size 	: Rectangle;
-		private var padding : int = 25;
+		private var padding : int = 30;
 		private var rows 	: int = 5;
 		private var cols 	: int = 10;
 		private var flags	: Vector.<CurveFlag>;
 		
-		private var yTexts	: Vector.<TextField>;	// y轴文本框
-		private var xTexts	: Vector.<TextField>;	// x轴文本框
+		private var yTexts	: Vector.<Spinner>;	// y轴文本框
+		private var xTexts	: Vector.<Spinner>;	// x轴文本框
 		private var xStep   : Number = 1;			// x轴格子宽度
 		private var yStep   : Number = 1;			// y轴格子宽度
 		private var valueY  : Number = 1;			
@@ -66,7 +65,7 @@ package ui.core.controls {
 			}
 			valueY = value;
 			for (var i:int = 0; i < yTexts.length; i++) {
-				yTexts[i].text = "" + (valueY / rows * (rows - i)).toFixed(2);
+				yTexts[i].value= (valueY / rows * (rows - i)).toFixed(2);
 			}
 			this.drawCurves();
 		}
@@ -91,7 +90,7 @@ package ui.core.controls {
 			}
 			valueX = value;
 			for (var i:int = 0; i < xTexts.length; i++) {
-				xTexts[i].text = "" + (valueX / cols * i).toFixed(1);
+				xTexts[i].value = (valueX / cols * i).toFixed(1);
 			}
 			this.drawCurves();
 		}
@@ -116,8 +115,8 @@ package ui.core.controls {
 			this.linesPanel = new Sprite();
 			this.flagPanel = new Sprite();
 			this.lablesPanel= new Sprite();
-			this.lablesPanel.mouseChildren = false;
-			this.lablesPanel.mouseEnabled  = false;
+			this.lablesPanel.mouseChildren = true;
+			this.lablesPanel.mouseEnabled  = true;
 			this.panel = new Sprite();
 			this.panel.addChild(linesPanel);
 			this.panel.addChild(flagPanel);
@@ -135,7 +134,7 @@ package ui.core.controls {
 			this.xStep = size.width / cols;
 			this.yStep = size.height / rows;
 			// 绘制背景色
-			this.boardPanel.graphics.beginFill(0x282828, 1.0);
+			this.boardPanel.graphics.beginFill(Style.backgroundColor, 1.0);
 			this.boardPanel.graphics.drawRect(0, 0, size.width + padding * 2, size.height + padding * 2);
 			this.boardPanel.graphics.endFill();
 			// 绘制格子
@@ -151,31 +150,33 @@ package ui.core.controls {
 			this.boardPanel.graphics.lineStyle(2, 0x222222);
 			this.boardPanel.graphics.drawRect(size.x, size.y, size.width, size.height);
 			// 摆放文本框
-			this.yTexts = new Vector.<TextField>();
-			this.xTexts = new Vector.<TextField>();
+			this.yTexts = new Vector.<Spinner>();
+			this.xTexts = new Vector.<Spinner>();
 			// Y轴文本框
 			for (i = 0; i < rows; i++) {
-				var ytex : TextField = new TextField();
-				ytex.defaultTextFormat = new TextFormat("", 12, 0x656565, null, null, null, null, null, TextFieldAutoSize.RIGHT);
-				ytex.width= size.x;
-				ytex.text = "" + (valueY / rows * (rows - i)).toFixed(1);
+				var ytex : Spinner = new Spinner(0, 0, 0, 1, 0);
 				ytex.x = 0;
-				ytex.y = yStep * i + size.y - ytex.textHeight / 2;
-				this.lablesPanel.addChild(ytex);
+				ytex.y = yStep * i + size.y - ytex.height / 2;
+				ytex.enabled = false;
+				this.lablesPanel.addChild(ytex.view);
 				this.yTexts.push(ytex);
 			}
 			// x轴文本框
 			for (i = 0; i <= cols; i++) {
-				var xtex : TextField = new TextField();
-				xtex.defaultTextFormat = new TextFormat("", 12, 0x656565, null, null, null, null, null, TextFieldAutoSize.LEFT);
-				xtex.width= size.x;
-				xtex.y = size.bottom;
-				xtex.text = "" + (valueX / cols * i).toFixed(1);
-				xtex.x = size.x + xStep * i - xtex.textWidth / 2;
-				this.lablesPanel.addChild(xtex);
+				var xtex : Spinner = new Spinner(0, 0, 0, 1, 0);
+				xtex.enabled = false;
+				xtex.y = size.bottom;;
+				xtex.x = size.x + xStep * i - xtex.width / 2;
+				this.lablesPanel.addChild(xtex.view);
 				this.xTexts.push(xtex);
 			}
+			this.yTexts[0].enabled = true;
+			this.yTexts[0].addEventListener(ControlEvent.CHANGE, changeAxisYValue);
 			this.linesPanel.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+		}
+		
+		private function changeAxisYValue(e : Event) : void {
+			this.axisYValue = this.yTexts[0].value;
 		}
 		
 		private var addKeyTick : int = 0;
@@ -366,7 +367,7 @@ package ui.core.controls {
 			if (!dragFlag) {
 				return;
 			}
-						
+			
 			var ix : Number = panel.mouseX;
 			var iy : Number = panel.mouseY;
 			
@@ -403,7 +404,7 @@ package ui.core.controls {
 			dragFlag = event.target as CurveFlag;
 			if (dragFlag) {
 				dragFlag.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-				dragFlag.startDrag(true);
+				dragFlag.startDrag(false);
 			}
 		}
 		

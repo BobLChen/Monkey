@@ -26,7 +26,7 @@ package ide {
 		private var _output	 	: TabControl;
 		private var _property	: TabControl;
 		private var _hierarchy 	: TabControl;
-				
+		
 		public function Studio() {
 			if (this.stage) {
 				this.init();
