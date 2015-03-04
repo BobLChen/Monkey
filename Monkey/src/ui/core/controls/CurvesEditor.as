@@ -65,7 +65,7 @@ package ui.core.controls {
 			}
 			valueY = value;
 			for (var i:int = 0; i < yTexts.length; i++) {
-				yTexts[i].value= (valueY / rows * (rows - i)).toFixed(2);
+				yTexts[i].value= Number((valueY / rows * (rows - i)).toFixed(2));
 			}
 			this.drawCurves();
 		}
@@ -90,7 +90,7 @@ package ui.core.controls {
 			}
 			valueX = value;
 			for (var i:int = 0; i < xTexts.length; i++) {
-				xTexts[i].value = (valueX / cols * i).toFixed(1);
+				xTexts[i].value = Number((valueX / cols * i).toFixed(1));
 			}
 			this.drawCurves();
 		}
