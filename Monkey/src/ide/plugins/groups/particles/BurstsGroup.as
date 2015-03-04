@@ -40,7 +40,6 @@ package ide.plugins.groups.particles {
 			this.header.orientation = HORIZONTAL;
 			this.header.addControl(new Label("Time"));
 			this.header.addControl(new Label("Particles"));
-			this.header.addControl(new Label(""));
 			this.addControl(header);
 			this.maxHeight = 60;
 			this.minHeight = 60;
