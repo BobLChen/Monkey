@@ -8,7 +8,8 @@ package monkey.loader {
 	 * 
 	 */	
 	public interface IQueLoader extends IEventDispatcher {
-		function load() : void;
+		function load()  : void;
+		function close() : void;
 		function get bytesTotal()  	: uint;
 		function get bytesLoaded() 	: uint;
 		function get loaded() 		: Boolean;

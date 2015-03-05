@@ -19,10 +19,13 @@ package monkey.loader {
 		private var _loading	 : Boolean;					// 正在载入
 		private var _bytesLoaded : uint;
 		private var _bytesTotal  : uint;
+		private var _closed		 : Boolean;
+		private var _current	 : IQueLoader;
 		
 		public function QueLoader() {
 			this._queues = new Vector.<IQueLoader>();
 			this._loading = false;
+			this._closed  = false;
 		}
 		
 		public function push(item : IQueLoader) : void {
@@ -30,16 +33,18 @@ package monkey.loader {
 		}
 		
 		public function load() : void {
-			if (this._loading) {
+			if (this._loading || this._closed) {
 				return;
 			}
 			var item : IQueLoader = this._queues.pop();
 			if (!item) {
 				this._loaded = true;
+				this._closed = true;
 				this.dispatchEvent(new Event(Event.COMPLETE));
 				return;
 			}
 			this._loading = true;
+			this._current = item;
 			item.addEventListener(Event.COMPLETE, 			onComplete);
 			item.addEventListener(ProgressEvent.PROGRESS, 	onProgress);
 			item.addEventListener(IOErrorEvent.IO_ERROR,  	onComplete);
@@ -53,22 +58,27 @@ package monkey.loader {
 		}
 				
 		private function onComplete(e : Event) : void {
-			
 			this._loading = false;
-			
 			var item : IQueLoader = e.target as IQueLoader;
-			
 			item.removeEventListener(Event.COMPLETE, 			onComplete);
 			item.removeEventListener(ProgressEvent.PROGRESS, 	onProgress);
 			item.removeEventListener(IOErrorEvent.IO_ERROR,  	onComplete);
-			
 			if (e is IOErrorEvent) {
 				this.dispatchEvent(new QueLoaderEvent(item, QueLoaderEvent.QUEUE_ITEM_IO_ERROE));	
 			} else {
 				this.dispatchEvent(new QueLoaderEvent(item, QueLoaderEvent.QUEUE_ITEM_COMPLETE));	
 			}
-			
 			this.load();
+		}
+		
+		public function close():void {
+			if (this._closed) {
+				return;
+			}
+			if (this._loading && this._current) {
+				this._current.close();
+			}
+			this._closed = true;
 		}
 		
 		public function get bytesLoaded():uint {

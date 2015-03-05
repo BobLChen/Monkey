@@ -29,7 +29,9 @@ package monkey.loader {
 		private var loader 	: Loader;
 		private var url		: String;
 		
-		private var _loaded : Boolean;
+		private var _urlLoader	 : URLLoader;
+		private var _loaded 	 : Boolean;
+		private var _closed		 : Boolean;
 		private var _bytesTotal  : uint;
 		private var _bytesLoaded : uint;
 
@@ -50,14 +52,14 @@ package monkey.loader {
 		}
 
 		public function load() : void {
-			var urlloader : URLLoader = new URLLoader();
-			urlloader.dataFormat = URLLoaderDataFormat.BINARY;
-			urlloader.addEventListener(Event.COMPLETE, 			onLoadComplete);
-			urlloader.addEventListener(ProgressEvent.PROGRESS, 	onProgress);
-			urlloader.addEventListener(IOErrorEvent.IO_ERROR, 	onIoError);
-			urlloader.load(new URLRequest(url));
+			this._urlLoader = new URLLoader();
+			this._urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
+			this._urlLoader.addEventListener(Event.COMPLETE, 			onLoadComplete);
+			this._urlLoader.addEventListener(ProgressEvent.PROGRESS, 	onProgress);
+			this._urlLoader.addEventListener(IOErrorEvent.IO_ERROR, 	onIoError);
+			this._urlLoader.load(new URLRequest(url));
 		}
-
+		
 		private function onIoError(event : IOErrorEvent) : void {
 			this.dispatchEvent(event);
 		}
@@ -81,17 +83,19 @@ package monkey.loader {
 		}
 		
 		private function onLoadComplete(event : Event) : void {
-			var urlloader : URLLoader = event.target as URLLoader;
-			urlloader.removeEventListener(Event.COMPLETE, 			onLoadComplete);
-			urlloader.removeEventListener(ProgressEvent.PROGRESS, 	onProgress);
-			urlloader.removeEventListener(IOErrorEvent.IO_ERROR, 	onIoError);
-			var bytes : ByteArray = urlloader.data as ByteArray;
+			this._urlLoader.removeEventListener(Event.COMPLETE, 		onLoadComplete);
+			this._urlLoader.removeEventListener(ProgressEvent.PROGRESS, onProgress);
+			this._urlLoader.removeEventListener(IOErrorEvent.IO_ERROR, 	onIoError);
+			var bytes : ByteArray = this._urlLoader.data as ByteArray;
+			this._urlLoader.close();
+			this._urlLoader = null;
 			this.loadBytes(bytes);
 			bytes.clear();
 		}
 		
 		private function onTextureLoadComplete(event : Event) : void {
 			this._loaded = true;
+			this._closed = true;
 			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onTextureLoadComplete);
 			var bmp : BitmapData = (this.loader.content as Bitmap).bitmapData;
 			this.loader.unloadAndStop(true);
@@ -100,6 +104,17 @@ package monkey.loader {
 			this.addChild(skybox);
 			this.dispatchEvent(event);
 		}
+		
+		public function close():void {
+			if (this._closed) {
+				return;
+			}
+			this._closed = true;
+			if (this._urlLoader) {
+				this._urlLoader.close();
+			}
+		}
+		
 
 	}
 }

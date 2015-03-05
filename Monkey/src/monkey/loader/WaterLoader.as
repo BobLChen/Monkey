@@ -33,11 +33,14 @@ package monkey.loader {
 		
 		private var _bytesLoaded : uint;
 		private var _bytesTotal	 : uint;
+		private var _urlloader	 : URLLoader;
+		private var _closed		 : Boolean;
 		private var _loaded		 : Boolean;
 		
 		public function WaterLoader(url : String) {
 			super();
 			this.url = url;
+			this._closed = false;
 			this._loaded = false;
 		}
 		
@@ -97,14 +100,24 @@ package monkey.loader {
 		 * 
 		 */		
 		public function load() : void {
-			var urlloader : URLLoader = new URLLoader();
-			urlloader.dataFormat = URLLoaderDataFormat.BINARY;
-			urlloader.addEventListener(Event.COMPLETE, 			onLoadComplete);
-			urlloader.addEventListener(ProgressEvent.PROGRESS, 	onProgress);
-			urlloader.addEventListener(IOErrorEvent.IO_ERROR,  	onIoError);
-			urlloader.load(new URLRequest(url));
+			this._urlloader = new URLLoader();
+			this._urlloader.dataFormat = URLLoaderDataFormat.BINARY;
+			this._urlloader.addEventListener(Event.COMPLETE, 			onLoadComplete);
+			this._urlloader.addEventListener(ProgressEvent.PROGRESS, 	onProgress);
+			this._urlloader.addEventListener(IOErrorEvent.IO_ERROR,  	onIoError);
+			this._urlloader.load(new URLRequest(url));
 		}
 		
+		public function close():void {
+			if (this._closed) {
+				return;
+			}
+			this._closed = true;
+			if (this._urlloader) {
+				this._urlloader.close();
+			}
+		}
+				
 		public function get bytesLoaded():uint {
 			return _bytesLoaded;
 		}
@@ -128,11 +141,12 @@ package monkey.loader {
 		}
 		
 		private function onLoadComplete(event:Event) : void {
-			var urlloder : URLLoader = event.target as URLLoader;
-			urlloder.removeEventListener(Event.COMPLETE, 			onLoadComplete);
-			urlloder.removeEventListener(ProgressEvent.PROGRESS, 	onProgress);
-			urlloder.removeEventListener(IOErrorEvent.IO_ERROR,  	onIoError);
-			var bytes : ByteArray = urlloder.data as ByteArray;
+			this._urlloader.removeEventListener(Event.COMPLETE, 			onLoadComplete);
+			this._urlloader.removeEventListener(ProgressEvent.PROGRESS, 	onProgress);
+			this._urlloader.removeEventListener(IOErrorEvent.IO_ERROR,  	onIoError);
+			var bytes : ByteArray = this._urlloader.data as ByteArray;
+			this._urlloader.close();
+			this._urlloader = null;
 			this.loadBytes(bytes);
 			bytes.clear();
 		}

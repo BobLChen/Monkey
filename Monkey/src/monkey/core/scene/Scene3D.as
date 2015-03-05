@@ -283,11 +283,13 @@ package monkey.core.scene {
 		 * 
 		 */		
 		public function setupFrame(camera : Camera3D) : void {
+			
 			Device3D.triangles = 0;
 			Device3D.drawCalls = 0;
 			Device3D.drawOBJNum= 0;
 			Device3D.camera    = camera;
 			Device3D.scene     = this;
+			
 			Device3D.proj.copyFrom(Device3D.camera.projection);
 			Device3D.view.copyFrom(Device3D.camera.view);
 			Device3D.viewProjection.copyFrom(Device3D.camera.viewProjection);
@@ -295,6 +297,7 @@ package monkey.core.scene {
 			Device3D.camera.transform.getDir(false, Device3D.cameraDir);
 			Device3D.defaultDirectLight.transform.copyfrom(Device3D.camera.transform);
 			Device3D.defaultDirectLight.transform.updateTransforms(true);
+			
 			if (camera.clipScissor) {
 				this.context.setScissorRectangle(camera.lens.viewPort);
 			} else {

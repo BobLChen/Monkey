@@ -291,7 +291,7 @@ package monkey.core.base {
 			Device3D.mvp.copyFrom(Device3D.world);
 			Device3D.mvp.append(scene.camera.viewProjection);
 			Device3D.drawOBJNum++;
-			
+						
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {
 					icom.onDraw(scene);
@@ -376,6 +376,9 @@ package monkey.core.base {
 			this._disposed = true;
 			for each (var icom : IComponent in components) {
 				icom.dispose();
+			}
+			for each (var child : Object3D in children) {
+				child.dispose();
 			}
 		}
 		

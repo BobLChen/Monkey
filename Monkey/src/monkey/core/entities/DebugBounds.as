@@ -2,7 +2,6 @@ package monkey.core.entities {
 	
 	import monkey.core.base.Bounds3D;
 	import monkey.core.base.Object3D;
-	import monkey.core.renderer.MeshRenderer;
 
 	public class DebugBounds extends Lines3D {
 		
@@ -10,11 +9,14 @@ package monkey.core.entities {
 		
 		public function DebugBounds(obj : Object3D) {
 			super();
-			this.aabb = (obj.getComponent(MeshRenderer) as MeshRenderer).mesh.bounds;
-			(this.getComponent(MeshRenderer) as MeshRenderer).material.depthWrite = false;
+			if (!obj.renderer || !obj.renderer.mesh) {
+				return;
+			}
+			this.aabb = obj.renderer.mesh.bounds;
+			this.renderer.material.depthWrite = false;
 			this.init();
 		}
-		
+				
 		private function init() : void {
 			if (!aabb) {
 				return;
