@@ -16,7 +16,12 @@ package monkey.loader {
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Zip;
 	
-	public class WaterLoader extends Object3D {
+	/**
+	 * 海水加载器 
+	 * @author Neil
+	 * 
+	 */	
+	public class WaterLoader extends Object3D implements IQueLoader {
 		
 		public var water	: Water3D;
 		
@@ -24,9 +29,16 @@ package monkey.loader {
 		private var cfg 	: Object;		
 		private var tex 	: BitmapData;
 		private var loader 	: Loader;
+		private var url		: String;
 		
-		public function WaterLoader() {
-				
+		private var _bytesLoaded : uint;
+		private var _bytesTotal	 : uint;
+		private var _loaded		 : Boolean;
+		
+		public function WaterLoader(url : String) {
+			super();
+			this.url = url;
+			this._loaded = false;
 		}
 		
 		/**
@@ -64,6 +76,7 @@ package monkey.loader {
 		}
 				
 		private function onNormalLoadComplete(event:Event) : void {
+			this._loaded = true;
 			this.zip.dispose();
 			var nrm : BitmapData = (loader.content as Bitmap).bitmapData;
 			this.loader.unloadAndStop(true);
@@ -83,13 +96,25 @@ package monkey.loader {
 		 * @param url
 		 * 
 		 */		
-		public function load(url : String) : void {
+		public function load() : void {
 			var urlloader : URLLoader = new URLLoader();
 			urlloader.dataFormat = URLLoaderDataFormat.BINARY;
-			urlloader.addEventListener(Event.COMPLETE, onLoadComplete);
-			urlloader.addEventListener(ProgressEvent.PROGRESS, onProgress);
-			urlloader.addEventListener(IOErrorEvent.IO_ERROR,  onIoError);
+			urlloader.addEventListener(Event.COMPLETE, 			onLoadComplete);
+			urlloader.addEventListener(ProgressEvent.PROGRESS, 	onProgress);
+			urlloader.addEventListener(IOErrorEvent.IO_ERROR,  	onIoError);
 			urlloader.load(new URLRequest(url));
+		}
+		
+		public function get bytesLoaded():uint {
+			return _bytesLoaded;
+		}
+		
+		public function get bytesTotal():uint {
+			return _bytesTotal;
+		}
+		
+		public function get loaded():Boolean {
+			return this._loaded;
 		}
 		
 		private function onIoError(event:IOErrorEvent) : void {
@@ -97,11 +122,17 @@ package monkey.loader {
 		}
 		
 		private function onProgress(event:ProgressEvent) : void {
+			this._bytesLoaded = event.bytesLoaded;
+			this._bytesTotal  = event.bytesTotal;
 			this.dispatchEvent(event);			
 		}
 		
 		private function onLoadComplete(event:Event) : void {
-			var bytes : ByteArray = (event.target as URLLoader).data as ByteArray;
+			var urlloder : URLLoader = event.target as URLLoader;
+			urlloder.removeEventListener(Event.COMPLETE, 			onLoadComplete);
+			urlloder.removeEventListener(ProgressEvent.PROGRESS, 	onProgress);
+			urlloder.removeEventListener(IOErrorEvent.IO_ERROR,  	onIoError);
+			var bytes : ByteArray = urlloder.data as ByteArray;
 			this.loadBytes(bytes);
 			bytes.clear();
 		}

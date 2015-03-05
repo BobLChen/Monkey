@@ -185,7 +185,7 @@ package ide.plugins {
 		 * 
 		 */		
 		public static function openWater(bytes : ByteArray) : Object3D {
-			var loader : WaterLoader = new WaterLoader();
+			var loader : WaterLoader = new WaterLoader("");
 			loader.loadBytes(bytes);
 			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
 				App.core.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));
@@ -194,7 +194,7 @@ package ide.plugins {
 		}
 		
 		public static function openSkybox(bytes : ByteArray) : Object3D {
-			var loader : SkyboxLoader = new SkyboxLoader();
+			var loader : SkyboxLoader = new SkyboxLoader("");
 			loader.loadBytes(bytes);
 			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
 				App.core.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));

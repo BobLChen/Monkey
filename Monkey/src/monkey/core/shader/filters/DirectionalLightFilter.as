@@ -12,6 +12,7 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.ShaderRegisterElement;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Device3D;
+	import monkey.core.utils.Vector3DUtils;
 	
 	/**
 	 * 太阳光filter 
@@ -37,12 +38,20 @@ package monkey.core.shader.filters {
 			this._specularData 	= Vector.<Number>([1, 1, 1, 1]);
 			this._eyeData 		= Vector.<Number>([0, 0, 0, 0]);
 			this._dirData 		= Vector.<Number>([0, 0, 0, 0]);
-			this._light 		= light;
+			this.light			= light;
+		}
+		
+		public function set light(light : DirectionalLight) : void {
+			
+			if (this._light) {
+				this._light.removeEventListener(Event.CHANGE, change);
+				this._light.transform.removeEventListener(Transform3D.UPDATE_TRANSFORM, change);
+			}
+			this._light = light;
 			this._light.addEventListener(Event.CHANGE, change);
 			this._light.transform.addEventListener(Transform3D.UPDATE_TRANSFORM, change);
-			
-			this.specular 		= new Color(0x000000);
-			this.dirData 		= light.transform.getDir(false);
+			light.transform.getDir(false, Vector3DUtils.vec0);
+			this.dirData 		= Vector3DUtils.vec0;
 			this.lightColor 	= light.color;
 			this.power 			= light.power;
 			this.ambient 		= light.ambient;

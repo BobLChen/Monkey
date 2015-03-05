@@ -25,9 +25,6 @@ package monkey.core.textures {
 			this.magMode 		= MAG_LINEAR;
 			this.wrapMode   	= WRAP_REPEAT;
 			this.mipMode		= MIP_LINEAR;
-			this._width			= bitmapdata.width;
-			this._height		= bitmapdata.height;
-			this._transparent 	= bitmapdata.transparent;
 		}
 		
 		/**
@@ -143,8 +140,9 @@ package monkey.core.textures {
 			if (value) {
 				this._width  = value.width;
 				this._height = value.height;
+				this._transparent = value.transparent;
 			}
 		}
-				
+		
 	}
 }

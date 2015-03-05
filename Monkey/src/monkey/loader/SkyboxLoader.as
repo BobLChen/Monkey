@@ -20,16 +20,23 @@ package monkey.loader {
 	 * @author Neil
 	 * 
 	 */	
-	public class SkyboxLoader extends Object3D {
+	public class SkyboxLoader extends Object3D implements IQueLoader {
 
 		public var skybox 	: SkyBox;
 		
 		private var zip 	: Zip;
 		private var cfg 	: Object;
 		private var loader 	: Loader;
+		private var url		: String;
+		
+		private var _loaded : Boolean;
+		private var _bytesTotal  : uint;
+		private var _bytesLoaded : uint;
 
-		public function SkyboxLoader() {
+		public function SkyboxLoader(url : String) {
 			super();
+			this.url = url;
+			this._loaded = false;
 		}
 
 		public function loadBytes(bytes : ByteArray) : void {
@@ -42,12 +49,12 @@ package monkey.loader {
 			this.loader.loadBytes(zip.getFileByName("texture"));
 		}
 
-		public function load(url : String) : void {
+		public function load() : void {
 			var urlloader : URLLoader = new URLLoader();
 			urlloader.dataFormat = URLLoaderDataFormat.BINARY;
-			urlloader.addEventListener(Event.COMPLETE, onLoadComplete);
-			urlloader.addEventListener(ProgressEvent.PROGRESS, onProgress);
-			urlloader.addEventListener(IOErrorEvent.IO_ERROR, onIoError);
+			urlloader.addEventListener(Event.COMPLETE, 			onLoadComplete);
+			urlloader.addEventListener(ProgressEvent.PROGRESS, 	onProgress);
+			urlloader.addEventListener(IOErrorEvent.IO_ERROR, 	onIoError);
 			urlloader.load(new URLRequest(url));
 		}
 
@@ -56,16 +63,35 @@ package monkey.loader {
 		}
 
 		private function onProgress(event : ProgressEvent) : void {
+			this._bytesLoaded = event.bytesLoaded;
+			this._bytesTotal  = event.bytesTotal;
 			this.dispatchEvent(event);
 		}
-
+		
+		public function get bytesLoaded():uint {
+			return _bytesLoaded;
+		}
+		
+		public function get bytesTotal():uint {
+			return _bytesTotal;
+		}
+		
+		public function get loaded():Boolean {
+			return _loaded;
+		}
+		
 		private function onLoadComplete(event : Event) : void {
-			var bytes : ByteArray = (event.target as URLLoader).data as ByteArray;
+			var urlloader : URLLoader = event.target as URLLoader;
+			urlloader.removeEventListener(Event.COMPLETE, 			onLoadComplete);
+			urlloader.removeEventListener(ProgressEvent.PROGRESS, 	onProgress);
+			urlloader.removeEventListener(IOErrorEvent.IO_ERROR, 	onIoError);
+			var bytes : ByteArray = urlloader.data as ByteArray;
 			this.loadBytes(bytes);
 			bytes.clear();
 		}
-
+		
 		private function onTextureLoadComplete(event : Event) : void {
+			this._loaded = true;
 			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onTextureLoadComplete);
 			var bmp : BitmapData = (this.loader.content as Bitmap).bitmapData;
 			this.loader.unloadAndStop(true);
