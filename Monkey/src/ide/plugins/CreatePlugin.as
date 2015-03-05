@@ -1,7 +1,5 @@
 package ide.plugins {
 	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.events.Event;
 	
 	import ide.App;
@@ -36,9 +34,6 @@ package ide.plugins {
 		
 		private var _app : App;
 		
-		[Embed(source="4.png")]
-		private var IMG : Class;
-				
 		public function CreatePlugin() {
 			
 		}
@@ -89,8 +84,7 @@ package ide.plugins {
 		}
 		
 		private function createSkyBox(e : Event) : void {
-			var bmp : BitmapData = new IMG().bitmapData;
-			var skybox : SkyBox = new SkyBox(bmp);
+			var skybox : SkyBox = new SkyBox(Texture3DUtils.nullBitmapData);
 			this._app.scene.addChild(skybox);
 			this._app.selection.objects = [skybox];
 		}
