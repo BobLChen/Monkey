@@ -16,8 +16,8 @@ package ide.plugins {
 		
 		public function init(app : App) : void {
 			this._app = app;
-			this._app.addMenu("File/open file",  openFile);
-			this._app.addMenu("File/open files", openFiles);
+			this._app.addMenu("File/Open File",  openFile);
+			this._app.addMenu("File/Open Files", openFiles);
 			
 			FilePluginUtils.init(app);
 		}

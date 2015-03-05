@@ -4,8 +4,8 @@ package ide.utils {
 	
 	import flash.utils.ByteArray;
 	
+	import monkey.core.entities.SkyBox;
 	import monkey.core.entities.Water3D;
-	import monkey.core.utils.Device3D;
 	import monkey.core.utils.Texture3DUtils;
 	import monkey.core.utils.Zip;
 	
@@ -59,7 +59,23 @@ package ide.utils {
 			return bytes;
 		}
 		
-		
+		public static function exportSkybox(skybox: SkyBox) : ByteArray {
+			var config : Object = {};
+			config.size  = skybox.size;
+			config.scaleRatio = skybox.scaleRatio;
+			var bytes : ByteArray = null;
+			if (skybox.userData.texture) {
+				bytes = skybox.userData.texture;				
+			} else {
+				bytes = PNGEncoder.encode(Texture3DUtils.nullBitmapData);
+			}
+			var zip : Zip = new Zip();
+			zip.addString("config", JSON.stringify(config));
+			zip.addFile("texture", 	bytes);
+			var ret : ByteArray = new ByteArray();
+			zip.serialize(ret);
+			return ret;
+		}
 	}
 	
 }

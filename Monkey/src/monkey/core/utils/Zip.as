@@ -12,6 +12,14 @@ package monkey.core.utils {
 			this._dict = new Dictionary();
 		}
 		
+		public function dispose() : void {
+			for (var name : String in _dict) {
+				var data : ByteArray = _dict[name];
+				data.clear();
+			}
+			this._dict = new Dictionary();
+		}
+		
 		public function loadBytes(bytes : ByteArray) : void {
 			bytes.position = 0;
 			bytes.endian = Endian.LITTLE_ENDIAN;

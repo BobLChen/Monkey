@@ -4,11 +4,12 @@ package ide.plugins {
 	import flash.events.MouseEvent;
 	
 	import ide.App;
+	import ide.utils.ExportImportUtils;
 	import ide.utils.FileUtils;
 	
+	import monkey.core.entities.SkyBox;
 	import monkey.core.entities.Water3D;
 	import monkey.core.utils.AssetsType;
-	import ide.utils.ExportImportUtils;
 	
 	import ui.core.interfaces.IPlugin;
 
@@ -22,7 +23,8 @@ package ide.plugins {
 		
 		public function init(app : App) : void {
 			this._app = app;
-			this._app.addMenu("Export/export water", exportWater);
+			this._app.addMenu("Export/Water",  exportWater);
+			this._app.addMenu("Export/SkyBox", exportSkybox);
 		}
 		
 		private function exportConfig(e : MouseEvent) : void {
@@ -50,13 +52,11 @@ package ide.plugins {
 //			}
 		}
 		
-		private function exportSkybox(e : MouseEvent) : void {
-//			if (this._app.selection.main == null || this._app.selection.main is Scene3D)
-//				return;
-//			if (this._app.selection.main is SkyBox) {
-//				var fr : FileReference = new FileReference();
-//				fr.save(ExportImportUtils.exportSkybox(this._app.selection.main as SkyBox));
-//			}
+		private function exportSkybox(e : Event) : void {
+			if (this._app.selection.main is SkyBox) {
+				var file : FileUtils = new FileUtils();
+				file.save(ExportImportUtils.exportSkybox(this._app.selection.main as SkyBox), AssetsType.SKYBOX);
+			}
 		}
 		
 		private function exportWater(e : Event) : void {
@@ -64,15 +64,9 @@ package ide.plugins {
 				var file : FileUtils = new FileUtils();
 				file.save(ExportImportUtils.exportWater(this._app.selection.main as Water3D), AssetsType.WATER);
 			}
-//			if (this._app.selection.main == null || this._app.selection.main is Scene3D)
-//				return;
-//			if (this._app.selection.main is Water) {
-//				var fr : FileReference = new FileReference();
-//				fr.save(ExportImportUtils.exportWater(this._app.selection.main as Water));
-//			}
 		}
 		
-		private function exportParticles(e : MouseEvent) : void {
+		private function exportParticles(e : Event) : void {
 //			if (this._app.selection.main == null || this._app.selection.main is Scene3D)
 //				return;
 //			

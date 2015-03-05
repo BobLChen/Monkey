@@ -40,8 +40,6 @@ package monkey.loader {
 			// 读取配置
 			var strBytes : ByteArray = zip.getFileByName("config");
 			var configStr: String = strBytes.readUTFBytes(strBytes.length);
-			// 释放配置资源
-			strBytes.clear();	
 			this.cfg = JSON.parse(configStr);
 			// 读取贴图
 			var texBytes : ByteArray = zip.getFileByName("texture");
@@ -59,7 +57,6 @@ package monkey.loader {
 			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onTextureLoadComplete);
 			this.tex = (loader.content as Bitmap).bitmapData;
 			this.loader.unloadAndStop(true);
-			this.zip.getFileByName("texture").clear();
 			// 加载扭曲贴图
 			var nrmBytes : ByteArray = zip.getFileByName("normal");
 			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onNormalLoadComplete);
@@ -67,9 +64,9 @@ package monkey.loader {
 		}
 				
 		private function onNormalLoadComplete(event:Event) : void {
+			this.zip.dispose();
 			var nrm : BitmapData = (loader.content as Bitmap).bitmapData;
 			this.loader.unloadAndStop(true);
-			this.zip.getFileByName("normal").clear();
 			// 初始化water
 			this.water = new Water3D(tex, nrm, cfg.width, cfg.height, cfg.segment);
 			this.water.waterSpeed = cfg.waterSpeed;

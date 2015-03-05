@@ -21,6 +21,7 @@ package ide.plugins {
 	import monkey.core.utils.AssetsType;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Mesh3DUtils;
+	import monkey.loader.SkyboxLoader;
 	import monkey.loader.WaterLoader;
 
 	public class FilePluginUtils extends EventDispatcher {
@@ -123,6 +124,7 @@ package ide.plugins {
 			_utils[AssetsType.OBJ]  	= openOBJ;
 			_utils[AssetsType.MAX3DS] 	= open3DS;
 			_utils[AssetsType.WATER]	= openWater;
+			_utils[AssetsType.SKYBOX]	= openSkybox;
 		}
 		
 		/**
@@ -184,6 +186,15 @@ package ide.plugins {
 		 */		
 		public static function openWater(bytes : ByteArray) : Object3D {
 			var loader : WaterLoader = new WaterLoader();
+			loader.loadBytes(bytes);
+			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
+				App.core.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));
+			});
+			return loader;
+		}
+		
+		public static function openSkybox(bytes : ByteArray) : Object3D {
+			var loader : SkyboxLoader = new SkyboxLoader();
 			loader.loadBytes(bytes);
 			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
 				App.core.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));
