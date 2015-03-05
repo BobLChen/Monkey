@@ -28,6 +28,10 @@ package monkey.loader {
 			this._closed  = false;
 		}
 		
+		public function get queues():Vector.<IQueLoader> {
+			return _queues;
+		}
+
 		public function push(item : IQueLoader) : void {
 			this._queues.push(item);
 		}

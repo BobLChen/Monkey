@@ -75,37 +75,41 @@ package monkey.core.renderer {
 			if (!mesh) {
 				return false;
 			}
+			var vec3 : Vector3D = Vector3DUtils.vec0;
 			if (this._boundsScaled) {
 				// 获取最新的中心点以及半径
 				Matrix3DUtils.transformVector(object3D.transform.world, mesh.bounds.center, _boundsCenter);
-				Matrix3DUtils.getScale(object3D.transform.world, Vector3DUtils.vec0);
-				this._boundsRadius = mesh.bounds.radius * Math.max(Vector3DUtils.vec0.x, Vector3DUtils.vec0.y, Vector3DUtils.vec0.z);
+				Matrix3DUtils.getScale(object3D.transform.world, vec3);
+				this._boundsRadius = mesh.bounds.radius * Math.max(vec3.x, vec3.y, vec3.z);
 				this._boundsScaled = false;
 			}
 			// 将中心点转换到view空间
-			Matrix3DUtils.transformVector(Device3D.view, _boundsCenter, Vector3DUtils.vec0);
-			// 检测是否在near-far之间
-			if ((Vector3DUtils.vec0.z - _boundsRadius) > Device3D.camera.far) {
-				return false;
+			Matrix3DUtils.transformVector(Device3D.view, _boundsCenter, vec3);
+			if (_boundsCenter.length >= this._boundsRadius) {
+				// 检测是否在near-far之间
+				if ((vec3.z - _boundsRadius) > Device3D.camera.far) {
+					return false;
+				}
+				if ((vec3.z + _boundsRadius) < Device3D.camera.near) {
+					return false;
+				}
+				// 透视投影
+				var zom : Number = 1 / Device3D.camera.zoom / vec3.z; 
+				var rat : Number = Device3D.camera.aspect;
+				if ((vec3.x + _boundsRadius) * zom < -1) {
+					return false;
+				}
+				if ((vec3.x - _boundsRadius) * zom > 1) {
+					return false;
+				}
+				if ((vec3.y + _boundsRadius) * zom * rat < -1) {
+					return false;
+				}
+				if ((vec3.y - _boundsRadius) * zom * rat > 1) {
+					return false;
+				}
 			}
-			if ((Vector3DUtils.vec0.z + _boundsRadius) < Device3D.camera.near) {
-				return false;
-			}
-			// 透视投影
-			var zom : Number = 1 / Device3D.camera.zoom / Vector3DUtils.vec0.z;
-			var rat : Number = Device3D.camera.aspect;
-			if ((Vector3DUtils.vec0.x + _boundsRadius) * zom < -1) {
-				return false;
-			}
-			if ((Vector3DUtils.vec0.x - _boundsRadius) * zom > 1) {
-				return false;
-			}
-			if ((Vector3DUtils.vec0.y + _boundsRadius) * zom * rat < -1) {
-				return false;
-			}
-			if ((Vector3DUtils.vec0.y - _boundsRadius) * zom * rat > 1) {
-				return false;
-			}
+			
 			return true;
 		}
 		
