@@ -14,15 +14,20 @@ package ide.plugins {
 	import ide.events.SceneEvent;
 	
 	import monkey.core.base.Object3D;
+	import monkey.core.base.Surface3D;
+	import monkey.core.entities.Mesh3D;
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.parser.Max3DSParser;
 	import monkey.core.parser.NavMeshParser;
 	import monkey.core.parser.OBJParser;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.utils.AssetsType;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Mesh3DUtils;
 	import monkey.loader.SkyboxLoader;
 	import monkey.loader.WaterLoader;
+	import monkey.navmesh.NavigationCell;
+	import monkey.navmesh.NavigationMesh;
 
 	public class FilePluginUtils extends EventDispatcher {
 		
@@ -125,6 +130,7 @@ package ide.plugins {
 			_utils[AssetsType.MAX3DS] 	= open3DS;
 			_utils[AssetsType.WATER]	= openWater;
 			_utils[AssetsType.SKYBOX]	= openSkybox;
+			_utils[AssetsType.NAV]		= openNavmesh;
 		}
 		
 		/**
@@ -174,10 +180,27 @@ package ide.plugins {
 		 */		
 		public static function openNavmesh(bytes : ByteArray) : Object3D {
 			bytes.position = 0;
-			var parser : NavMeshParser = new NavMeshParser();
-			return null;
+			var parser  : NavMeshParser = new NavMeshParser();
+			var navmesh : NavigationMesh = parser.parse(bytes);
+			// 根据导入的navmesh构建模型数据
+			var surf : Surface3D = new Surface3D();
+			surf.setVertexVector(Surface3D.POSITION, new Vector.<Number>(), 3);
+			surf.indexVector = new Vector.<uint>();
+			for each (var cell : NavigationCell in navmesh.cells) {
+				surf.getVertexVector(Surface3D.POSITION).push(
+					cell.vertives[0].x, cell.vertives[0].y, cell.vertives[0].z,
+					cell.vertives[1].x, cell.vertives[1].y, cell.vertives[1].z,
+					cell.vertives[2].x, cell.vertives[2].y, cell.vertives[2].z
+				);
+			}
+			var len : int = surf.getVertexVector(Surface3D.POSITION).length / 3;
+			for (var i:int = 0; i < len; i++) {
+				surf.indexVector.push(i);
+			}
+			navmesh.addComponent(new MeshRenderer(new Mesh3D([surf]), new ColorMaterial(Color.WHITE)));
+			return navmesh;
 		}
-		
+				
 		/**
 		 * 导入water 
 		 * @param bytes

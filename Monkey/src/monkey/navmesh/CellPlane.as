@@ -13,9 +13,9 @@ package monkey.navmesh {
 	 */	
 	public class CellPlane {
 		
-		private var _normal   : Vector3D; // 法线
-		private var _point    : Vector3D; // 点
-		private var _distance : Number; // 点到平面距离
+		private var _normal   : Vector3D; 	// 法线
+		private var _point    : Vector3D; 	// 点
+		private var _distance : Number; 	// 点到平面距离
 		
 		public function CellPlane(p0 : Vector3D, p1 : Vector3D, p2 : Vector3D) {
 			var t0 : Vector3D = p1.subtract(p0);
@@ -53,7 +53,11 @@ package monkey.navmesh {
 		 */		
 		public function getY(x : Number, z : Number) : Number {
 			if (_normal != null) {
-				return (-(normal.x * x + normal.z * z + distance) / normal.y);
+				var y : Number = -(normal.x * x + normal.z * z + distance) / normal.y;
+				if (isNaN(y)) {
+					y = 0;
+				}
+				return y;
 			}
 			return 0;
 		}

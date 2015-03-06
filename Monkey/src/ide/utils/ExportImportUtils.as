@@ -2,12 +2,16 @@ package ide.utils {
 	
 	import com.adobe.images.PNGEncoder;
 	
+	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
 	
 	import monkey.core.entities.SkyBox;
 	import monkey.core.entities.Water3D;
 	import monkey.core.utils.Texture3DUtils;
 	import monkey.core.utils.Zip;
+	import monkey.navmesh.NavigationCell;
+	import monkey.navmesh.NavigationMesh;
 	
 	/**
 	 * 导入导出工具
@@ -75,6 +79,44 @@ package ide.utils {
 			var ret : ByteArray = new ByteArray();
 			zip.serialize(ret);
 			return ret;
+		}
+		
+		public static function exportNavmesh(navmesh : NavigationMesh) : ByteArray {
+			
+			var byte : ByteArray = new ByteArray();
+			byte.endian = Endian.LITTLE_ENDIAN;
+			
+			var len : int = navmesh.cells.length;
+			// 写入单元个数
+			byte.writeInt(len);
+			var i : int = 0;
+			var j : int = 0;
+			var cell : NavigationCell = null;
+			
+			for (i = 0; i < len; i++) {
+				cell = navmesh.cells[i];
+				
+				// 写顶点数据
+				for (j = 0; j < 3; j++) {
+					var vert : Vector3D = cell.vertives[j];
+					byte.writeFloat(vert.x);
+					byte.writeFloat(vert.y);
+					byte.writeFloat(vert.z);
+				}
+			}
+			
+			for (i = 0; i < len; i++) {
+				cell = navmesh.cells[i];
+				
+				// 写三角形索引
+				for (j = 0; j < 3; j++) {
+					var adj : NavigationCell = cell.link[j];
+					byte.writeInt(navmesh.cells.indexOf(adj));
+				}
+			}
+			
+			byte.compress();
+			return byte;
 		}
 	}
 	

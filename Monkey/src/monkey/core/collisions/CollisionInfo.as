@@ -21,7 +21,7 @@ package monkey.core.collisions {
 		public var point 	: Vector3D;
 				
 		public function CollisionInfo() {
-			
+			this.point = new Vector3D();
 		}
 	}
 }

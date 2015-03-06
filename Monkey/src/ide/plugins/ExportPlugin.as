@@ -10,6 +10,7 @@ package ide.plugins {
 	import monkey.core.entities.SkyBox;
 	import monkey.core.entities.Water3D;
 	import monkey.core.utils.AssetsType;
+	import monkey.navmesh.NavigationMesh;
 	
 	import ui.core.interfaces.IPlugin;
 
@@ -25,6 +26,7 @@ package ide.plugins {
 			this._app = app;
 			this._app.addMenu("Export/Water",  exportWater);
 			this._app.addMenu("Export/SkyBox", exportSkybox);
+			this._app.addMenu("Export/NavMesh", exportNavmesh);
 		}
 		
 		private function exportConfig(e : MouseEvent) : void {
@@ -45,11 +47,11 @@ package ide.plugins {
 			
 		}
 		
-		private function exportNavmesh(e : MouseEvent) : void {
-//			if (this._app.selection.main is NavigationMesh) {
-//				var fr : FileReference = new FileReference();
-//				fr.save(ExportImportUtils.exportNavmesh(this._app.selection.main as NavigationMesh));
-//			}
+		private function exportNavmesh(e : Event) : void {
+			if (this._app.selection.main is NavigationMesh) {
+				var file : FileUtils = new FileUtils();
+				file.save(ExportImportUtils.exportNavmesh(this._app.selection.main as NavigationMesh), AssetsType.NAV);
+			}
 		}
 		
 		private function exportSkybox(e : Event) : void {

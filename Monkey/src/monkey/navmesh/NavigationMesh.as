@@ -17,42 +17,42 @@ package monkey.navmesh {
 	 *
 	 */
 	public class NavigationMesh extends Object3D {
-
+		
 		public static const EPSILON : Number = 0; //精度
+		/** 最多尝试搜寻次数 */
+		public static const MAX_TRY : int = 100;
 		
 		private var _cells 	: Vector.<NavigationCell>;
 		private var _heap 	: BinaryHeap;
 		private var _mesh	: Mesh3D;
 				
 		public function NavigationMesh() {
-			this.name   = "NavigationMesh";
+			this.name  = "NavigationMesh";
+			this._heap = new BinaryHeap(compare);
 		}
 		
 		public function build(mesh : Mesh3D) : void {
-			
 			this._cells = new Vector.<NavigationCell>();
-			this._heap  = new BinaryHeap(compare);
 			this._mesh  = mesh;
-			this.addComponent(new MeshRenderer(this._mesh, new ColorMaterial(new Color(0xFFCB00))));
-			
-			var geo : Surface3D = mesh.surfaces[0];
-			var vertexVector	: Vector.<Number> = geo.getVertexVector(Surface3D.POSITION);
-			var indexVector 	: Vector.<uint>   = geo.indexVector;
-			var indexLen 		: int = indexVector.length;
+			var surface  : Surface3D = mesh.surfaces[0];
+			var vertices : Vector.<Number> = surface.getVertexVector(Surface3D.POSITION);
+			var indices  : Vector.<uint>   = surface.indexVector;
+			var indexLen : int = indices.length;
 			var v0 : Vector3D = new Vector3D();
 			var v1 : Vector3D = new Vector3D();
 			var v2 : Vector3D = new Vector3D();
 			var i  : int = 0;
 			while (i < indexLen) {
-				var px : int = indexVector[i++] * 3;
-				var py : int = indexVector[i++] * 3;
-				var pz : int = indexVector[i++] * 3;
-				v0.setTo(vertexVector[px], vertexVector[(px + 1)], vertexVector[(px + 2)]);
-				v1.setTo(vertexVector[py], vertexVector[(py + 1)], vertexVector[(py + 2)]);
-				v2.setTo(vertexVector[pz], vertexVector[(pz + 1)], vertexVector[(pz + 2)]);
+				var px : int = indices[i++] * 3;
+				var py : int = indices[i++] * 3;
+				var pz : int = indices[i++] * 3;
+				v0.setTo(vertices[px], vertices[(px + 1)], vertices[(px + 2)]);
+				v1.setTo(vertices[py], vertices[(py + 1)], vertices[(py + 2)]);
+				v2.setTo(vertices[pz], vertices[(pz + 1)], vertices[(pz + 2)]);
 				this.addCell(v0, v1, v2);
 			}
 			this.linkCells();
+			this.addComponent(new MeshRenderer(this._mesh, new ColorMaterial(new Color(0xFFCB00))));
 		}
 		
 		/**
@@ -246,11 +246,16 @@ package monkey.navmesh {
 				return wayPoints;
 			}
 			
+			var i : int = 0;
 			var wayP : WayPoint = new WayPoint(path[0], start);
 			while (!wayP.point.equals(end)) {
 				wayP = this.getFurthestWayPoint(wayP, path, end);
 				var point : Vector3D = new Vector3D(wayP.point.x, wayP.cell.plane.getY(wayP.point.x, wayP.point.y), wayP.point.y);
 				wayPoints.push(point);
+				i++;
+				if (i >= MAX_TRY) {
+					break;
+				}
 			}
 			
 			return wayPoints;

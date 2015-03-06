@@ -81,6 +81,7 @@ package monkey.core.collisions {
 							info.tri = tri;
 							info.surface = surf;
 							info.object = collider.object3D;
+							info.point.copyFrom(RayPoint);
 						}
 					}
 				}

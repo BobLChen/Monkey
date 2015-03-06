@@ -90,7 +90,7 @@ package monkey.core.base {
 				return;
 			}
 			_visible = value;
-			for (var child : Object3D in children) {
+			for each (var child : Object3D in children) {
 				child.visible = value;
 			}
 		}

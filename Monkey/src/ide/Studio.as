@@ -4,6 +4,7 @@ package ide {
 	import flash.events.Event;
 	
 	import ide.plugins.CreatePlugin;
+	import ide.plugins.EditPlugin;
 	import ide.plugins.ExportPlugin;
 	import ide.plugins.FilePlugin;
 	import ide.plugins.HierarchyPlugin;
@@ -148,6 +149,7 @@ package ide {
 			app.stage = this.stage;
 			// 初始化app
 			app.initPlugin(new FilePlugin());
+			app.initPlugin(new EditPlugin());
 			app.initPlugin(new ScenePlugin());
 			app.initPlugin(new LogPlugin());
 			app.initPlugin(new CreatePlugin());

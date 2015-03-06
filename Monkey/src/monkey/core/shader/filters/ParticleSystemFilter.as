@@ -223,11 +223,7 @@ package monkey.core.shader.filters {
 				code += "add " + vt2 + ".xyz, " + vt2 + ".xyz, " + speedVa + ".xyz \n";
 				// 速度乘以时间
 				code += "mul " + vt0 + ".xyz, " + vt2 + ".xyz, " + vt1 + ".x \n";
-				
-				
-//				code += "mul " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + vt1 + ".y \n";
-				
-				
+								
 				// billboard
 				code += "m33 " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + billVc + " \n";
 				// 位置 + 速度

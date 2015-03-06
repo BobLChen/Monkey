@@ -8,7 +8,7 @@ package monkey.core.utils {
 		public static const ANIM 	: String = "anim";
 		public static const OBJ  	: String = "obj";
 		public static const MAX3DS  : String = "3ds";
-		public static const NAV		: String = "nav";
+		public static const NAV		: String = "navmesh";
 		public static const WATER	: String = "water";
 		public static const SKYBOX  : String = "sky";
 	}
