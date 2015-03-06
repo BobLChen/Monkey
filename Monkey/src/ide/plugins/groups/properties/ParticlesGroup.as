@@ -4,23 +4,30 @@ package ide.plugins.groups.properties {
 	
 	import ide.App;
 	import ide.events.LogEvent;
-	import ide.plugins.groups.particles.BurstsGroup;
-	import ide.plugins.groups.particles.DurationGroup;
-	import ide.plugins.groups.particles.LoopsGroup;
-	import ide.plugins.groups.particles.MaxParticleGroup;
-	import ide.plugins.groups.particles.ParticleAttribute;
-	import ide.plugins.groups.particles.RateGroup;
-	import ide.plugins.groups.particles.StartColorGroup;
-	import ide.plugins.groups.particles.StartDelayGroup;
-	import ide.plugins.groups.particles.StartLifetimeGroup;
-	import ide.plugins.groups.particles.StartRotationXGroup;
-	import ide.plugins.groups.particles.StartRotationYGroup;
-	import ide.plugins.groups.particles.StartRotationZGroup;
-	import ide.plugins.groups.particles.StartSizeXGroup;
-	import ide.plugins.groups.particles.StartSizeYGroup;
-	import ide.plugins.groups.particles.StartSizeZGroup;
-	import ide.plugins.groups.particles.StartSpeedGroup;
 	import ide.plugins.groups.particles.TimeGroup;
+	import ide.plugins.groups.particles.base.BillboardGroup;
+	import ide.plugins.groups.particles.base.MaxParticleGroup;
+	import ide.plugins.groups.particles.emission.BurstsGroup;
+	import ide.plugins.groups.particles.emission.DurationGroup;
+	import ide.plugins.groups.particles.emission.LoopsGroup;
+	import ide.plugins.groups.particles.emission.RateGroup;
+	import ide.plugins.groups.particles.lifetime.LifetimeRotX;
+	import ide.plugins.groups.particles.lifetime.LifetimeRotY;
+	import ide.plugins.groups.particles.lifetime.LifetimeRotZ;
+	import ide.plugins.groups.particles.lifetime.LifetimeSize;
+	import ide.plugins.groups.particles.lifetime.LifetimeSpeedX;
+	import ide.plugins.groups.particles.lifetime.LifetimeSpeedY;
+	import ide.plugins.groups.particles.lifetime.LifetimeSpeedZ;
+	import ide.plugins.groups.particles.start.StartColorGroup;
+	import ide.plugins.groups.particles.start.StartDelayGroup;
+	import ide.plugins.groups.particles.start.StartLifetimeGroup;
+	import ide.plugins.groups.particles.start.StartRotationXGroup;
+	import ide.plugins.groups.particles.start.StartRotationYGroup;
+	import ide.plugins.groups.particles.start.StartRotationZGroup;
+	import ide.plugins.groups.particles.start.StartSizeXGroup;
+	import ide.plugins.groups.particles.start.StartSizeYGroup;
+	import ide.plugins.groups.particles.start.StartSizeZGroup;
+	import ide.plugins.groups.particles.start.StartSpeedGroup;
 	
 	import monkey.core.entities.particles.ParticleSystem;
 	
@@ -35,12 +42,12 @@ package ide.plugins.groups.properties {
 
 		private var _app 	    : App;
 		private var _particles  : ParticleSystem;
-		private var groups 		: Vector.<ParticleAttribute>;
+		private var groups 		: Array;
 		private var time		: TimeGroup;
 				
 		public function ParticlesGroup() {
 			super("Particles", true);
-			this.groups = new Vector.<ParticleAttribute>();
+			this.groups = [];
 			this.accordion.contentHeight = 1800;
 			this.layout.margins = 2.5;
 			this.layout.space = 1;
@@ -48,6 +55,8 @@ package ide.plugins.groups.properties {
 			this.groups.push(time);
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new MaxParticleGroup()));
+			this.layout.addControl(new Separator());
+			this.groups.push(this.layout.addControl(new BillboardGroup()));
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new RateGroup()));
 			this.layout.addControl(new Separator());
@@ -72,6 +81,14 @@ package ide.plugins.groups.properties {
 			this.groups.push(this.layout.addControl(new StartRotationZGroup()));
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new StartColorGroup()));
+			
+			this.groups.push(this.layout.addControl(new LifetimeSize()));
+			this.groups.push(this.layout.addControl(new LifetimeSpeedX()))
+			this.groups.push(this.layout.addControl(new LifetimeSpeedY()));
+			this.groups.push(this.layout.addControl(new LifetimeSpeedZ()));
+			this.groups.push(this.layout.addControl(new LifetimeRotX()));
+			this.groups.push(this.layout.addControl(new LifetimeRotY()));
+			this.groups.push(this.layout.addControl(new LifetimeRotZ()));
 		}
 		
 		override public function update(app : App) : Boolean {
@@ -79,7 +96,7 @@ package ide.plugins.groups.properties {
 			if (app.selection.main is ParticleSystem) {
 				this._particles = _app.selection.main as ParticleSystem;
 				this._particles.addEventListener(ParticleSystem.BUILD, onBuildParticle);
-				for each (var group : ParticleAttribute in this.groups) {
+				for each (var group : Object in this.groups) {
 					group.updateGroup(app, _particles);
 				}
 				this.layout.draw();

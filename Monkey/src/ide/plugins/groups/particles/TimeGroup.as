@@ -11,7 +11,7 @@ package ide.plugins.groups.particles {
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
 
-	public class TimeGroup extends ParticleAttribute {
+	public class TimeGroup extends ParticleBaseGroup {
 		
 		private var play : Button;
 		private var stop : Button;

@@ -1,4 +1,4 @@
-package ide.plugins.groups.particles {
+package ide.plugins.groups.particles.start {
 	
 	import flash.events.Event;
 	
@@ -16,13 +16,15 @@ package ide.plugins.groups.particles {
 	import ui.core.controls.Label;
 	import ui.core.event.ControlEvent;
 	import ui.core.type.ColorMode;
+	import ide.plugins.groups.particles.ImageButtonMenu;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 
 	/**
 	 * 初始颜色 
 	 * @author Neil
 	 * 
 	 */	
-	public class StartColorGroup extends ParticleAttribute {
+	public class StartColorGroup extends ParticleBaseGroup {
 		
 		[Embed(source="arrow.png")]
 		private static var ARROW : Class;

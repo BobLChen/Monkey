@@ -1,8 +1,10 @@
 package ide.plugins {
 	
 	import flash.events.Event;
+	import flash.geom.Point;
 	
 	import ide.App;
+	import ide.plugins.groups.particles.lifetime.LifetimeData;
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
@@ -21,6 +23,7 @@ package ide.plugins {
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.utils.Color;
+	import monkey.core.utils.Curves;
 	import monkey.core.utils.Texture3DUtils;
 	
 	import ui.core.interfaces.IPlugin;
@@ -101,6 +104,30 @@ package ide.plugins {
 		private function createParticles(e : Event) : void {
 			var particle : ParticleSystem = new ParticleSystem();
 			particle.play();
+			particle.build();
+			
+			// 生成默认的lifetime数据，只适用于编辑器
+			var lifetimes : Array = [];
+			for (var i:int = 0; i < 7; i++) {
+				var curve : Curves = new Curves();
+				var value : Number = i > 5 ? 1 : 0;
+				// 11个关键帧
+				for (var j:int = 0; j < 11; j++) {
+					curve.datas.push(new Point(j * 0.1, value));
+				}
+				lifetimes.push(curve);
+			}
+			var data : LifetimeData = new LifetimeData();
+			data.speedX = lifetimes[0];
+			data.speedY = lifetimes[1];
+			data.speedZ = lifetimes[2];
+			data.rotX = lifetimes[3];
+			data.rotY = lifetimes[4];
+			data.rotZ = lifetimes[5];
+			data.size = lifetimes[6];
+			
+			particle.userData.lifetime = data
+						
 			this._app.scene.addChild(particle);
 			this._app.selection.objects = [particle];
 		}

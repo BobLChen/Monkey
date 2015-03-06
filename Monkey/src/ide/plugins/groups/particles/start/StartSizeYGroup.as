@@ -1,4 +1,4 @@
-package ide.plugins.groups.particles {
+package ide.plugins.groups.particles.start {
 	import flash.events.Event;
 	import flash.geom.Point;
 	
@@ -16,13 +16,15 @@ package ide.plugins.groups.particles {
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
+	import ide.plugins.groups.particles.ImageButtonMenu;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 
 	/**
 	 * x轴的size 
 	 * @author Neil
 	 * 
 	 */	
-	public class StartSizeYGroup extends ParticleAttribute {
+	public class StartSizeYGroup extends ParticleBaseGroup {
 		
 		[Embed(source="arrow.png")]
 		private static var ARROW : Class;

@@ -1,4 +1,4 @@
-package ide.plugins.groups.particles {
+package ide.plugins.groups.particles.emission {
 	
 	import flash.events.Event;
 	import flash.geom.Point;
@@ -14,8 +14,9 @@ package ide.plugins.groups.particles {
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 
-	public class BurstsGroup extends ParticleAttribute {
+	public class BurstsGroup extends ParticleBaseGroup {
 		
 		[Embed(source="add.png")]
 		private static const ADD : Class;

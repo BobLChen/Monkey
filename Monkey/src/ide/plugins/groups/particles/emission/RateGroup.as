@@ -1,4 +1,4 @@
-package ide.plugins.groups.particles {
+package ide.plugins.groups.particles.emission {
 	
 	import flash.events.Event;
 	
@@ -9,13 +9,14 @@ package ide.plugins.groups.particles {
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 
 	/**
 	 * 发射器属性 
 	 * @author Neil
 	 * 
 	 */	
-	public class RateGroup extends ParticleAttribute {
+	public class RateGroup extends ParticleBaseGroup {
 		
 		private var rate : Spinner;
 				

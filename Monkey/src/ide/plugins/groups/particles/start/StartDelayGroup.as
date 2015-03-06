@@ -1,4 +1,4 @@
-package ide.plugins.groups.particles {
+package ide.plugins.groups.particles.start {
 	import flash.events.Event;
 	
 	import ide.App;
@@ -9,8 +9,9 @@ package ide.plugins.groups.particles {
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 
-	public class StartDelayGroup extends ParticleAttribute {
+	public class StartDelayGroup extends ParticleBaseGroup {
 		
 		private var label : Label;
 		private var delay : Spinner;

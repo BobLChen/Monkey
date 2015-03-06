@@ -1,4 +1,4 @@
-package ide.plugins.groups.particles {
+package ide.plugins.groups.particles.emission {
 	
 	import flash.events.Event;
 	
@@ -9,8 +9,9 @@ package ide.plugins.groups.particles {
 	import ui.core.controls.CheckBox;
 	import ui.core.controls.Label;
 	import ui.core.event.ControlEvent;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 
-	public class LoopsGroup extends ParticleAttribute {
+	public class LoopsGroup extends ParticleBaseGroup {
 		
 		private var loops : CheckBox;
 		private var label : Label;

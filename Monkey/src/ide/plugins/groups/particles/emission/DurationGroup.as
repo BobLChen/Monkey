@@ -1,4 +1,4 @@
-package ide.plugins.groups.particles {
+package ide.plugins.groups.particles.emission {
 
 	import flash.events.Event;
 	
@@ -10,13 +10,14 @@ package ide.plugins.groups.particles {
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 
 	/**
 	 * duration 
 	 * @author Neil
 	 * 
 	 */	
-	public class DurationGroup extends ParticleAttribute {
+	public class DurationGroup extends ParticleBaseGroup {
 		
 		private var duration : Spinner;
 		private var label	 : Label;

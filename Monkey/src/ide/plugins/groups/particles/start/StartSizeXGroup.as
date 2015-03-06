@@ -1,5 +1,4 @@
-package ide.plugins.groups.particles {
-	
+package ide.plugins.groups.particles.start {
 	import flash.events.Event;
 	import flash.geom.Point;
 	
@@ -17,8 +16,15 @@ package ide.plugins.groups.particles {
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
+	import ide.plugins.groups.particles.ImageButtonMenu;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 
-	public class StartLifetimeGroup extends ParticleAttribute {
+	/**
+	 * x轴的size 
+	 * @author Neil
+	 * 
+	 */	
+	public class StartSizeXGroup extends ParticleBaseGroup {
 		
 		[Embed(source="arrow.png")]
 		private static var ARROW : Class;
@@ -35,12 +41,12 @@ package ide.plugins.groups.particles {
 		private var minConst : Spinner;
 		private var maxConst : Spinner;
 		
-		public function StartLifetimeGroup() {
-			super(); 
+		public function StartSizeXGroup() {
+			super();
 			this.header	  = new Box();
 			this.header.orientation = Box.HORIZONTAL;
 			this.arrow	  = new ImageButtonMenu(new ARROW());
-			this.label	  = new Label("Lifetime:", 160);
+			this.label	  = new Label("StartSizeX:", 160);
 			this.header.addControl(this.arrow);
 			this.header.addControl(this.label);
 			this.header.maxHeight = 20;
@@ -62,22 +68,26 @@ package ide.plugins.groups.particles {
 		}
 		
 		private function changeToRandomTwoConst(e : Event) : void {
-			this.particle.startLifeTime = new PropRandomTwoConst(5, 5);
+			this.particle.startSize[0] = new PropRandomTwoConst(1, 1);
+			this.particle.build();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeToCurve(e : Event) : void {
-			this.particle.startLifeTime = new PropCurves();
+			this.particle.startSize[0] = new PropCurves(1);
+			this.particle.build();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeToConst(e : Event) : void {
-			this.particle.startLifeTime = new PropConst();
+			this.particle.startSize[0] = new PropConst(1);
+			this.particle.build();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
-				
+		
 		private function changeRandomTwoConst(event:Event) : void {
-			this.particle.startLifeTime = new PropRandomTwoConst(minConst.value, maxConst.value);	
+			this.particle.startSize[0] = new PropRandomTwoConst(minConst.value, maxConst.value);
+			this.particle.build();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
@@ -88,12 +98,14 @@ package ide.plugins.groups.particles {
 				data.curve.datas.push(point.clone());
 			}
 			data.yValue = this.curves.axisYValue;
-			this.particle.startLifeTime = data;
+			this.particle.startSize[0] = data;
+			this.particle.build();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeOne(event:Event) : void {
-			this.particle.startLifeTime = new PropConst(this.oneConst.value);		
+			this.particle.startSize[0] = new PropConst(this.oneConst.value);	
+			this.particle.build();
 		}
 		
 		override public function updateGroup(app:App, particle:ParticleSystem):void {
@@ -101,24 +113,24 @@ package ide.plugins.groups.particles {
 			this.removeAllControls();
 			this.addControl(this.header);
 			this.particle.addEventListener(ParticleSystem.BUILD, onParticleBuild);
-			if (particle.startLifeTime is PropConst) {
+			if (particle.startSize[0] is PropConst) {
 				this.orientation = HORIZONTAL;
 				this.addControl(this.oneConst);
-				this.oneConst.value = (particle.startLifeTime as PropConst).value;
+				this.oneConst.value = (particle.startSize[0] as PropConst).value;
 				this.minHeight = 20;
 				this.maxHeight = 20;
-			} else if (particle.startLifeTime is PropRandomTwoConst) {
+			} else if (particle.startSize[0] is PropRandomTwoConst) {
 				this.orientation = HORIZONTAL;
-				var randomTwoConst : PropRandomTwoConst = particle.startLifeTime as PropRandomTwoConst;
+				var randomTwoConst : PropRandomTwoConst = particle.startSize[0] as PropRandomTwoConst;
 				this.addControl(this.minConst);
 				this.addControl(this.maxConst);
 				this.minConst.value = randomTwoConst.minValue;
 				this.maxConst.value = randomTwoConst.maxValue;
 				this.minHeight = 20;
 				this.maxHeight = 20;
-			} else if (particle.startLifeTime is PropCurves) {
+			} else if (particle.startSize[0] is PropCurves) {
 				this.orientation = VERTICAL;
-				var propCurves : PropCurves = particle.startLifeTime as PropCurves;
+				var propCurves : PropCurves = particle.startSize[0] as PropCurves;
 				this.addControl(this.curves);
 				this.curves.axisXValue = particle.duration;
 				this.curves.axisYValue = propCurves.yValue;

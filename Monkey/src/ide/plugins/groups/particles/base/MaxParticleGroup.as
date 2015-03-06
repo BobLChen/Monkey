@@ -1,4 +1,4 @@
-package ide.plugins.groups.particles {
+package ide.plugins.groups.particles.base {
 	import flash.events.Event;
 	
 	import ide.App;
@@ -6,8 +6,9 @@ package ide.plugins.groups.particles {
 	import monkey.core.entities.particles.ParticleSystem;
 	
 	import ui.core.controls.Label;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 
-	public class MaxParticleGroup extends ParticleAttribute {
+	public class MaxParticleGroup extends ParticleBaseGroup {
 		
 		private var label : Label;
 		private var nums  : Label;

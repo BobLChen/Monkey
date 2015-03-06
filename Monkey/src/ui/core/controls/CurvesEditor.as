@@ -12,6 +12,9 @@ package ui.core.controls {
 
 	public class CurvesEditor extends Control {
 		
+		public var lockX : Boolean;
+		public var lockY : Boolean;
+		
 		private var _points	: Vector.<Point>;
 		private var size 	: Rectangle;
 		private var padding : int = 30;
@@ -19,20 +22,20 @@ package ui.core.controls {
 		private var cols 	: int = 10;
 		private var flags	: Vector.<CurveFlag>;
 		
-		private var yTexts	: Vector.<Spinner>;	// y轴文本框
-		private var xTexts	: Vector.<Spinner>;	// x轴文本框
+		private var yTexts	: Vector.<Spinner>;		// y轴文本框
+		private var xTexts	: Vector.<Spinner>;		// x轴文本框
 		private var xStep   : Number = 1;			// x轴格子宽度
 		private var yStep   : Number = 1;			// y轴格子宽度
 		private var valueY  : Number = 1;			
 		private var valueX  : Number = 1;
 		
-		private var boardPanel	: Sprite;		// 底板
-		private var linesPanel  : Sprite;		// 曲线
-		private var lablesPanel : Sprite;		// 文本框
-		private var flagPanel	: Sprite;		// 提示
-		private var panel   	: Sprite;		// panel
+		private var boardPanel	: Sprite;			// 底板
+		private var linesPanel  : Sprite;			// 曲线
+		private var lablesPanel : Sprite;			// 文本框
+		private var flagPanel	: Sprite;			// 提示
+		private var panel   	: Sprite;			// panel
 		private var dragFlag	: CurveFlag = null;
-		private var tips 		: ToolTip1;		// 
+		private var tips 		: ToolTip1;			// 
 		
 		public function CurvesEditor(width : int = 300, height : int = 200) {
 			this.size = new Rectangle(padding, padding, width, height);
@@ -112,6 +115,7 @@ package ui.core.controls {
 			// ui
 			this.boardPanel = new Sprite();
 			this.boardPanel.addEventListener(MouseEvent.CLICK, onAddKey);
+			this.boardPanel.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			this.linesPanel = new Sprite();
 			this.flagPanel = new Sprite();
 			this.lablesPanel= new Sprite();
@@ -370,12 +374,6 @@ package ui.core.controls {
 			
 			var ix : Number = panel.mouseX;
 			var iy : Number = panel.mouseY;
-			
-			if (ix < 0 || ix > size.width || iy < 0 || iy > size.height) {
-				dragFlag.stopDrag();
-				dragFlag.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			}
-			
 			ix = Math.max(ix, 0);
 			ix = Math.min(ix, size.width);
 			iy = Math.max(iy, 0);
@@ -383,8 +381,15 @@ package ui.core.controls {
 			
 			var lx : Number = ix / size.width  * valueX;
 			var ly : Number = (size.height - iy) / size.height * valueY;
-			dragFlag.value.x = lx;
-			dragFlag.value.y = ly;
+			
+			if (!lockX) {
+				dragFlag.x = ix;
+				dragFlag.value.x = lx;
+			}
+			if (!lockY) {
+				dragFlag.y = iy;
+				dragFlag.value.y = ly;
+			}
 			
 			this.sortPoints();
 			this.drawCurves();
@@ -393,7 +398,6 @@ package ui.core.controls {
 		private function onMouseUp(event:MouseEvent) : void {
 			dragFlag = event.target as CurveFlag;
 			if (dragFlag) {
-				dragFlag.stopDrag();
 				this.sortPoints();
 				this.drawCurves();
 			}
@@ -402,10 +406,6 @@ package ui.core.controls {
 		
 		private function onDragFLag(event:MouseEvent) : void {
 			dragFlag = event.target as CurveFlag;
-			if (dragFlag) {
-				dragFlag.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-				dragFlag.startDrag(false);
-			}
 		}
 		
 		private function onMouseOut(event:MouseEvent) : void {

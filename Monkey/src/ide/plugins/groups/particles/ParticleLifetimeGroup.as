@@ -4,21 +4,20 @@ package ide.plugins.groups.particles {
 	
 	import monkey.core.entities.particles.ParticleSystem;
 	
-	import ui.core.container.Box;
+	import ui.core.container.Accordion;
 
-	public class ParticleAttribute extends Box {
+	public class ParticleLifetimeGroup extends Accordion {
 		
 		public var app		: App;
 		public var particle	: ParticleSystem;
 		
-		public function ParticleAttribute() {
-			super();
+		public function ParticleLifetimeGroup(text : String) {
+			super(text);
 		}
 		
 		public function updateGroup(app : App, particle : ParticleSystem) : void {
-			this.app	= app;
+			this.app = app;
 			this.particle = particle;
 		}
-		
 	}
 }
