@@ -111,10 +111,10 @@ package ide.plugins {
 			var step : Number = 1 / (ParticleSystem.MAX_KEY_NUM - 1);
 			for (var i:int = 0; i < 7; i++) {
 				var curve : Linears = new Linears();
-				var value : Number  = i >= 6 ? 0 : 1;
+				var value : Number  = i >= 6 ? 1 : 0;
 				// 5个关键帧
 				for (var j:int = 0; j < ParticleSystem.MAX_KEY_NUM; j++) {
-					curve.datas.push(new Point(j * step, 0));
+					curve.datas.push(new Point(j * step, value));
 				}
 				lifetimes.push(curve);
 			}
