@@ -14,7 +14,7 @@ package {
 			this.addChild(new Studio());	
 			this.stage.nativeWindow.maximize(); 
 		}
-		
+				
 	}
 }
  

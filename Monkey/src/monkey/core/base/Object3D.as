@@ -104,6 +104,9 @@ package monkey.core.base {
 			if (children.indexOf(child) != -1) {
 				return;
 			}
+			if (!child) {
+				return;
+			}
 			child._parent = this;
 			child.visible = visible;
 			children.push(child);
@@ -367,18 +370,18 @@ package monkey.core.base {
 		 * 释放 
 		 */		
 		public function dispose() : void {
-			if (this.parent) {
-				this.parent.removeChild(this);
-			}
 			if (disposed) {
 				return;
+			}
+			if (this.parent) {
+				this.parent.removeChild(this);
 			}
 			this._disposed = true;
 			for each (var icom : IComponent in components) {
 				icom.dispose();
 			}
-			for each (var child : Object3D in children) {
-				child.dispose();
+			while (children.length > 0) {
+				children[0].dispose();
 			}
 		}
 		

@@ -24,9 +24,7 @@ package ide.plugins.groups.properties {
 	import ide.plugins.groups.particles.start.StartRotationXGroup;
 	import ide.plugins.groups.particles.start.StartRotationYGroup;
 	import ide.plugins.groups.particles.start.StartRotationZGroup;
-	import ide.plugins.groups.particles.start.StartSizeXGroup;
-	import ide.plugins.groups.particles.start.StartSizeYGroup;
-	import ide.plugins.groups.particles.start.StartSizeZGroup;
+	import ide.plugins.groups.particles.start.StartSizeGroup;
 	import ide.plugins.groups.particles.start.StartSpeedGroup;
 	
 	import monkey.core.entities.particles.ParticleSystem;
@@ -72,9 +70,7 @@ package ide.plugins.groups.properties {
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new StartSpeedGroup()));
 			this.layout.addControl(new Separator());
-			this.groups.push(this.layout.addControl(new StartSizeXGroup()));
-			this.groups.push(this.layout.addControl(new StartSizeYGroup()));
-			this.groups.push(this.layout.addControl(new StartSizeZGroup()));
+			this.groups.push(this.layout.addControl(new StartSizeGroup()));
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new StartRotationXGroup()));
 			this.groups.push(this.layout.addControl(new StartRotationYGroup()));

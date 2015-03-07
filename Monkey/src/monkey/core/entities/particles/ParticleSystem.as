@@ -29,55 +29,56 @@ package monkey.core.entities.particles {
 	import monkey.core.utils.Time3D;
 	
 	/**
-	 * 仿unity3d粒子系统。
-	 * 粒子数量有限制，根据shape模型的三角面进行限制。particleSystem不会进行数据分割。
+	 * 粒子
 	 * @author Neil
 	 * 
 	 */	
 	public class ParticleSystem extends Object3D {
 		
-		/** 粒子动画播放完成 */
-		public static const COMPLETE	   : String = "ParticleSystem:COMPLETE";
-		public static const BUILD		   : String = "ParticleSystem:BUILD";
-		
-		private static const buildEvent	   : Event = new Event(BUILD);				
-		private static const completeEvent : Event = new Event(COMPLETE);			// 播放完成事件
-		
-		/** matrix临时变量 */
-		private static const matrix3d 	: Matrix3D = new Matrix3D();
-		/** vector临时变量 */
-		private static const vector3d 	: Vector3D = new Vector3D();
-		
 		[Embed(source="ParticleSystem.png")]
-		private static const DEFAULT_IMG: Class;
-		/** 默认关键帧 */
-		private static var _defKeyframe : ByteArray;
+		private static const DEFAULT_IMG	: Class;										// 粒子默认贴图
 		
-		private var _duration 			: Number; 						// 持续发射时间
-		private var _loops 				: Boolean; 						// 循环发射模式
-		private var _startDelay 		: Number; 						// 开始延迟时间
-		private var _startLifeTime 		: PropData; 					// 生命周期
-		private var _startSpeed 		: PropData; 					// 速度
-		private var _additionalSpeed	: Vector.<PropRandomTwoConst>;	// 附加速度
-		private var _startSize 			: Vector.<PropData>; 			// 初始大小
-		private var _startRotation 		: Vector.<PropData>; 			// 初始旋转角度
-		private var _startColor 		: PropColor; 					// 初始颜色
-		private var _shape 				: ParticleShape; 				// 形状
-		private var _simulationSpace 	: Boolean; 						// 坐标系。false:本地；true:世界
-		private var _rate 				: int; 							// 发射频率
-		private var _bursts 			: Vector.<Point>; 				// 爆炸
-		private var _particleNum		: int;							// 粒子数量
-		private var _totalTime			: Number;						// 粒子系统的生命周期
-		private var _needBuild			: Boolean;						// 是否需要build
-		private var _time				: Number = 0;					// 时间
-		private var _colorOverLifetime  : GradientColor;				// color over lifetime
-		private var _matrixOverLifetime : ByteArray;					// 缩放旋转速度 over lifetime
-		private var _image				: BitmapData;					// image
-		private var _playing			: Boolean;						// 是否正在播放
-		private var texture				: Bitmap2DTexture;				// 粒子贴图
-		private var blendTexture   		: Bitmap2DTexture;				// color over lifetime贴图
-		private var mesh 				: Mesh3D;						// mesh
-		private var material			: ParticleMaterial;				// material
+		/** 粒子动画播放完成事件 */
+		public static const PLAY_COMPLETE	: String = "ParticleSystem:COMPLETE";
+		/** 粒子系统build事件 */
+		public static const BUILD		   	: String = "ParticleSystem:BUILD";
+		/** lifetime最大关键帧数量 */
+		public static const MAX_KEY_NUM 	: int = 6;
+		
+		private static const buildEvent	   	: Event = new Event(BUILD);						// 粒子系统创建完成事件
+		private static const AnimDoneEvent 	: Event = new Event(PLAY_COMPLETE);				// 播放完成事件
+		private static const DELAY_BIAS		: Number = 0.001;								// 延时时间偏移参数
+		private static const matrix3d 		: Matrix3D = new Matrix3D();					// matrix缓存
+		private static const vector3d 		: Vector3D = new Vector3D();					// vector缓存
+		
+		/** 默认关键帧 */
+		private static var _defKeyframe 	: ByteArray;
+		
+		private var _duration 				: Number; 						// 持续发射时间
+		private var _loops 					: Boolean; 						// 循环发射模式
+		private var _startDelay 			: Number; 						// 开始延迟时间
+		private var _startLifeTime 			: PropData; 					// 生命周期
+		private var _startSpeed 			: PropData; 					// 速度
+		private var _additionalSpeed		: Vector.<PropRandomTwoConst>;	// 附加速度
+		private var _startSize 				: PropData; 					// 初始大小
+		private var _startRotation 			: Vector.<PropData>; 			// 初始旋转角度
+		private var _startColor 			: PropColor; 					// 初始颜色
+		private var _shape 					: ParticleShape; 				// 形状
+		private var _simulationSpace 		: Boolean; 						// 坐标系。false:本地；true:世界
+		private var _rate 					: int; 							// 发射频率
+		private var _bursts 				: Vector.<Point>; 				// 爆炸
+		private var _particleNum			: int;							// 粒子数量
+		private var _totalTime				: Number;						// 粒子系统的生命周期
+		private var _needBuild				: Boolean;						// 是否需要build
+		private var _time					: Number = 0;					// 时间
+		private var _colorOverLifetime 	 	: GradientColor;				// color over lifetime
+		private var _keyfsOverLifetime 		: ByteArray;					// 缩放旋转速度 over lifetime
+		private var _image					: BitmapData;					// image
+		private var _playing				: Boolean;						// 是否正在播放
+		private var texture					: Bitmap2DTexture;				// 粒子贴图
+		private var blendTexture   			: Bitmap2DTexture;				// color over lifetime贴图
+		private var mesh 					: Mesh3D;						// mesh
+		private var material				: ParticleMaterial;				// material
 		
 		/**
 		 *  粒子系统
@@ -97,14 +98,14 @@ package monkey.core.entities.particles {
 			this.shape 			 = new SphereShape();
 			this.shape.mode 	 = new Plane(1, 1, 1).surfaces[0];				
 			this.mesh.bounds	 = shape.mode.bounds;
-			this.rate 			 = 20;											
+			this.rate 			 = 10;											
 			this.bursts 		 = new Vector.<Point>();		
 			this.billboard		 = true;
 			this.duration 		 = 5;											
 			this.loops 		 	 = true;											
 			this.startDelay 	 = 0;											
 			this.startSpeed 	 = new PropConst(5);							
-			this.startSize 		 = Vector.<PropData>([new PropConst(1), new PropConst(1), new PropConst(1)]);
+			this.startSize 		 = new PropConst(1);
 			this.startColor 	 = new PropGradientColor();						
 			this.startLifeTime   = new PropConst(5);							
 			this.startRotation   = Vector.<PropData>([new PropConst(0), new PropConst(0), new PropConst(0)])
@@ -128,19 +129,18 @@ package monkey.core.entities.particles {
 			this.createParticleMesh();		// 生成粒子对应的网格
 			this.shape.generate(this);		// 生成shape对应的数据，包括粒子的位置、方向、uv、索引
 			this.createParticleAttribute();	// 更新粒子属性
-			this.dispatchEvent(buildEvent);
+			this.dispatchEvent(buildEvent); // 完成事件
 		}
 		
 		/**
 		 *  更新粒子的属性
 		 */		
 		private function createParticleAttribute() : void {
-			// 检测是否需要补齐
 			// 生成正常发射频率的数据
 			var rateNum : int = rate * duration;
 			var idx : int = 0;
 			for (var i:int = 0; i < rateNum; i++) {
-				this.updateParticles(idx++, i * 1.0 / rate);
+				this.updateParticles(idx++, i * 1.0 / rate + DELAY_BIAS);
 			}
 			// 补齐正常发射频率数据
 			var fillSize : int = Math.ceil(this._totalTime / duration) - 1;
@@ -149,7 +149,7 @@ package monkey.core.entities.particles {
 				for (var m:int = 1; m <= fillSize; m++) {
 					delay = duration * m;
 					for (i = 0; i < rateNum; i++) {
-						this.updateParticles(idx++, delay + i * 1.0 / rate);
+						this.updateParticles(idx++, delay + i * 1.0 / rate + DELAY_BIAS);
 					}
 				}
 			}
@@ -191,7 +191,9 @@ package monkey.core.entities.particles {
 					num = perSize;
 				}
 				var surface : Surface3D = new Surface3D();
+				// custom2存放时间参数，第一个存放起始时间，第二个存放生命周期时间
 				surface.setVertexVector(Surface3D.CUSTOM2, new Vector.<Number>(num * shape.vertNum * 2, true), 2);
+				// custom3存放粒子颜色，分别对应rgba
 				surface.setVertexVector(Surface3D.CUSTOM3, new Vector.<Number>(num * shape.vertNum * 4, true), 4);
 				this.mesh.surfaces.push(surface);
 			}
@@ -226,19 +228,17 @@ package monkey.core.entities.particles {
 		 * @param delay		粒子延时
 		 */		
 		private function updateParticles(idx : int, delay : Number) : void {
-			var perSize  : int = 65535 / shape.vertNum;		
-			var surface  : Surface3D = this.surfaces[int(idx / perSize)];
-			idx = idx % perSize;
+			var perSize  : int = 65535 / shape.vertNum;						// 计算出每一个surface存放的粒子数量
+			var surface  : Surface3D = this.surfaces[int(idx / perSize)];	// 根据persize计算出surface的索引
+			idx = idx % perSize;											// 重置索引为surface的正常索引
 			// 粒子数据
 			var position : Vector.<Number> = surface.getVertexVector(Surface3D.POSITION);	// 位置
 			var velocity : Vector.<Number> = surface.getVertexVector(Surface3D.CUSTOM1);	// 方向
 			var lifetimes: Vector.<Number> = surface.getVertexVector(Surface3D.CUSTOM2);	// 时间
 			var colors	 : Vector.<Number> = surface.getVertexVector(Surface3D.CUSTOM3);	// 颜色
-			var xDelay	 : Number	= delay % duration;
+			var xDelay	 : Number	= delay % duration;								// x轴的延时
 			var speed 	 : Number 	= startSpeed.getValue(xDelay);					// 根据延时获取对应的Speed
-			var sizeX 	 : Number 	= startSize[0].getValue(xDelay);				// 根据延时获取对应的SizeX
-			var sizeY 	 : Number 	= startSize[1].getValue(xDelay);				// 根据延时获取对应的SizeY
-			var sizeZ 	 : Number 	= startSize[2].getValue(xDelay);				// 根据延时获取对应的SizeZ
+			var size 	 : Number 	= startSize.getValue(xDelay);					// 根据延时获取对应的Size
 			var rotaX 	 : Number 	= startRotation[0].getValue(xDelay);			// 根据延时获取对应的RotationX
 			var rotaY 	 : Number 	= startRotation[1].getValue(xDelay);			// 根据延时获取对应的RotationY
 			var rotaZ 	 : Number 	= startRotation[2].getValue(xDelay);			// 根据延时获取对应的RotationZ
@@ -246,7 +246,7 @@ package monkey.core.entities.particles {
 			var lifetime : Number 	= startLifeTime.getValue(xDelay);				// 根据延时获取对应的LifeTime
 			// 缩放以及旋转
 			matrix3d.identity();
-			Matrix3DUtils.setScale(matrix3d, sizeX, sizeY, sizeZ);
+			Matrix3DUtils.setScale(matrix3d, size, size, size);
 			Matrix3DUtils.setRotation(matrix3d, rotaX, rotaY, rotaZ);
 			// const speed
 			var speedX : Number = additionalSpeed[0].getValue(delay);
@@ -305,7 +305,7 @@ package monkey.core.entities.particles {
 		}
 		
 		/**
-		 * 默认的关键帧数据 
+		 * 默认的关键帧数据，强制使用5个关键帧
 		 * @return 
 		 * 
 		 */		
@@ -315,7 +315,7 @@ package monkey.core.entities.particles {
 				bytes.endian = Endian.LITTLE_ENDIAN;
 				var matrix : Matrix3D = new Matrix3D();
 				var datas  : Vector.<Number> = new Vector.<Number>(16 * 11, true);
-				for (var i:int = 0; i < 11; i++) {
+				for (var i:int = 0; i < ParticleSystem.MAX_KEY_NUM; i++) {
 					matrix.identity();
 					Matrix3DUtils.setScale(matrix, 1, 1, 1);		// 缩放
 					Matrix3DUtils.setRotation(matrix, 0, 0, 0);		// 旋转
@@ -323,11 +323,12 @@ package monkey.core.entities.particles {
 					for (var j:int = 0; j < 16; j++) {
 						datas[16 * i + j] = matrix.rawData[j];
 					}
-					datas[16 * i + 12] = 0;			// x轴速度
-					datas[16 * i + 13] = 0;			// y轴速度
-					datas[16 * i + 14] = 0;			// z轴速度
+					datas[16 * i + 12] = 0;			// x轴位移
+					datas[16 * i + 13] = 0;			// y轴位移
+					datas[16 * i + 14] = 0;			// z轴位移
 				}
-				for (var k:int = 0; k < 176; k++) {
+				var size : int = datas.length;
+				for (var k:int = 0; k < size; k++) {
 					bytes.writeFloat(datas[k]);
 				}
 				_defKeyframe = bytes;
@@ -364,38 +365,11 @@ package monkey.core.entities.particles {
 		 * 
 		 */		
 		public function get keyFrames():ByteArray {
-			return _matrixOverLifetime;
+			return _keyfsOverLifetime;
 		}
 		
-		/**
-		 * 随生命周期变换的旋转缩放速度数据，一共11个关键帧。关键帧之间使用线性插值。
-		 * 格式为:Matrix的rawdata数据，一共11个matrix，需要转置。转置之后最后一个vector保存速度数据。如下：
-		 * 
-		 * var bytes  : ByteArray = new ByteArray();
-		 *	bytes.endian = Endian.LITTLE_ENDIAN;
-		 *	var matrix : Matrix3D = new Matrix3D();
-		 *	var datas  : Vector.<Number> = new Vector.<Number>(16 * 11, true);
-		 *	for (var i:int = 0; i < 11; i++) {
-		 *		matrix.identity();
-		 *		Matrix3DUtils.setScale(matrix, 1, 1, 1);		// 缩放
-		 *		Matrix3DUtils.setRotation(matrix, 0, 0, 0);		// 旋转
-		 *		matrix.transpose();
-		 *		for (var j:int = 0; j < 16; j++) {
-		 *			datas[16 * i + j] = matrix.rawData[j];
-		 *		}
-		 *		datas[16 * i + 12] = 0;			// x轴速度
-		 *		datas[16 * i + 13] = 0;			// y轴速度
-		 *		datas[16 * i + 14] = 0;			// z轴速度
-		 *	}
-		 *	for (var k:int = 0; k < 176; k++) {
-		 *		bytes.writeFloat(datas[k]);
-		 *	}
-		 *
-		 * @param value
-		 * 
-		 */		
 		public function set keyFrames(value:ByteArray):void {
-			_matrixOverLifetime = value;
+			_keyfsOverLifetime = value;
 			material.keyframes = value;
 		}
 		
@@ -472,7 +446,8 @@ package monkey.core.entities.particles {
 			for (var i:int = 0; i < bursts.length; i++) {
 				result += bursts[i].y;
 			}
-			// 无限循环需要补齐粒子
+			// 循环模式需要补齐粒子
+			// 例如粒子系统的生命周期_totalTime为8秒，但是发射器发射时间为5秒。因此少了一个循环，需要补齐一个循环。
 			if (loops) {
 				var fillNum : int = Math.ceil(this._totalTime / duration);
 				result = result * fillNum;
@@ -598,7 +573,7 @@ package monkey.core.entities.particles {
 		 * @return
 		 *
 		 */
-		public function get startSize() : Vector.<PropData> {
+		public function get startSize() : PropData {
 			return _startSize;
 		}
 
@@ -607,7 +582,7 @@ package monkey.core.entities.particles {
 		 * @param value
 		 *
 		 */
-		public function set startSize(value : Vector.<PropData>) : void {
+		public function set startSize(value : PropData) : void {
 			_startSize = value;
 			_needBuild = true;
 		}
@@ -765,7 +740,7 @@ package monkey.core.entities.particles {
 			}
 			// 检测粒子是否播放完成
 			if (!loops && time >= startDelay + _totalTime) {
-				this.dispatchEvent(completeEvent);
+				this.dispatchEvent(AnimDoneEvent);
 			}
 			this.dispatchEvent(exitDrawEvent);
 		}

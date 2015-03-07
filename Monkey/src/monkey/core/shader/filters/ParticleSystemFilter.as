@@ -6,6 +6,7 @@ package monkey.core.shader.filters {
 	import flash.utils.ByteArray;
 	
 	import monkey.core.base.Surface3D;
+	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.shader.utils.FsRegisterLabel;
 	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.shader.utils.ShaderRegisterElement;
@@ -77,7 +78,7 @@ package monkey.core.shader.filters {
 		}
 		
 		/**
-		 * 必须为16 * 11长度 
+		 * 必须为16 * 6长度,强制使用5个关键帧
 		 * @param bytes
 		 * 
 		 */		
@@ -160,9 +161,9 @@ package monkey.core.shader.filters {
 			// 当前时间
 			var timeVc  : ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(timeData));
 			// 缩放 旋转 速度关键帧
-			var keysVc 	: ShaderRegisterElement = regCache.getVc(44, keyframeLabel);
+			var keysVc 	: ShaderRegisterElement = regCache.getVc(ParticleSystem.MAX_KEY_NUM * 4, keyframeLabel);
 			// step
-			var stepVc 	: ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(Vector.<Number>([10, 4, keysVc.index, 3])));
+			var stepVc 	: ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(Vector.<Number>([ParticleSystem.MAX_KEY_NUM - 1, 4, keysVc.index, 3])));
 			// billboard
 			var billVc  : ShaderRegisterElement = regCache.getVc(4, billboardLabel);
 			
@@ -189,11 +190,11 @@ package monkey.core.shader.filters {
 				code += "sub " + vt1 + ".x, " + vt1 + ".x, " + timeVa + ".x \n";
 				// 计算比率
 				code += "div " + vt1 + ".y, " + vt1 + ".x, " + timeVa + ".y \n";
-				// 根据时间计算出当前关键帧的索引:例如比率 * 10 => 0.34 * 10 = 3.4
+				// 根据时间计算出当前关键帧的索引:例如比率 * 10 => 0.34 * 5 = 1.7
 				code += "mul " + vt0 + ".x, " + vt1 + ".y, " + stepVc + ".x \n";
-				// 取分数: 3.4 => 0.4
+				// 取分数: 1.7 => 0.7
 				code += "frc " + vt0 + ".y, " + vt0 + ".x \n";
-				// 获取整数部分: => 3.4 - 0.4 = 3.0
+				// 获取整数部分: => 1.7 - 0.7 = 1.0
 				code += "sub " + vt0 + ".x, " + vt0 + ".x, " + vt0 + ".y \n";
 				// 跳转到矩阵
 				// vt0.z = 4
@@ -219,10 +220,11 @@ package monkey.core.shader.filters {
 				code += "sub " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt2 + ".xyz \n";
 				code += "mul " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt0 + ".y \n";
 				code += "add " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
-				// 速度 + speed over lifetime			
-				code += "add " + vt2 + ".xyz, " + vt2 + ".xyz, " + speedVa + ".xyz \n";
-				// 速度乘以时间
-				code += "mul " + vt0 + ".xyz, " + vt2 + ".xyz, " + vt1 + ".x \n";
+				
+				// start速度
+				code += "mul " + vt3 + ".xyz, " + speedVa + ".xyz, " + vt1 + ".x \n";
+				// 加上位移
+				code += "add " + vt0 + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
 								
 				// billboard
 				code += "m33 " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + billVc + " \n";

@@ -5,11 +5,15 @@ package ide.plugins.groups.particles.start {
 	
 	import ide.App;
 	import ide.events.SelectionEvent;
+	import ide.plugins.groups.particles.ImageButtonMenu;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
+	import ide.plugins.groups.particles.lifetime.LifetimeData;
 	
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.entities.particles.prop.value.PropConst;
 	import monkey.core.entities.particles.prop.value.PropCurves;
 	import monkey.core.entities.particles.prop.value.PropRandomTwoConst;
+	import monkey.core.utils.ParticleUtils;
 	
 	import ui.core.Menu;
 	import ui.core.container.Box;
@@ -17,8 +21,6 @@ package ide.plugins.groups.particles.start {
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
-	import ide.plugins.groups.particles.ImageButtonMenu;
-	import ide.plugins.groups.particles.ParticleBaseGroup;
 
 	public class StartLifetimeGroup extends ParticleBaseGroup {
 		
@@ -28,6 +30,7 @@ package ide.plugins.groups.particles.start {
 		private var arrow	 : ImageButtonMenu;
 		private var label	 : Label;
 		private var header	 : Box;
+		private var data	 : LifetimeData;
 		
 		// const模式
 		private var oneConst : Spinner;
@@ -65,21 +68,25 @@ package ide.plugins.groups.particles.start {
 		
 		private function changeToRandomTwoConst(e : Event) : void {
 			this.particle.startLifeTime = new PropRandomTwoConst(5, 5);
+			this.updateKeyFrameData(5);
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
-		
+				
 		private function changeToCurve(e : Event) : void {
-			this.particle.startLifeTime = new PropCurves();
+			this.particle.startLifeTime = new PropCurves(5);
+			this.updateKeyFrameData(5);
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeToConst(e : Event) : void {
-			this.particle.startLifeTime = new PropConst();
+			this.particle.startLifeTime = new PropConst(5);
+			this.updateKeyFrameData(5);
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 				
 		private function changeRandomTwoConst(event:Event) : void {
 			this.particle.startLifeTime = new PropRandomTwoConst(minConst.value, maxConst.value);	
+			this.updateKeyFrameData(maxConst.value);
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
@@ -91,15 +98,18 @@ package ide.plugins.groups.particles.start {
 			}
 			data.yValue = this.curves.axisYValue;
 			this.particle.startLifeTime = data;
+			this.updateKeyFrameData(this.curves.axisYValue);
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeOne(event:Event) : void {
 			this.particle.startLifeTime = new PropConst(this.oneConst.value);		
+			this.updateKeyFrameData(this.oneConst.value);
 		}
 		
 		override public function updateGroup(app:App, particle:ParticleSystem):void {
 			super.updateGroup(app, particle);
+			this.data = particle.userData.lifetime;
 			this.removeAllControls();
 			this.addControl(this.header);
 			this.particle.addEventListener(ParticleSystem.BUILD, onParticleBuild);
@@ -132,6 +142,20 @@ package ide.plugins.groups.particles.start {
 		
 		private function onParticleBuild(event:Event) : void {
 			this.curves.axisXValue = particle.duration;
+		}
+		
+		private function updateKeyFrameData(lifetime : Number) : void {
+			this.data.lifetime = lifetime;
+			this.particle.keyFrames = ParticleUtils.GeneratelifetimeBytes(
+				data.lifetime,
+				data.speedX,
+				data.speedY,
+				data.speedZ,
+				data.rotX,
+				data.rotY,
+				data.rotZ,
+				data.size
+			);
 		}
 		
 	}

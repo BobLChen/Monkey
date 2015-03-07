@@ -7,9 +7,10 @@ package ide.plugins.groups.particles.lifetime {
 	import ide.plugins.groups.particles.ParticleLifetimeGroup;
 	
 	import monkey.core.entities.particles.ParticleSystem;
+	import monkey.core.utils.ParticleUtils;
 	
 	import ui.core.Menu;
-	import ui.core.controls.CurvesEditor;
+	import ui.core.controls.LinearsEditor;
 
 	/**
 	 * lifetime speed x 
@@ -18,12 +19,12 @@ package ide.plugins.groups.particles.lifetime {
 	 */	
 	public class LifetimeSize extends ParticleLifetimeGroup {
 		
-		private var curve  : CurvesEditor;
+		private var curve  : LinearsEditor;
 		private var data   : LifetimeData;
 		
 		public function LifetimeSize() {
-			super("LifetimeSize:");
-			this.curve  = new CurvesEditor(230, 150);
+			super("LifetimeSize");
+			this.curve  = new LinearsEditor(230, 150);
 			this.curve.lockX = true;
 			this.contentHeight = 200;
 			this.addControl(curve);
@@ -38,7 +39,16 @@ package ide.plugins.groups.particles.lifetime {
 			for each (var p : Point in this.curve.points) {
 				this.data.size.datas.push(p.clone());
 			}
-			this.particle.keyFrames = this.data.generate();
+			this.particle.keyFrames = ParticleUtils.GeneratelifetimeBytes(
+				data.lifetime,
+				data.speedX,
+				data.speedY,
+				data.speedZ,
+				data.rotX,
+				data.rotY,
+				data.rotZ,
+				data.size
+			);
 		}
 		
 		override public function updateGroup(app : App, particle:ParticleSystem):void {

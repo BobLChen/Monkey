@@ -14,7 +14,7 @@ package monkey.core.parser {
 			
 		}
 		
-		public function parse(bytes : ByteArray) : NavigationMesh {
+		public static function parse(bytes : ByteArray) : NavigationMesh {
 			var navmesh : NavigationMesh = new NavigationMesh();
 			
 			bytes.endian = Endian.LITTLE_ENDIAN;

@@ -60,7 +60,7 @@ package monkey.loader {
 			this._bytesTotal  = e.bytesTotal;
 			this.dispatchEvent(e);
 		}
-				
+		
 		private function onComplete(e : Event) : void {
 			this._loading = false;
 			var item : IQueLoader = e.target as IQueLoader;
@@ -68,6 +68,7 @@ package monkey.loader {
 			item.removeEventListener(ProgressEvent.PROGRESS, 	onProgress);
 			item.removeEventListener(IOErrorEvent.IO_ERROR,  	onComplete);
 			if (e is IOErrorEvent) {
+				this.dispatchEvent(e);
 				this.dispatchEvent(new QueLoaderEvent(item, QueLoaderEvent.QUEUE_ITEM_IO_ERROE));	
 			} else {
 				this.dispatchEvent(new QueLoaderEvent(item, QueLoaderEvent.QUEUE_ITEM_COMPLETE));	

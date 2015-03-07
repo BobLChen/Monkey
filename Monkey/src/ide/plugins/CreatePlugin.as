@@ -23,7 +23,7 @@ package ide.plugins {
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.utils.Color;
-	import monkey.core.utils.Curves;
+	import monkey.core.utils.Linears;
 	import monkey.core.utils.Texture3DUtils;
 	
 	import ui.core.interfaces.IPlugin;
@@ -108,16 +108,18 @@ package ide.plugins {
 			
 			// 生成默认的lifetime数据，只适用于编辑器
 			var lifetimes : Array = [];
+			var step : Number = 1 / (ParticleSystem.MAX_KEY_NUM - 1);
 			for (var i:int = 0; i < 7; i++) {
-				var curve : Curves = new Curves();
-				var value : Number = i > 5 ? 1 : 0;
-				// 11个关键帧
-				for (var j:int = 0; j < 11; j++) {
-					curve.datas.push(new Point(j * 0.1, value));
+				var curve : Linears = new Linears();
+				var value : Number  = i >= 6 ? 0 : 1;
+				// 5个关键帧
+				for (var j:int = 0; j < ParticleSystem.MAX_KEY_NUM; j++) {
+					curve.datas.push(new Point(j * step, 0));
 				}
 				lifetimes.push(curve);
 			}
 			var data : LifetimeData = new LifetimeData();
+			data.lifetime = 5;				// 初始时默认lifetime为5
 			data.speedX = lifetimes[0];
 			data.speedY = lifetimes[1];
 			data.speedZ = lifetimes[2];

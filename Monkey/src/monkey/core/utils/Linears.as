@@ -3,15 +3,15 @@ package monkey.core.utils {
 	import flash.geom.Point;
 	
 	/**
-	 * 曲线数据 
+	 * 线性数据 
 	 * @author Neil
 	 * 
 	 */	
-	public class Curves {
+	public class Linears {
 				
 		public var datas : Vector.<Point>;
 		
-		public function Curves() {
+		public function Linears() {
 			this.datas = Vector.<Point>([]);
 		}
 		
@@ -71,14 +71,8 @@ package monkey.core.utils {
 				return datas[len - 1].y;
 			}
 			// 插值
-			var tx : Number = 0;
-			var h  : Number = lp.y - rp.y;
-			if (h < 0) {
-				h *= -1;
-				tx = Math.PI;
-			}
 			len = rp.x - lp.x;
-			return lp.y - Math.sin((x - lp.x) / len * Math.PI / 2 + tx) * h;
+			return lp.y + (rp.y - lp.y) * (x - lp.x) / len;
 		}
 		
 	}

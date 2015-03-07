@@ -180,8 +180,7 @@ package ide.plugins {
 		 */		
 		public static function openNavmesh(bytes : ByteArray) : Object3D {
 			bytes.position = 0;
-			var parser  : NavMeshParser = new NavMeshParser();
-			var navmesh : NavigationMesh = parser.parse(bytes);
+			var navmesh : NavigationMesh = NavMeshParser.parse(bytes);
 			// 根据导入的navmesh构建模型数据
 			var surf : Surface3D = new Surface3D();
 			surf.setVertexVector(Surface3D.POSITION, new Vector.<Number>(), 3);

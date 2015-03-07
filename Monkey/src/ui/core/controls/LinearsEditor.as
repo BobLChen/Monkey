@@ -10,7 +10,7 @@ package ui.core.controls {
 	import ui.core.Style;
 	import ui.core.event.ControlEvent;
 
-	public class CurvesEditor extends Control {
+	public class LinearsEditor extends Control {
 		
 		public var lockX : Boolean;
 		public var lockY : Boolean;
@@ -37,7 +37,7 @@ package ui.core.controls {
 		private var dragFlag	: CurveFlag = null;
 		private var tips 		: ToolTip1;			// 
 		
-		public function CurvesEditor(width : int = 300, height : int = 200) {
+		public function LinearsEditor(width : int = 300, height : int = 200) {
 			this.size = new Rectangle(padding, padding, width, height);
 			this.initCurves();
 			this.axisYValue = 1.0;
@@ -49,7 +49,7 @@ package ui.core.controls {
 		public function get points():Vector.<Point> {
 			return _points;
 		}
-
+		
 		public function set points(value:Vector.<Point>):void {
 			this.clear();
 			for (var i:int = 0; i < value.length; i++) {
@@ -317,23 +317,8 @@ package ui.core.controls {
 		 * 
 		 */		
 		private function drawCurveLines(pa : Point, pb : Point) : void {
-			var lx : Number = getX(pa.x);
-			var ly : Number = getY(pa.y);
-			var rx : Number = getX(pb.x);
-			var ry : Number = getY(pb.y);
-			var h  : Number = ly - ry;
-			var tx : Number = 0;
-			if (h < 0) {
-				h *= -1;
-				tx = Math.PI;
-			} else {
-				tx = 0;
-			}
-			var length : Number = rx - lx;
 			this.linesPanel.graphics.moveTo(getX(pa.x), getY(pa.y));
-			for (var i:Number = lx; i < rx; i++) {
-				this.linesPanel.graphics.lineTo(i, ly - Math.sin((i - lx) / length * Math.PI / 2 + tx) * h);
-			}
+			this.linesPanel.graphics.lineTo(getX(pb.x), getY(pb.y));
 		}
 		
 		/**
@@ -400,6 +385,7 @@ package ui.core.controls {
 			if (up) {
 				dragFlag = null;
 			}
+			
 			this.sortPoints();
 			this.drawCurves();
 		}
