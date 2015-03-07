@@ -50,6 +50,7 @@ package monkey.core.utils {
 				datas[16 * i + 12] = retX;			// x轴位移
 				datas[16 * i + 13] = retY;			// y轴位移
 				datas[16 * i + 14] = retZ;			// z轴位移
+				datas[16 * i + 15] = maxLifetime;	// 最大生命周期
 				// 叠加位移
 				retX += x;
 				retY += y;

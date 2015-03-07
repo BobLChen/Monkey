@@ -20,7 +20,7 @@ package monkey.core.shader.filters {
 	 * 粒子的速度和方向绑定到一起
 	 * 粒子的startColor由顶点颜色决定
 	 * 粒子的lifetime color用贴图实现
-	 * 粒子的lifetime transform由11个关键字决帧。强制为11个关键帧。
+	 * 粒子的lifetime transform由6个关键字决帧。强制为6个关键帧。
 	 * @author Neil
 	 *
 	 */
@@ -213,13 +213,15 @@ package monkey.core.shader.filters {
 				code += "add " + regCache.op + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
 				// 最后一个vc为速度->偏移3个
 				code += "add " + vt0 + ".z, " + vt0 + ".z, " + stepVc + ".w \n";							// 右边速度
-				code += "mov " + vt3 + ".xyz, " + "vc[" + vt0 + ".z" + "]\n";								// 获取右边速度
+				code += "mov " + vt3 + ", " + "vc[" + vt0 + ".z" + "]\n";								// 获取右边速度
 				code += "sub " + vt0 + ".z, " + vt0 + ".z, " + stepVc + ".y \n";							// 左移四个得到左边速度
-				code += "mov " + vt2 + ".xyz, " + "vc[" + vt0 + ".z" + "]\n";								// 获取左边速度
+				code += "mov " + vt2 + ", " + "vc[" + vt0 + ".z" + "]\n";								// 获取左边速度
 				// 线性插值
 				code += "sub " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt2 + ".xyz \n";
 				code += "mul " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt0 + ".y \n";
 				code += "add " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
+				code += "mul " + vt2 + ".xyz, " + vt2 + ".xyz, " + timeVa + ".y \n";
+				code += "div " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt2 + ".w \n";
 				
 				// start速度
 				code += "mul " + vt3 + ".xyz, " + speedVa + ".xyz, " + vt1 + ".x \n";
