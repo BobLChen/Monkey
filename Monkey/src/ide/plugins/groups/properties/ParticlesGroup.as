@@ -11,6 +11,7 @@ package ide.plugins.groups.properties {
 	import ide.plugins.groups.particles.emission.DurationGroup;
 	import ide.plugins.groups.particles.emission.LoopsGroup;
 	import ide.plugins.groups.particles.emission.RateGroup;
+	import ide.plugins.groups.particles.lifetime.LifetimeColor;
 	import ide.plugins.groups.particles.lifetime.LifetimeRotX;
 	import ide.plugins.groups.particles.lifetime.LifetimeRotY;
 	import ide.plugins.groups.particles.lifetime.LifetimeRotZ;
@@ -78,6 +79,7 @@ package ide.plugins.groups.properties {
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new StartColorGroup()));
 			
+			this.groups.push(this.layout.addControl(new LifetimeColor()));
 			this.groups.push(this.layout.addControl(new LifetimeSize()));
 			this.groups.push(this.layout.addControl(new LifetimeSpeedX()))
 			this.groups.push(this.layout.addControl(new LifetimeSpeedY()));
