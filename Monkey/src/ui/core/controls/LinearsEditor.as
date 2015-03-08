@@ -68,7 +68,7 @@ package ui.core.controls {
 			}
 			valueY = value;
 			for (var i:int = 0; i < yTexts.length; i++) {
-				yTexts[i].value= Number((valueY / rows * (rows - i)).toFixed(2));
+				yTexts[i].value= Number((valueY * 2 / rows * (rows - i)).toFixed(2)) - value;
 			}
 			this.drawCurves();
 		}
@@ -157,7 +157,7 @@ package ui.core.controls {
 			this.yTexts = new Vector.<Spinner>();
 			this.xTexts = new Vector.<Spinner>();
 			// Y轴文本框
-			for (i = 0; i < rows; i++) {
+			for (i = 0; i <= rows; i++) {
 				var ytex : Spinner = new Spinner(0, 0, 0, 1, 0);
 				ytex.x = 0;
 				ytex.y = yStep * i + size.y - ytex.height / 2;
@@ -328,7 +328,7 @@ package ui.core.controls {
 		 * 
 		 */		
 		private function getY(value : Number) : Number {
-			value = value / valueY * size.height;
+			value = (value + valueY) / 2 / valueY * size.height;
 			return size.height - value;
 		}
 		
@@ -379,7 +379,7 @@ package ui.core.controls {
 			}
 			if (!lockY) {
 				dragFlag.y = iy;
-				dragFlag.value.y = ly;
+				dragFlag.value.y = ly * 2 - valueY;
 			}
 			
 			if (up) {
