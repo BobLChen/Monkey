@@ -12,7 +12,5 @@ Monkey同级目录有一个Samples目录。该目录为FlashBuild工程文件，
 
 ## 正在开发中
 
-## 使用请注明出处，随意改随意用。
-
 <img src="http://boblchen.github.io/samples/ide.png"></img>
 
