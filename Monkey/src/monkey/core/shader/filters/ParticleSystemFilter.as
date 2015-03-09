@@ -226,6 +226,7 @@ package monkey.core.shader.filters {
 				code += "mul " + vt3 + ".xyz, " + speedVa + ".xyz, " + vt1 + ".x \n";
 				// 加上位移
 				code += "add " + vt0 + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
+				code += "add " + vt0 + ".xyz, " + vt0 + ".xyz, " + regCache.getVa(Surface3D.CUSTOM4) + " \n";
 				// uv动画
 				
 				// billboard

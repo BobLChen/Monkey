@@ -31,7 +31,7 @@ package monkey.navmesh {
 			this.initNormal();
 		}
 		
-		private function initNormal() : void {
+		public function initNormal() : void {
 			this._normal.x = _pb.x - _pa.x;
 			this._normal.y = _pb.y - _pa.y;
 		}

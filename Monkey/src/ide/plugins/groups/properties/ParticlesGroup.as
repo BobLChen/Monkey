@@ -19,6 +19,7 @@ package ide.plugins.groups.properties {
 	import ide.plugins.groups.particles.lifetime.LifetimeSpeedX;
 	import ide.plugins.groups.particles.lifetime.LifetimeSpeedY;
 	import ide.plugins.groups.particles.lifetime.LifetimeSpeedZ;
+	import ide.plugins.groups.particles.shape.ShapeGroup;
 	import ide.plugins.groups.particles.start.StartColorGroup;
 	import ide.plugins.groups.particles.start.StartDelayGroup;
 	import ide.plugins.groups.particles.start.StartLifetimeGroup;
@@ -78,6 +79,8 @@ package ide.plugins.groups.properties {
 			this.groups.push(this.layout.addControl(new StartRotationZGroup()));
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new StartColorGroup()));
+			
+			this.groups.push(this.layout.addControl(new ShapeGroup()));
 			
 			this.groups.push(this.layout.addControl(new LifetimeColor()));
 			this.groups.push(this.layout.addControl(new LifetimeSize()));

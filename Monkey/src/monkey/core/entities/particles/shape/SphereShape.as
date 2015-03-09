@@ -44,6 +44,8 @@ package monkey.core.entities.particles.shape {
 				// 粒子系统线速度，速度和方向整合到一起。(速度方向使用custom1寄存器)
 				var velocity : Vector.<Number> = new Vector.<Number>();
 				particle.surfaces[n].setVertexVector(Surface3D.CUSTOM1, velocity, 3);
+				var offsets	 : Vector.<Number> = new Vector.<Number>();
+				particle.surfaces[n].setVertexVector(Surface3D.CUSTOM4, offsets, 3);
 				// 生成对应的位置数据以及方向
 				for (var i:int = 0; i < num; i++) {
 					// 位置
@@ -73,11 +75,13 @@ package monkey.core.entities.particles.shape {
 					for (var j:int = 0; j < vertNum; j++) {
 						// 位置
 						var step : int = j * 3;
-						vertices.push(modeVertices[step + 0] + tx);
-						vertices.push(modeVertices[step + 1] + ty);
-						vertices.push(modeVertices[step + 2] + tz);
+						vertices.push(modeVertices[step + 0]);
+						vertices.push(modeVertices[step + 1]);
+						vertices.push(modeVertices[step + 2]);
 						// 方向
 						velocity.push(vec3.x, vec3.y, vec3.z);
+						// 位移
+						offsets.push(tx, ty, tz);
 					}
 				}
 			}

@@ -38,6 +38,8 @@ package monkey.core.base {
 		public static const ADDED				: String = "Object3D:ADDED";
 		/** 被移除 */
 		public static const REMOVED				: String = "Object3D:REMOVED";
+		/** 被销毁 */
+		public static const DISPOSED			: String = "Object3D:DISPOSED";
 		
 		// -------------------------------- 所有事件 --------------------------------
 		protected static const enterDrawEvent 	: Event = new Event(ENTER_DRAW);
@@ -48,8 +50,8 @@ package monkey.core.base {
 		protected static const removeChildEvent	: Event = new Event(REMOVE_CHILD);
 		protected static const addedEvent		: Event = new Event(ADDED);
 		protected static const removedEvent		: Event = new Event(REMOVED);
-		
-		
+		protected static const disposedEvent	: Event = new Event(DISPOSED);
+				
 		/** 名称 */
 		public var name 	: String = "";
 		public var userData : Object;
@@ -94,7 +96,7 @@ package monkey.core.base {
 				child.visible = value;
 			}
 		}
-
+				
 		/**
 		 * 添加一个child 
 		 * @param child
@@ -383,8 +385,9 @@ package monkey.core.base {
 			while (children.length > 0) {
 				children[0].dispose();
 			}
+			this.dispatchEvent(disposedEvent);
 		}
-		
+				
 		/**
 		 * 克隆 
 		 * @return 

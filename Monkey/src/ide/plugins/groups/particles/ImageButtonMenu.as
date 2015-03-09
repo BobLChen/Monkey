@@ -22,6 +22,9 @@ package ide.plugins.groups.particles {
 		}
 		
 		private function onClick(event:Event) : void {
+			if (!this.view.contextMenu) {
+				return;
+			}
 			this.view.contextMenu.display(this.view.stage, this.view.stage.mouseX, this.view.stage.mouseY);
 		}
 	}
