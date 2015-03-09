@@ -13,28 +13,28 @@ package monkey.core.entities.particles.shape {
 	 *
 	 */
 	public class ParticleShape {
-		
+
 		/** 临时变量 */
 		protected static const vec3 : Vector3D = new Vector3D();
-
+		
 		private var _mode 	 : Surface3D; 	// mode数据
-		private var _vertNum : int = 0;		// 顶点数量
+		private var _vertNum : int = 0; 	// 顶点数量
 		
 		public function ParticleShape() {
-
+			
 		}
 		
 		/**
-		 * 顶点数量 
-		 * @return 
-		 * 
-		 */		
+		 * 顶点数量
+		 * @return
+		 *
+		 */
 		public function get vertNum() : int {
 			return _vertNum;
 		}
 		
 		/**
-		 * 粒子mode
+		 * 粒子模型
 		 * @return
 		 *
 		 */
@@ -43,10 +43,12 @@ package monkey.core.entities.particles.shape {
 		}
 
 		/**
-		 * @private
-		 */
+		 * 粒子模型 
+		 * @param value
+		 * 
+		 */		
 		public function set mode(value : Surface3D) : void {
-			this._mode 	  = value;
+			this._mode    = value;
 			this._vertNum = value.getVertexVector(Surface3D.POSITION).length / 3;
 		}
 		
@@ -58,18 +60,45 @@ package monkey.core.entities.particles.shape {
 		public function generate(particle : ParticleSystem) : void {
 			this.generateUV(particle);
 			this.generateIndices(particle);
+			this.generateOffsetVelecity(particle);
 		}
 		
+		protected function generateOffsetVelecity(particle : ParticleSystem) : void {
+			var size    : int = Math.ceil(particle.maxParticles * vertNum / 65535);
+			var perSize : int = 65535 / vertNum;
+			for (var n  : int = 0; n < size; n++) {
+				var num : int = 0;
+				if (n == size - 1) {
+					num = particle.maxParticles - perSize * n;
+				} else {
+					num = perSize;
+				}
+				var vertices : Vector.<Number> = new Vector.<Number>();						// 粒子系统顶点数据
+				particle.surfaces[n].setVertexVector(Surface3D.POSITION, vertices, 3);
+				var velocity : Vector.<Number> = new Vector.<Number>();						// 粒子系统线速度，速度和方向整合到一起。(速度方向使用custom1寄存器)
+				particle.surfaces[n].setVertexVector(Surface3D.CUSTOM1,  velocity, 3);
+				var offsets : Vector.<Number> = new Vector.<Number>();						// 偏移量
+				particle.surfaces[n].setVertexVector(Surface3D.CUSTOM4,  offsets,  3);
+				// 生成对应的位置数据以及方向
+				for (var i : int = 0; i < num; i++) {
+					createVerticesVelecityOffset(i, vertices, velocity, offsets);
+				}
+			}
+		}
+
+		protected function createVerticesVelecityOffset(i : int, vertices : Vector.<Number>, velocity : Vector.<Number>, offsets : Vector.<Number>) : void {
+
+		}
+
 		/**
 		 * 生成索引
 		 * @param particle
 		 *
 		 */
-		public function generateIndices(particle : ParticleSystem) : void {
-			var size : int = Math.ceil(particle.maxParticles * vertNum / 65535);
+		protected function generateIndices(particle : ParticleSystem) : void {
+			var size 	: int = Math.ceil(particle.maxParticles * vertNum / 65535);
 			var perSize : int = 65535 / vertNum;
-			
-			for (var n:int = 0; n < size; n++) {
+			for (var n  : int = 0; n < size; n++) {
 				var num : int = 0;
 				if (n == size - 1) {
 					num = particle.maxParticles - perSize * n;
@@ -78,24 +107,25 @@ package monkey.core.entities.particles.shape {
 				}
 				var indices : Vector.<uint> = new Vector.<uint>();
 				var idxSize : int = mode.indexVector.length;
-				for (var i:int = 0; i < num; i++) {
+				for (var i  : int = 0; i < num; i++) {
 					for (var j : int = 0; j < idxSize; j++) {
 						indices.push(mode.indexVector[j] + vertNum * i);
 					}
 				}
 				particle.surfaces[n].indexVector = indices;
 			}
+
 		}
-		
+
 		/**
 		 * 生成uv
 		 * @param particle
 		 *
 		 */
-		public function generateUV(particle : ParticleSystem) : void {
-			var size : int = Math.ceil(particle.maxParticles * vertNum / 65535);
-			var perSize : int = 65535 / vertNum;			
-			for (var n:int = 0; n < size; n++) {
+		protected function generateUV(particle : ParticleSystem) : void {
+			var size    : int = Math.ceil(particle.maxParticles * vertNum / 65535);
+			var perSize : int = 65535 / vertNum;
+			for (var n  : int = 0; n < size; n++) {
 				var num : int = 0;
 				if (n == size - 1) {
 					num = particle.maxParticles - perSize * n;
@@ -108,8 +138,8 @@ package monkey.core.entities.particles.shape {
 				// shape UV数据
 				var modeUV : Vector.<Number> = mode.getVertexVector(Surface3D.UV0);
 				// 组装uv数据
-				var step : int = 0;
-				for (var i:int = 0; i < num; i++) {
+				var step   : int = 0;
+				for (var i : int = 0; i < num; i++) {
 					// 遍历shape的所有顶点
 					for (var j : int = 0; j < vertNum; j++) {
 						step = 2 * j;
@@ -120,6 +150,5 @@ package monkey.core.entities.particles.shape {
 				particle.surfaces[n].setVertexBytes(Surface3D.UV0, uvBytes, 2);
 			}
 		}
-				
 	}
 }
