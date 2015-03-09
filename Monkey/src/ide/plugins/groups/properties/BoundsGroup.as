@@ -13,6 +13,7 @@ package ide.plugins.groups.properties {
 		
 		public function BoundsGroup() {
 			super("Boundings");
+			this.accordion.contentHeight = 30;
 			this.layout.labelWidth = 20;
 			this.layout.addHorizontalGroup();
 			this._lenX = layout.addControl(new Spinner(), "X:") as Spinner;

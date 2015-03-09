@@ -1,8 +1,7 @@
 package monkey.core.shader.filters {
 
 	import flash.geom.Matrix3D;
-	import flash.geom.Orientation3D;
-	import flash.geom.Vector3D;
+	import flash.geom.Point;
 	import flash.utils.ByteArray;
 	
 	import monkey.core.base.Surface3D;
@@ -13,6 +12,7 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.VcRegisterLabel;
 	import monkey.core.textures.Texture3D;
 	import monkey.core.utils.Device3D;
+	import monkey.core.utils.Matrix3DUtils;
 	
 	/**
 	 * 粒子系统filter
@@ -27,11 +27,10 @@ package monkey.core.shader.filters {
 	public class ParticleSystemFilter extends Filter3D {
 		
 		public static const RADIANS_TO_DEGREES : Number = 180 / Math.PI;
-		
-		/** 是否开启广告牌 */
-		public var billboard : Boolean = false;					// 广告牌
-		
+				
+		public var billboard 		: Boolean = false;			// 广告牌
 		private var timeData  		: Vector.<Number>;			// 时间数据
+		private var frameData		: Vector.<Number>;			// uv动画数据
 		private var textureLabel    : FsRegisterLabel;			// 粒子贴图
 		private var blendedLabel 	: FsRegisterLabel;			// 混合贴图
 		private var keyframeLabel	: VcRegisterLabel;			// lifetime关键帧
@@ -47,25 +46,35 @@ package monkey.core.shader.filters {
 		 */		
 		public function ParticleSystemFilter() {
 			super("ParticleSystemFilter");
-			this.priority = 14;
-			this.timeData	  = Vector.<Number>([0, 0, 1, 5]);
-			this.blendedLabel = new FsRegisterLabel(null);
-			this.textureLabel = new FsRegisterLabel(null);
-			this.keyframeLabel= new VcRegisterLabel(null);
+			this.priority 		 = 14;
+			this.timeData	  	 = Vector.<Number>([0, 0, 1, 5]);
+			this.frameData		 = Vector.<Number>([1, 1, 1, 1]);
+			this.blendedLabel 	 = new FsRegisterLabel(null);
+			this.textureLabel 	 = new FsRegisterLabel(null);
+			this.keyframeLabel	 = new VcRegisterLabel(null);
 			this.billboardMatrix = new Matrix3D();
 			this.billboardLabel  = new VcRegisterLabel(billboardMatrix);
+			this.frame			 = new Point(1, 1);
 		}
 		
 		override public function update():void {
 			if (billboard) {
-				this.billboardMatrix.copyFrom(Device3D.world);
-				this.billboardMatrix.append(Device3D.view);
-				var comps : Vector.<Vector3D> = billboardMatrix.decompose(Orientation3D.AXIS_ANGLE);
-				this.billboardMatrix.identity();
-				this.billboardMatrix.appendRotation(-comps[1].w * RADIANS_TO_DEGREES, comps[1]);
+				Matrix3DUtils.setOrientation(billboardMatrix, Device3D.cameraDir);
 			} else {
 				this.billboardMatrix.identity();
 			}
+		}
+		
+		/**
+		 * uv动画 
+		 * @param value		value.x为行数，value.y为列数
+		 * 
+		 */		
+		public function set frame(value : Point) : void {
+			this.frameData[0] = value.y * value.x - 1;
+			this.frameData[1] = 1 / value.y;
+			this.frameData[2] = 1 / value.x;
+			this.frameData[3] = value.y;
 		}
 		
 		/**
@@ -166,11 +175,13 @@ package monkey.core.shader.filters {
 			var stepVc 	: ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(Vector.<Number>([ParticleSystem.MAX_KEY_NUM - 1, 4, keysVc.index, 3])));
 			// billboard
 			var billVc  : ShaderRegisterElement = regCache.getVc(4, billboardLabel);
+			// uv
+			var frameVc : ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(frameData));
 			
-			var vt0 : ShaderRegisterElement = regCache.getVt();		// 临时变量
-			var vt1 : ShaderRegisterElement = regCache.getVt();		// 粒子时间
-			var vt2 : ShaderRegisterElement = regCache.getVt();		// left， 左边关键帧
-			var vt3 : ShaderRegisterElement = regCache.getVt();		// right，右边关键帧
+			var vt0 : ShaderRegisterElement = regCache.getVt();			// 临时变量
+			var vt1 : ShaderRegisterElement = regCache.getVt();			// 粒子时间
+			var vt2 : ShaderRegisterElement = regCache.getVt();			// left， 左边关键帧
+			var vt3 : ShaderRegisterElement = regCache.getVt();			// right，右边关键帧
 			
 			var code : String = "";
 			
@@ -196,6 +207,11 @@ package monkey.core.shader.filters {
 				code += "frc " + vt0 + ".y, " + vt0 + ".x \n";
 				// 获取整数部分: => 1.7 - 0.7 = 1.0
 				code += "sub " + vt0 + ".x, " + vt0 + ".x, " + vt0 + ".y \n";
+				
+				// 当前时间:vt1.x
+				// 当前比率:vt1.y
+				// 当前索引:vt0.x
+				
 				// 跳转到矩阵
 				// vt0.z = 4
 				code += "mov " + vt0 + ".z, " + stepVc + ".y \n";
@@ -211,28 +227,46 @@ package monkey.core.shader.filters {
 				code += "sub " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt2 + ".xyz \n";
 				code += "mul " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt0 + ".y \n";
 				code += "add " + regCache.op + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
-				// 最后一个vc为速度->偏移3个
-				code += "add " + vt0 + ".z, " + vt0 + ".z, " + stepVc + ".w \n";							// 右边速度
-				code += "mov " + vt3 + ", " + "vc[" + vt0 + ".z" + "]\n";								// 获取右边速度
-				code += "sub " + vt0 + ".z, " + vt0 + ".z, " + stepVc + ".y \n";							// 左移四个得到左边速度
-				code += "mov " + vt2 + ", " + "vc[" + vt0 + ".z" + "]\n";								// 获取左边速度
+				// 最后一个vc为位移->偏移3个
+				code += "add " + vt0 + ".z, " + vt0 + ".z, " + stepVc + ".w \n";							// 右边位移
+				code += "mov " + vt3 + ", " + "vc[" + vt0 + ".z" + "]\n";									// 获取右边位移
+				code += "sub " + vt0 + ".z, " + vt0 + ".z, " + stepVc + ".y \n";							// 左移四个得到左边位移
+				code += "mov " + vt2 + ", " + "vc[" + vt0 + ".z" + "]\n";									// 获取左边位移
 				// 线性插值
 				code += "sub " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt2 + ".xyz \n";
 				code += "mul " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt0 + ".y \n";
 				code += "add " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
 				code += "mul " + vt2 + ".xyz, " + vt2 + ".xyz, " + timeVa + ".y \n";
 				code += "div " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt2 + ".w \n";
-				// start速度
+				// 速度 * 时间
 				code += "mul " + vt3 + ".xyz, " + speedVa + ".xyz, " + vt1 + ".x \n";
-				// 加上位移
+				// lifetime位移 + 速度 * 时间 + offset
 				code += "add " + vt0 + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
 				code += "add " + vt0 + ".xyz, " + vt0 + ".xyz, " + regCache.getVa(Surface3D.CUSTOM4) + " \n";
-				// uv动画
-				
-				// billboard
+				// 广告牌
 				code += "m33 " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + billVc + " \n";
-				// 位置 + 速度
+				// 顶点 + 最终位移
 				code += "add " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + vt0 + ".xyz \n";
+				
+				// =============uv动画=============
+				code += "mul " + vt2 + ".xy, " + regCache.getVa(Surface3D.UV0) + ".xy, " + frameVc + ".yz \n";
+				// 计算总量
+				code += "mul " + vt3 + ".x, " + vt1 + ".y, " + frameVc + ".x \n";	// 计算出总量
+				code += "frc " + vt3 + ".y, " + vt3 + ".x \n";
+				code += "sub " + vt3 + ".x, " + vt3 + ".x, " + vt3 + ".y \n";
+				// 计算出行数
+				code += "mul " + vt3 + ".z, " + vt3 + ".x, " + frameVc + ".y \n";
+				code += "frc " + vt3 + ".y, " + vt3 + ".z \n";
+				code += "sub " + vt3 + ".z, " + vt3 + ".z, " + vt3 + ".y \n";
+				// 计算列索引
+				code += "mul " + vt3 + ".w, " + vt3 + ".y, " + frameVc + ".w \n";
+				// 
+				code += "mov " + vt2 + ".zw, " + frameVc + ".yzyz \n";
+				code += "mul " + vt2 + ".zw, " + vt2 + ".zwzw, " + vt3 + ".wzwz \n";
+				code += "add " + vt2 + ".xy, " + vt2 + ".xyxy, " + vt2 + ".zwzw \n";
+				code += "mov " + regCache.getV(Surface3D.UV0) + ".xy, " + vt2 + ".xy \n";
+				// =============uv动画=============
+				
 				// 当前时间 < 0 时不显示 vt1.z = vt1.w >= 0 ? 1 : 0;
 				code += "sge " + vt0 + ".x, " + vt1 + ".w, " + timeVc + ".y \n";
 				// 当前时间 >= 生命周期时不显示 vt1.z = 1 - (vt1.w >= timeVa.y ? 1 : 0);

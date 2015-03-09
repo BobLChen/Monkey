@@ -44,6 +44,7 @@ package ide.plugins.groups.particles.lifetime {
 		
 		override public function updateGroup(app:App, particle:ParticleSystem):void {
 			super.updateGroup(app, particle);
+			this.open = false;
 			this._colors.removeAllKeys();
 			this._alphas.removeAllKeys();
 			var colorLifetime : GradientColor = particle.colorLifetime;

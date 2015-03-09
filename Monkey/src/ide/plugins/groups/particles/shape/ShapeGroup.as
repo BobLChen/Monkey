@@ -36,11 +36,11 @@ package ide.plugins.groups.particles.shape {
 		}
 		
 		public function updateGroup(app : App, particle : ParticleSystem) : void {
+			this.open = false;
 			this.app = app;
 			this.particle = particle;
 			this.removeAllControls();
 			this.addControl(this.header);
-			
 			if (particle.shape is SphereShape) {
 				this.sphere.update(particle.shape as SphereShape, particle);
 				this.addControl(this.sphere);

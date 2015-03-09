@@ -1,5 +1,6 @@
 package monkey.core.materials {
 	
+	import flash.geom.Point;
 	import flash.utils.ByteArray;
 	
 	import monkey.core.materials.shader.ParticleShader;
@@ -19,6 +20,7 @@ package monkey.core.materials {
 		private var _time	   : Number;
 		private var _totalLife : Number;
 		private var _billboard : Boolean;
+		private var _frame	   : Point;
 		
 		public function ParticleMaterial() {
 			super();
@@ -45,6 +47,15 @@ package monkey.core.materials {
 			this.blendTexture.dispose();
 			this.keyframes.clear();
 		}
+		
+		public function get frame():Point {
+			return _frame;
+		}
+		
+		public function set frame(value:Point):void {
+			_frame = value;
+		}
+
 		
 		public function get billboard():Boolean {
 			return _billboard;
@@ -133,6 +144,7 @@ package monkey.core.materials {
 			texture.upload(scene);
 			blendTexture.upload(scene);
 			ParticleShader(shader).time 		= time;
+			ParticleShader(shader).frame 		= frame;
 			ParticleShader(shader).texture 		= texture;
 			ParticleShader(shader).keyframe 	= keyframes;
 			ParticleShader(shader).billboard	= billboard;

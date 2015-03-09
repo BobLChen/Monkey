@@ -1,5 +1,6 @@
 package monkey.core.materials.shader {
 
+	import flash.geom.Point;
 	import flash.utils.ByteArray;
 	
 	import monkey.core.shader.Shader3D;
@@ -32,6 +33,10 @@ package monkey.core.materials.shader {
 				_instance = new ParticleShader();
 			}
 			return _instance;
+		}
+		
+		public function set frame(value : Point) : void {
+			this.filter.frame = value;
 		}
 		
 		public function set time(value : Number) : void {

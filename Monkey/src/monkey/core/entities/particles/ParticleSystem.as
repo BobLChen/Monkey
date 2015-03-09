@@ -103,7 +103,8 @@ package monkey.core.entities.particles {
 			this.billboard		 = true;
 			this.duration 		 = 5;											
 			this.loops 		 	 = true;											
-			this.startDelay 	 = 0;											
+			this.startDelay 	 = 0;				
+			this.frame			 = new Point(1, 1);
 			this.startSpeed 	 = new PropConst(5);							
 			this.startSize 		 = new PropConst(1);
 			this.startColor 	 = new PropGradientColor();						
@@ -171,8 +172,8 @@ package monkey.core.entities.particles {
 				}
 			}
 			if (loops) {
-				this._totalTime = fillSize * duration;
-				this.material.totalLife = fillSize * duration;
+				this._totalTime = fillSize * duration + duration;
+				this.material.totalLife = fillSize * duration + duration;
 			} else {
 				this.material.totalLife = this._totalTime * 2; // * 2防止粒子在结束时又重新出现
 			}
@@ -357,6 +358,14 @@ package monkey.core.entities.particles {
 			_image = value;
 			texture = new Bitmap2DTexture(value);
 			material.texture = texture;
+		}
+		
+		public function get frame():Point {
+			return this.material.frame;
+		}
+		
+		public function set frame(value:Point):void {
+			this.material.frame = value;
 		}
 		
 		/**

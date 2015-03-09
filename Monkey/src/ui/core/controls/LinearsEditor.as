@@ -17,7 +17,7 @@ package ui.core.controls {
 		
 		private var _points	: Vector.<Point>;
 		private var size 	: Rectangle;
-		private var padding : int = 30;
+		private var padding : int = 40;
 		private var rows 	: int = 5;
 		private var cols 	: int = 10;
 		private var flags	: Vector.<CurveFlag>;

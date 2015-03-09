@@ -7,6 +7,7 @@ package ide.plugins.groups.properties {
 	import ide.plugins.groups.particles.TimeGroup;
 	import ide.plugins.groups.particles.base.BillboardGroup;
 	import ide.plugins.groups.particles.base.MaxParticleGroup;
+	import ide.plugins.groups.particles.base.TextureGroup;
 	import ide.plugins.groups.particles.emission.BurstsGroup;
 	import ide.plugins.groups.particles.emission.DurationGroup;
 	import ide.plugins.groups.particles.emission.LoopsGroup;
@@ -80,8 +81,8 @@ package ide.plugins.groups.properties {
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new StartColorGroup()));
 			
+			this.groups.push(this.layout.addControl(new TextureGroup()));
 			this.groups.push(this.layout.addControl(new ShapeGroup()));
-			
 			this.groups.push(this.layout.addControl(new LifetimeColor()));
 			this.groups.push(this.layout.addControl(new LifetimeSize()));
 			this.groups.push(this.layout.addControl(new LifetimeSpeedX()))
