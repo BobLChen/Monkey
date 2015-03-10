@@ -27,6 +27,7 @@ package monkey.core.entities.particles {
 	import monkey.core.utils.GradientColor;
 	import monkey.core.utils.Matrix3DUtils;
 	import monkey.core.utils.Time3D;
+	import monkey.core.utils.deg2rad;
 	
 	/**
 	 * 粒子
@@ -314,23 +315,26 @@ package monkey.core.entities.particles {
 			if (!_defKeyframe) {
 				var bytes  : ByteArray = new ByteArray();
 				bytes.endian = Endian.LITTLE_ENDIAN;
-				var matrix : Matrix3D = new Matrix3D();
-				var datas  : Vector.<Number> = new Vector.<Number>(16 * 11, true);
-				for (var i:int = 0; i < ParticleSystem.MAX_KEY_NUM; i++) {
-					matrix.identity();
-					Matrix3DUtils.setScale(matrix, 1, 1, 1);		// 缩放
-					Matrix3DUtils.setRotation(matrix, 0, 0, 0);		// 旋转
-					matrix.transpose();
-					for (var j:int = 0; j < 16; j++) {
-						datas[16 * i + j] = matrix.rawData[j];
-					}
-					datas[16 * i + 12] = 0;			// x轴位移
-					datas[16 * i + 13] = 0;			// y轴位移
-					datas[16 * i + 14] = 0;			// z轴位移
+				// 旋转
+				for (i = 0; i < ParticleSystem.MAX_KEY_NUM; i++) {
+					bytes.writeFloat(0);
+					bytes.writeFloat(0);
+					bytes.writeFloat(0);
+					bytes.writeFloat(0);
 				}
-				var size : int = datas.length;
-				for (var k:int = 0; k < size; k++) {
-					bytes.writeFloat(datas[k]);
+				// 缩放
+				for (i = 0; i < ParticleSystem.MAX_KEY_NUM; i++) {
+					bytes.writeFloat(1);
+					bytes.writeFloat(1);
+					bytes.writeFloat(1);
+					bytes.writeFloat(1);
+				}
+				// 位移
+				for (var i:int = 0; i < ParticleSystem.MAX_KEY_NUM; i++) {
+					bytes.writeFloat(0);
+					bytes.writeFloat(0);
+					bytes.writeFloat(0);
+					bytes.writeFloat(1);
 				}
 				_defKeyframe = bytes;
 			}

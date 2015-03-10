@@ -16,11 +16,6 @@ package monkey.core.shader.filters {
 	
 	/**
 	 * 粒子系统filter
-	 * 粒子位置由cpu生成
-	 * 粒子的速度和方向绑定到一起
-	 * 粒子的startColor由顶点颜色决定
-	 * 粒子的lifetime color用贴图实现
-	 * 粒子的lifetime transform由6个关键字决帧。强制为6个关键帧。
 	 * @author Neil
 	 *
 	 */
@@ -162,96 +157,117 @@ package monkey.core.shader.filters {
 		 * 
 		 */		
 		override public function getVertexCode(regCache : ShaderRegisterCache, agal : Boolean) : String {
-			
+			const SIZE  : int = ParticleSystem.MAX_KEY_NUM;
 			// 速度
 			var speedVa : ShaderRegisterElement = regCache.getVa(Surface3D.CUSTOM1);
 			// 时间:timeVa.x=>起始时间;timeVa.y=>lifetime
 			var timeVa  : ShaderRegisterElement = regCache.getVa(Surface3D.CUSTOM2);
 			// 当前时间
 			var timeVc  : ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(timeData));
-			// 缩放 旋转 速度关键帧
-			var keysVc 	: ShaderRegisterElement = regCache.getVc(ParticleSystem.MAX_KEY_NUM * 4, keyframeLabel);
+			// 旋转 缩放 位移 关键帧
+			var keysVc 	: ShaderRegisterElement = regCache.getVc(SIZE * 3, keyframeLabel);
 			// step
-			var stepVc 	: ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(Vector.<Number>([ParticleSystem.MAX_KEY_NUM - 1, 4, keysVc.index, 3])));
+			var stepVc 	: ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(Vector.<Number>([SIZE - 1, SIZE, keysVc.index, 3])));
 			// billboard
 			var billVc  : ShaderRegisterElement = regCache.getVc(4, billboardLabel);
 			// uv
 			var frameVc : ShaderRegisterElement = regCache.getVc(1, new VcRegisterLabel(frameData));
 			
-			var vt0 : ShaderRegisterElement = regCache.getVt();			// 临时变量
-			var vt1 : ShaderRegisterElement = regCache.getVt();			// 粒子时间
-			var vt2 : ShaderRegisterElement = regCache.getVt();			// left， 左边关键帧
-			var vt3 : ShaderRegisterElement = regCache.getVt();			// right，右边关键帧
-			
+			var vtKey 	: ShaderRegisterElement = regCache.getVt();			// 临时变量
+			var vtTime 	: ShaderRegisterElement = regCache.getVt();			// 粒子时间
+			var vt2 	: ShaderRegisterElement = regCache.getVt();			// left， 左边关键帧
+			var vt3 	: ShaderRegisterElement = regCache.getVt();			// right，右边关键帧
+			var rotAxis : ShaderRegisterElement = regCache.getVt();
+			var xAxis 	: ShaderRegisterElement = regCache.getVt();
+			var temp 	: ShaderRegisterElement = regCache.getVt();
+			var cos 	: String = temp + ".x";
+			var sin 	: String = temp + ".y";
+			var cos2 	: String = temp + ".z";
+			var single 	: String = temp + ".w";
+			var R 		: ShaderRegisterElement = vt2;
+			var R_rev 	: ShaderRegisterElement = vt3;
+									
 			var code : String = "";
 			
 			if (agal) {
 				// 当前时间-延时
-				code += "sub " + vt1 + ".w, " + timeVc + ".x, " + timeVa + ".x \n";				
+				code += "sub " + vtTime + ".w, " + timeVc + ".x, " + timeVa + ".x \n";				
 				// 计算循环次数
 				// vt1.z = 时间/粒子生命周期
-				code += "div " + vt1 + ".z, " + vt1 + ".w, " + timeVc + ".w \n";
-				code += "frc " + vt1 + ".x, " + vt1 + ".z \n";
-				code += "sub " + vt1 + ".z, " + vt1 + ".z, " + vt1 + ".x \n";
+				code += "div " + vtTime + ".z, " + vtTime + ".w, " + timeVc + ".w \n";
+				code += "frc " + vtTime + ".x, " + vtTime + ".z \n";
+				code += "sub " + vtTime + ".z, " + vtTime + ".z, " + vtTime + ".x \n";
 				// 循环次数 * duration
-				code += "mul " + vt1 + ".z, " + vt1 + ".z, " + timeVc + ".w \n";
+				code += "mul " + vtTime + ".z, " + vtTime + ".z, " + timeVc + ".w \n";
 				// 当前时间 - 循环次数 * duration
-				code += "sub " + vt1 + ".x, " + timeVc + ".x, " + vt1 + ".z \n";
+				code += "sub " + vtTime + ".x, " + timeVc + ".x, " + vtTime + ".z \n";
 				// 减去延时
-				code += "sub " + vt1 + ".x, " + vt1 + ".x, " + timeVa + ".x \n";
+				code += "sub " + vtTime + ".x, " + vtTime + ".x, " + timeVa + ".x \n";
 				// 计算比率
-				code += "div " + vt1 + ".y, " + vt1 + ".x, " + timeVa + ".y \n";
-				// 根据时间计算出当前关键帧的索引:例如比率 * 10 => 0.34 * 5 = 1.7
-				code += "mul " + vt0 + ".x, " + vt1 + ".y, " + stepVc + ".x \n";
+				code += "div " + vtTime + ".y, " + vtTime + ".x, " + timeVa + ".y \n";
+				
+				
+				// 计算当前关键帧
+				code += "mul " + vtKey + ".x, " + vtTime + ".y, " + stepVc + ".x \n";
 				// 取分数: 1.7 => 0.7
-				code += "frc " + vt0 + ".y, " + vt0 + ".x \n";
-				// 获取整数部分: => 1.7 - 0.7 = 1.0
-				code += "sub " + vt0 + ".x, " + vt0 + ".x, " + vt0 + ".y \n";
+				code += "frc " + vtKey + ".y, " + vtKey + ".x \n";
+				// 获取整数部分: => 1.7 - 0.7 = 1.0，得到关键帧索引
+				code += "sub " + vtKey + ".x, " + vtKey + ".x, " + vtKey + ".y \n";
+				// vt0.x=>关键帧索引；vt0.y=>插值
 				
-				// 当前时间:vt1.x
-				// 当前比率:vt1.y
-				// 当前索引:vt0.x
-				
-				// 跳转到矩阵
-				// vt0.z = 4
-				code += "mov " + vt0 + ".z, " + stepVc + ".y \n";
-				// vt0.z = 4 * 3 = 12 (0, 4, 8, 12 ....36)
-				code += "mul " + vt0 + ".z, " + vt0 + ".z, " + vt0 + ".x \n";
-				// vt0.z = vt0.z + index
-				code += "add " + vt0 + ".z, " + vt0 + ".z, " + stepVc + ".z \n";
-				// m33 应用旋转和缩放
-				code += "m33 " + vt2 + ".xyz, " + regCache.op + ".xyz, " + "vc[" + vt0 + ".z" + "]\n";		// 乘以左边矩阵
-				code += "add " + vt0 + ".z, " + vt0 + ".z, " + stepVc + ".y \n";							// 偏移4个
-				code += "m33 " + vt3 + ".xyz, " + regCache.op + ".xyz, " + "vc[" + vt0 + ".z" + "]\n";		// 乘以右边矩阵
-				// 线性插值
+				// 旋转,插值
+				code += "mov " + vt2 + ".xyzw, " + "vc[" + vtKey + ".x+" + (keysVc.index + 0) + "].xyzw \n";
+				code += "mov " + vt3 + ".xyzw, " + "vc[" + vtKey + ".x+" + (keysVc.index + 1) + "].xyzw \n";
+				code += "sub " + vt3 + ".xyzw, " + vt3 + ".xyzw, " + vt2 + ".xyzw \n";
+				code += "mul " + vt3 + ".xyzw, " + vt3 + ".xyzw, " + vtKey + ".y  \n";
+				code += "add " + vt2 + ".xyzw, " + vt2 + ".xyzw, " + vt3 + ".xyzw \n";
+				// 旋转
+				code += "mov " + rotAxis + ".xyzw," + vt2 + ".xyzw \n";
+				code += "mov " + single + "," + rotAxis + ".w\n";
+				code += "cos " + cos + "," + single + "\n";
+				code += "sin " + sin + "," + single + "\n";
+				code += "mul " + R + ".xyz," + sin + "," + rotAxis + ".xyz\n";
+				code += "neg " + R_rev + ".xyz," + R + ".xyz\n";
+				code += "crs " + rotAxis + ".xyz," + R + ".xyz," + regCache.op + ".xyz\n";
+				code += "mul " + xAxis + ".xyz," + cos + "," + regCache.op + ".xyz\n";
+				code += "add " + rotAxis + ".xyz," + rotAxis + ".xyz," + xAxis + ".xyz\n";
+				code += "dp3 " + xAxis + ".w," + R + ".xyz," + regCache.op + ".xyz\n";
+				code += "neg " + rotAxis + ".w," + xAxis + ".w\n";
+				code += "crs " + R + ".xyz," + rotAxis + ".xyz," + R_rev + ".xyz\n";
+				code += "mul " + xAxis + ".xyzw," + rotAxis + ".xyzw," + cos + "\n";
+				code += "add " + R + ".xyz," + R + ".xyz," + xAxis + ".xyz\n";
+				code += "mul " + xAxis + ".xyz," + rotAxis + ".w," + R_rev + ".xyz\n";
+				code += "add " + regCache.op + "," + R + ".xyz," + xAxis + ".xyz\n";
+				code += "mov " + regCache.op + ".w, " + regCache.vc0123 + ".y \n";
+				// 缩放
+				code += "mul " + vt2 + ".xyz, " + regCache.op + ".xyz, " + "vc[" + vtKey + ".x+" + (keysVc.index + SIZE + 0) + "].x \n";
+				code += "mul " + vt3 + ".xyz, " + regCache.op + ".xyz, " + "vc[" + vtKey + ".x+" + (keysVc.index + SIZE + 1) + "].x \n";
 				code += "sub " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt2 + ".xyz \n";
-				code += "mul " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt0 + ".y \n";
+				code += "mul " + vt3 + ".xyz, " + vt3 + ".xyz, " + vtKey + ".y \n";
 				code += "add " + regCache.op + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
-				// 最后一个vc为位移->偏移3个
-				code += "add " + vt0 + ".z, " + vt0 + ".z, " + stepVc + ".w \n";							// 右边位移
-				code += "mov " + vt3 + ", " + "vc[" + vt0 + ".z" + "]\n";									// 获取右边位移
-				code += "sub " + vt0 + ".z, " + vt0 + ".z, " + stepVc + ".y \n";							// 左移四个得到左边位移
-				code += "mov " + vt2 + ", " + "vc[" + vt0 + ".z" + "]\n";									// 获取左边位移
-				// 线性插值
+				// 位移
+				code += "mov " + vt2 + ".xyzw, " + "vc[" + vtKey + ".x+" + (keysVc.index + SIZE * 2 + 0) + "].xyzw \n";
+				code += "mov " + vt3 + ".xyzw, " + "vc[" + vtKey + ".x+" + (keysVc.index + SIZE * 2 + 1) + "].xyzw \n";
 				code += "sub " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt2 + ".xyz \n";
-				code += "mul " + vt3 + ".xyz, " + vt3 + ".xyz, " + vt0 + ".y \n";
+				code += "mul " + vt3 + ".xyz, " + vt3 + ".xyz, " + vtKey + ".y \n";
 				code += "add " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
 				code += "mul " + vt2 + ".xyz, " + vt2 + ".xyz, " + timeVa + ".y \n";
 				code += "div " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt2 + ".w \n";
+				
 				// 速度 * 时间
-				code += "mul " + vt3 + ".xyz, " + speedVa + ".xyz, " + vt1 + ".x \n";
+				code += "mul " + vt3 + ".xyz, " + speedVa + ".xyz, " + vtTime + ".x \n";
 				// lifetime位移 + 速度 * 时间 + offset
-				code += "add " + vt0 + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
-				code += "add " + vt0 + ".xyz, " + vt0 + ".xyz, " + regCache.getVa(Surface3D.CUSTOM4) + " \n";
+				code += "add " + vtKey + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
+				code += "add " + vtKey + ".xyz, " + vtKey + ".xyz, " + regCache.getVa(Surface3D.CUSTOM4) + " \n";
 				// 广告牌
 				code += "m33 " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + billVc + " \n";
 				// 顶点 + 最终位移
-				code += "add " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + vt0 + ".xyz \n";
+				code += "add " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + vtKey + ".xyz \n";
 				
 				// =============uv动画=============
 				code += "mul " + vt2 + ".xy, " + regCache.getVa(Surface3D.UV0) + ".xy, " + frameVc + ".yz \n";
 				// 计算总量
-				code += "mul " + vt3 + ".x, " + vt1 + ".y, " + frameVc + ".x \n";	// 计算出总量
+				code += "mul " + vt3 + ".x, " + vtTime + ".y, " + frameVc + ".x \n";	// 计算出总量
 				code += "frc " + vt3 + ".y, " + vt3 + ".x \n";
 				code += "sub " + vt3 + ".x, " + vt3 + ".x, " + vt3 + ".y \n";
 				// 计算出行数
@@ -268,22 +284,26 @@ package monkey.core.shader.filters {
 				// =============uv动画=============
 				
 				// 当前时间 < 0 时不显示 vt1.z = vt1.w >= 0 ? 1 : 0;
-				code += "sge " + vt0 + ".x, " + vt1 + ".w, " + timeVc + ".y \n";
+				code += "sge " + vtKey + ".x, " + vtTime + ".w, " + timeVc + ".y \n";
 				// 当前时间 >= 生命周期时不显示 vt1.z = 1 - (vt1.w >= timeVa.y ? 1 : 0);
-				code += "add " + vt1 + ".z, " + vt1 + ".z, " + timeVa + ".y \n";
-				code += "sge " + vt1 + ".z, " + vt1 + ".w, " + vt1 + ".z \n";
-				code += "sub " + vt1 + ".z, " + timeVc + ".z, " + vt1 + ".z \n";
-				code += "mul " + vt0 + ".x, " + vt0 + ".x, " + vt1 + ".z \n";
+				code += "add " + vtTime + ".z, " + vtTime + ".z, " + timeVa + ".y \n";
+				code += "sge " + vtTime + ".z, " + vtTime + ".w, " + vtTime + ".z \n";
+				code += "sub " + vtTime + ".z, " + timeVc + ".z, " + vtTime + ".z \n";
+				code += "mul " + vtKey + ".x, " + vtKey + ".x, " + vtTime + ".z \n";
 				// mul
-				code += "mul " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + vt0 + ".x \n";
+				code += "mul " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + vtKey + ".x \n";
 				// 将时间参数传递给fragment着色器
-				code += "mov " + timeVary + ", " + vt1 + " \n";	
+				code += "mov " + timeVary + ", " + vtTime + " \n";	
 			}
 			
 			regCache.removeVt(vt3);
 			regCache.removeVt(vt2);
-			regCache.removeVt(vt1);
-			regCache.removeVt(vt0);
+			regCache.removeVt(vtTime);
+			regCache.removeVt(vtKey);
+			
+			regCache.removeVt(rotAxis);
+			regCache.removeVt(xAxis);
+			regCache.removeVt(temp);
 			
 			return code;
 		}

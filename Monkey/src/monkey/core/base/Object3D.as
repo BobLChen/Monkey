@@ -63,7 +63,7 @@ package monkey.core.base {
 		private var _visible		: Boolean;						// 是否显示
 		private var _disposed		: Boolean;						// 是否已经被销毁
 		private var componentDict   : Dictionary;					// 组件字典，懒汉模式
-				
+						
 		public function Object3D() {
 			super();
 			this.userData	   = new Object();

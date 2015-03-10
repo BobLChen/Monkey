@@ -322,7 +322,7 @@
 			m.copyColumnTo(3, _pos);
 			m.appendRotation(angle, _vector, ((pivotPoint) || (_pos)));
 		}
-
+		
 		public static function transformVector(m : Matrix3D, vector : Vector3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();
@@ -387,7 +387,7 @@
 			src.interpolateTo(dest, percent);
 			src.prependScale(_scale.x, _scale.y, _scale.z);
 		}
-
+		
 		public static function resetPosition(m : Matrix3D) : void {
 			setPosition(m, 0, 0, 0);
 		}
