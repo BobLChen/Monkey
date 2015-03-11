@@ -1,7 +1,9 @@
 package monkey.core.shader.filters {
 
 	import flash.geom.Matrix3D;
+	import flash.geom.Orientation3D;
 	import flash.geom.Point;
+	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
 	
 	import monkey.core.base.Surface3D;
@@ -12,7 +14,6 @@ package monkey.core.shader.filters {
 	import monkey.core.shader.utils.VcRegisterLabel;
 	import monkey.core.textures.Texture3D;
 	import monkey.core.utils.Device3D;
-	import monkey.core.utils.Matrix3DUtils;
 	
 	/**
 	 * 粒子系统filter
@@ -54,7 +55,11 @@ package monkey.core.shader.filters {
 		
 		override public function update():void {
 			if (billboard) {
-				Matrix3DUtils.setOrientation(billboardMatrix, Device3D.cameraDir);
+				this.billboardMatrix.copyFrom(Device3D.world);
+				this.billboardMatrix.append(Device3D.view);
+				var comps : Vector.<Vector3D> = billboardMatrix.decompose(Orientation3D.AXIS_ANGLE);
+				this.billboardMatrix.identity();
+				this.billboardMatrix.appendRotation(-comps[1].w * RADIANS_TO_DEGREES, comps[1]);
 			} else {
 				this.billboardMatrix.identity();
 			}

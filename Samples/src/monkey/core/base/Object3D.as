@@ -296,7 +296,7 @@ package monkey.core.base {
 			Device3D.mvp.copyFrom(Device3D.world);
 			Device3D.mvp.append(scene.camera.viewProjection);
 			Device3D.drawOBJNum++;
-						
+			
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {
 					icom.onDraw(scene);
