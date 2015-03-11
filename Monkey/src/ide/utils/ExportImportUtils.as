@@ -120,7 +120,7 @@ package ide.utils {
 			config.totalFrames 	= particle.animator.totalFrames;
 			config.image		= particle.userData.imageKey;
 			config.uuid			= particle.userData.uuid;
-			config.world		= particle.world;
+			config.world		= particle.worldspace;
 			config.colorLifetime= particle.colorLifetime;
 			config.optimize		= optimize;
 			config.loops		= particle.loops;

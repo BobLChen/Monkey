@@ -24,6 +24,7 @@ package monkey.core.entities.particles {
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.textures.Bitmap2DTexture;
+	import monkey.core.utils.Device3D;
 	import monkey.core.utils.GradientColor;
 	import monkey.core.utils.Matrix3DUtils;
 	
@@ -103,7 +104,7 @@ package monkey.core.entities.particles {
 			this.startLifeTime   = new DataConst(5);							
 			this.startRotation   = Vector.<PropData>([new DataConst(0), new DataConst(0), new DataConst(0)])
 			this.startOffset 	 = Vector.<PropData>([new DataConst(0), new DataConst(0), new DataConst(0)]);;
-			this.world 			 = false;										
+			this.worldspace 			 = false;										
 			this.colorLifetime 	 = new GradientColor();
 			this.image			 = new DEFAULT_IMG().bitmapData;
 			this.keyFrames		 = keyframeDatas;
@@ -521,16 +522,16 @@ package monkey.core.entities.particles {
 		 * @param value
 		 *
 		 */
-		public function get world() : Boolean {
+		public function get worldspace() : Boolean {
 			return _simulationSpace;
 		}
-
+		
 		/**
 		 * 粒子坐标系
 		 * @param value
 		 *
 		 */
-		public function set world(value : Boolean) : void {
+		public function set worldspace(value : Boolean) : void {
 			_simulationSpace = value;
 		}
 
@@ -708,6 +709,12 @@ package monkey.core.entities.particles {
 			if (!loops && !animator.playing) {
 				return;
 			}
+			
+			Device3D.world.copyFrom(transform.world);
+			Device3D.mvp.copyFrom(Device3D.world);
+			Device3D.mvp.append(scene.camera.viewProjection);
+			Device3D.drawOBJNum++;
+			
 			// draw
 			this.material.time = animator.currentFrame
 			// 绘制组件

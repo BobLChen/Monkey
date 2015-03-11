@@ -134,7 +134,7 @@ package monkey.core.utils {
 			ret.animator.totalFrames= config.totalFrames;
 			ret.userData.image 		= config.image;
 			ret.userData.uuid 		= config.uuid;
-			ret.world 				= config.world;
+			ret.worldspace 			= config.world;
 			ret.loops 	  			= config.loops;
 			ret.billboard 			= config.billboard;
 			ret.duration 			= config.duration;
