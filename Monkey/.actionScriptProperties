@@ -35,9 +35,6 @@
     <sourceAttachmentPath/>
   </compiler>
   <applications>
-    <application path="samples/TestParticles.as">
-      <airExcludes/>
-    </application>
     <application path="Monkey.as">
       <airExcludes/>
     </application>

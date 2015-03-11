@@ -60,6 +60,7 @@ package ide.plugins.groups.particles.base {
 				particle.image = bmp;
 				image.source = bmp;
 				particle.userData.image = file.bytes;
+				particle.userData.imageKey = file.file.nativePath;
 			});
 		}
 				

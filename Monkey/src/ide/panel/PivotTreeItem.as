@@ -1,12 +1,12 @@
 ﻿package ide.panel {
 
+	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
-	import monkey.core.entities.Mesh3D;
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.light.Light3D;
 	import monkey.core.scene.Scene3D;
@@ -37,9 +37,12 @@
 		public function PivotTreeItem(pivot : Object3D, level : Number) {
 			super(pivot.name, 0, 0, 30, 20);
 
+			var icon : Bitmap = new Arrow();
+			icon.x = -icon.width / 2;
+			icon.y = -icon.height / 2;
 			this.icon  = new McIcons();
 			this.arrow = new Sprite();
-			this.arrow.addChild(new Arrow());
+			this.arrow.addChild(icon);
 			
 			this.pivot = pivot;
 			this.label = new Label(pivot.name);

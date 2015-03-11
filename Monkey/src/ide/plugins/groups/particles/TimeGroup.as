@@ -38,11 +38,11 @@ package ide.plugins.groups.particles {
 		
 		private function onChangeTime(event:Event) : void {
 			this.play.text = "Play";
-			this.particle.gotoAndStop(this.time.value);
+			this.particle.animator.gotoAndStop(this.time.value);
 		}
 		
 		private function onClickStop(event:Event) : void {
-			this.particle.gotoAndStop(0);
+			this.particle.animator.gotoAndStop(0);
 			this.time.value = 0;
 			this.play.text = "Play";
 		}
@@ -50,22 +50,22 @@ package ide.plugins.groups.particles {
 		private function onClickPlay(event:Event) : void {
 			if (this.play.text == "Play") {
 				this.play.text = "Pause";
-				this.particle.play();
+				this.particle.animator.play();
 			} else {
 				this.play.text = "Play";
-				this.particle.stop();
+				this.particle.animator.stop();
 			}
 		}		
 		
 		override public function updateGroup(app:App, particle:ParticleSystem):void {
 			super.updateGroup(app, particle);
-			this.play.text  = particle.playing ? "Pause" : "Play";
-			this.time.value = particle.time;
+			this.play.text  = particle.animator.playing ? "Pause" : "Play";
+			this.time.value = particle.animator.currentFrame;
 			this.particle.addEventListener(Object3D.ENTER_DRAW, onUpdate);
 		}
 		
 		private function onUpdate(event:Event) : void {
-			this.time.value = this.particle.time;
+			this.time.value = this.particle.animator.currentFrame;
 		}
 		
 	}

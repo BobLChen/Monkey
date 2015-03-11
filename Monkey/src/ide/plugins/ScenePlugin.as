@@ -143,11 +143,11 @@ package ide.plugins {
 			var obj : Object3D = this._app.selection.main;
 			if (obj) {
 				this._lastFrame = this._scenePanel.rule.currentFrame;
-				if (obj is ParticleSystem) {
-					(obj as ParticleSystem).gotoAndStop(this._lastFrame * 1 / this._app.stage.frameRate);
-				}
 				if (obj.animator) {
 					obj.animator.gotoAndStop(this._scenePanel.rule.currentFrame);
+				}
+				if (obj is ParticleSystem) {
+					(obj as ParticleSystem).animator.gotoAndStop(this._lastFrame * 1 / this._app.stage.frameRate);
 				}
 			}
 		}
@@ -178,12 +178,12 @@ package ide.plugins {
 					obj.animator.gotoAndStop(this._scenePanel.rule.currentFrame);
 				}
 				if (obj && obj is ParticleSystem) {
-					(obj as ParticleSystem).gotoAndStop(this._scenePanel.rule.currentFrame * 1.0 / this._app.stage.frameRate);
+					(obj as ParticleSystem).animator.gotoAndStop(this._scenePanel.rule.currentFrame * 1.0 / this._app.stage.frameRate);
 				}
 //				this.gotoAndStop(this._scenePanel.rule.currentFrame);
 				this._app.dispatchEvent(new FrameEvent(FrameEvent.CHANGING));
 			}
-			
+					
 			if (this._action == ACTION_NULL) {
 				if (inScene && Input3D.rightMouseHit) {
 					this._action = ACTION_ORIBIT;

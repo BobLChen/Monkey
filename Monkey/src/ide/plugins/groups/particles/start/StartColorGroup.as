@@ -6,9 +6,9 @@ package ide.plugins.groups.particles.start {
 	import ide.events.SelectionEvent;
 	
 	import monkey.core.entities.particles.ParticleSystem;
-	import monkey.core.entities.particles.prop.color.PropConstColor;
-	import monkey.core.entities.particles.prop.color.PropGradientColor;
-	import monkey.core.entities.particles.prop.color.PropRandomTwoConstColor;
+	import monkey.core.entities.particles.prop.color.ColorConst;
+	import monkey.core.entities.particles.prop.color.ColorGradient;
+	import monkey.core.entities.particles.prop.color.ColorRandomTwoConst;
 	
 	import ui.core.container.Box;
 	import ui.core.controls.ColorPicker;
@@ -73,32 +73,32 @@ package ide.plugins.groups.particles.start {
 		}
 		
 		private function changeGradient(event:Event) : void {
-			var gradient : PropGradientColor = new PropGradientColor();
+			var gradient : ColorGradient = new ColorGradient();
 			gradient.color.setColors(gradColor.colors, gradColor.ratios);
 			gradient.color.setAlphas(gradAlpha.alphas, gradAlpha.ratios);
 			this.particle.startColor = gradient;
 		}
 		
 		private function changeRandomTwoConst(event:Event) : void {
-			this.particle.startColor = new PropRandomTwoConstColor(this.minColor.color, this.minColor.alpha, this.maxColor.color, this.maxColor.alpha);
+			this.particle.startColor = new ColorRandomTwoConst(this.minColor.color, this.minColor.alpha, this.maxColor.color, this.maxColor.alpha);
 		}
 		
 		private function changeOne(event:Event) : void {
-			this.particle.startColor = new PropConstColor(this.oneColor.color, this.oneColor.alpha);
+			this.particle.startColor = new ColorConst(this.oneColor.color, this.oneColor.alpha);
 		}
 		
 		private function changeToRandomTwoConst(e : Event) : void {
-			this.particle.startColor = new PropRandomTwoConstColor();
+			this.particle.startColor = new ColorRandomTwoConst();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeToGradient(e : Event) : void {
-			this.particle.startColor = new PropGradientColor();
+			this.particle.startColor = new ColorGradient();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeToConst(e : Event) : void {
-			this.particle.startColor = new PropConstColor();
+			this.particle.startColor = new ColorConst();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
@@ -110,13 +110,13 @@ package ide.plugins.groups.particles.start {
 			this.minHeight = 20;
 			this.maxHeight = 20;
 			
-			if (particle.startColor is PropConstColor) {
+			if (particle.startColor is ColorConst) {
 				this.orientation = HORIZONTAL;
 				this.addControl(oneColor);
-				this.oneColor.color = (particle.startColor as PropConstColor).color;
-				this.oneColor.alpha = (particle.startColor as PropConstColor).alpha;
-			} else if (particle.startColor is PropRandomTwoConstColor) {
-				var propColor : PropRandomTwoConstColor = particle.startColor as PropRandomTwoConstColor;
+				this.oneColor.color = (particle.startColor as ColorConst).color;
+				this.oneColor.alpha = (particle.startColor as ColorConst).alpha;
+			} else if (particle.startColor is ColorRandomTwoConst) {
+				var propColor : ColorRandomTwoConst = particle.startColor as ColorRandomTwoConst;
 				this.orientation = HORIZONTAL;
 				this.addControl(this.minColor);
 				this.addControl(this.maxColor);
@@ -124,8 +124,8 @@ package ide.plugins.groups.particles.start {
 				this.maxColor.color = propColor.maxColor;
 				this.minColor.alpha = propColor.minAlpha;
 				this.maxColor.alpha = propColor.maxAlpha;
-			} else if (particle.startColor is PropGradientColor) {
-				var propGrad : PropGradientColor = particle.startColor as PropGradientColor;
+			} else if (particle.startColor is ColorGradient) {
+				var propGrad : ColorGradient = particle.startColor as ColorGradient;
 				this.minHeight = 40;
 				this.maxHeight = 40;
 				this.orientation = HORIZONTAL;

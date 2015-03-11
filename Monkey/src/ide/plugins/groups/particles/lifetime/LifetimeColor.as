@@ -19,14 +19,14 @@ package ide.plugins.groups.particles.lifetime {
 		private var _colors  : GradientColorBar;
 		private var _alphas  : GradientColorBar;
 		private var _texture : Image;
-		private var layout  : Layout;
+		private var layout   : Layout;
 		
 		public function LifetimeColor() {
 			super("LifetimeColor");
+			this.removeAllControls();
 			this.layout = new Layout();
 			this.contentHeight = 80;
 			this.addControl(this.layout);
-			
 			this._colors = layout.addControl(new GradientColorBar(), "Colors:") as GradientColorBar;
 			this._alphas = layout.addControl(new GradientColorBar(), "Alphas:") as GradientColorBar;
 			this._colors.mode = ColorMode.MODE_RGB;

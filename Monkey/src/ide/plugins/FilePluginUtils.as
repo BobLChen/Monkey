@@ -24,6 +24,7 @@ package ide.plugins {
 	import monkey.core.utils.AssetsType;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Mesh3DUtils;
+	import monkey.loader.ParticleLoader;
 	import monkey.loader.SkyboxLoader;
 	import monkey.loader.WaterLoader;
 	import monkey.navmesh.NavigationCell;
@@ -41,7 +42,8 @@ package ide.plugins {
 			AssetsType.MAX3DS,
 			AssetsType.NAV,
 			AssetsType.WATER,
-			AssetsType.SKYBOX
+			AssetsType.SKYBOX,
+			AssetsType.PARTICLE
 		];
 		
 		private static var _filters : Array;
@@ -131,6 +133,7 @@ package ide.plugins {
 			_utils[AssetsType.WATER]	= openWater;
 			_utils[AssetsType.SKYBOX]	= openSkybox;
 			_utils[AssetsType.NAV]		= openNavmesh;
+			_utils[AssetsType.PARTICLE] = openParticle;
 		}
 		
 		/**
@@ -215,8 +218,29 @@ package ide.plugins {
 			return loader;
 		}
 		
+		/**
+		 * 导入天空盒 
+		 * @param bytes
+		 * @return 
+		 * 
+		 */		
 		public static function openSkybox(bytes : ByteArray) : Object3D {
 			var loader : SkyboxLoader = new SkyboxLoader("");
+			loader.loadBytes(bytes);
+			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
+				App.core.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));
+			});
+			return loader;
+		}
+		
+		/**
+		 * 导入粒子系统 
+		 * @param bytes
+		 * @return 
+		 * 
+		 */		
+		public static function openParticle(bytes : ByteArray) : Object3D {
+			var loader : ParticleLoader = new ParticleLoader("");
 			loader.loadBytes(bytes);
 			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
 				App.core.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));

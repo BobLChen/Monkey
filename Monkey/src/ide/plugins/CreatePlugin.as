@@ -1,7 +1,8 @@
 package ide.plugins {
 	
+	import com.adobe.images.PNGEncoder;
+	
 	import flash.events.Event;
-	import flash.geom.Point;
 	
 	import ide.App;
 	import ide.plugins.groups.particles.lifetime.LifetimeData;
@@ -23,8 +24,8 @@ package ide.plugins {
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.utils.Color;
-	import monkey.core.utils.Linears;
 	import monkey.core.utils.Texture3DUtils;
+	import monkey.core.utils.UUID;
 	
 	import ui.core.interfaces.IPlugin;
 	
@@ -103,33 +104,16 @@ package ide.plugins {
 		
 		private function createParticles(e : Event) : void {
 			var particle : ParticleSystem = new ParticleSystem();
-			particle.play();
+			particle.animator.play();
 			particle.build();
 			
-			// 生成默认的lifetime数据，只适用于编辑器
-			var lifetimes : Array = [];
-			var step : Number = 1 / (ParticleSystem.MAX_KEY_NUM - 1);
-			for (var i:int = 0; i < 7; i++) {
-				var curve : Linears = new Linears();
-				var value : Number  = i >= 6 ? 1 : 0;
-				// 5个关键帧
-				for (var j:int = 0; j < ParticleSystem.MAX_KEY_NUM; j++) {
-					curve.datas.push(new Point(j * step, value));
-				}
-				lifetimes.push(curve);
-			}
 			var data : LifetimeData = new LifetimeData();
-			data.lifetime = 5;				// 初始时默认lifetime为5
-			data.speedX = lifetimes[0];
-			data.speedY = lifetimes[1];
-			data.speedZ = lifetimes[2];
-			data.rotX = lifetimes[3];
-			data.rotY = lifetimes[4];
-			data.rotZ = lifetimes[5];
-			data.size = lifetimes[6];
-			
-			particle.userData.lifetime = data
-						
+			data.init();
+			particle.userData.lifetime  = data;
+			particle.userData.uuid 		= UUID.generate();		
+			particle.userData.image 	= PNGEncoder.encode(particle.image);
+			particle.userData.imageKey  = "default_image";
+				
 			this._app.scene.addChild(particle);
 			this._app.selection.objects = [particle];
 		}

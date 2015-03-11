@@ -14,6 +14,7 @@ package blog.samples {
 	import monkey.core.shader.filters.ColorFilter;
 	import monkey.core.shader.filters.SkeletonFilter34;
 	import monkey.core.utils.AnimUtil;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Mesh3DUtils;
 
 	public class Stage3d16 extends Sprite {
@@ -37,7 +38,7 @@ package blog.samples {
 			var skeleton : SkeletonFilter34 = new SkeletonFilter34();
 			var shader : Shader3D = new Shader3D([]);
 			shader.addFilter(skeleton);
-			shader.addFilter(new ColorFilter(0.7, 0.7, 0.7));
+			shader.addFilter(new ColorFilter(Color.GRAY));
 			var material : Material3D = new Material3D(shader);
 			
 			var obj  : Object3D = Mesh3DUtils.readMesh(new MESH());

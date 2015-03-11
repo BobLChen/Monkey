@@ -14,11 +14,4 @@
 	<natures>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>[source path] src</name>
-			<type>2</type>
-			<location>/Users/Neil/as3workpace/Monkey/Monkey/src</location>
-		</link>
-	</linkedResources>
 </projectDescription>

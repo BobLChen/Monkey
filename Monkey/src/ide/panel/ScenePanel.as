@@ -7,7 +7,6 @@ package ide.panel {
 	import ide.App;
 	import ide.events.FrameEvent;
 	
-	import monkey.core.base.Object3D;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.FPSStats;
 	

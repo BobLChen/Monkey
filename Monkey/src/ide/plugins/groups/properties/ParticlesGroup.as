@@ -13,9 +13,10 @@ package ide.plugins.groups.properties {
 	import ide.plugins.groups.particles.emission.LoopsGroup;
 	import ide.plugins.groups.particles.emission.RateGroup;
 	import ide.plugins.groups.particles.lifetime.LifetimeColor;
-	import ide.plugins.groups.particles.lifetime.LifetimeRotX;
-	import ide.plugins.groups.particles.lifetime.LifetimeRotY;
-	import ide.plugins.groups.particles.lifetime.LifetimeRotZ;
+	import ide.plugins.groups.particles.lifetime.LifetimeRotAngle;
+	import ide.plugins.groups.particles.lifetime.LifetimeRotAxisX;
+	import ide.plugins.groups.particles.lifetime.LifetimeRotAxisY;
+	import ide.plugins.groups.particles.lifetime.LifetimeRotAxisZ;
 	import ide.plugins.groups.particles.lifetime.LifetimeSize;
 	import ide.plugins.groups.particles.lifetime.LifetimeSpeedX;
 	import ide.plugins.groups.particles.lifetime.LifetimeSpeedY;
@@ -49,7 +50,7 @@ package ide.plugins.groups.properties {
 		public function ParticlesGroup() {
 			super("Particles", true);
 			this.groups = [];
-			this.accordion.contentHeight = 1800;
+			this.accordion.contentHeight = 1500;
 			this.layout.margins = 2.5;
 			this.layout.space = 1;
 			this.time = this.layout.addControl(new TimeGroup()) as TimeGroup;
@@ -82,15 +83,16 @@ package ide.plugins.groups.properties {
 			this.groups.push(this.layout.addControl(new StartColorGroup()));
 			
 			this.groups.push(this.layout.addControl(new TextureGroup()));
-			this.groups.push(this.layout.addControl(new ShapeGroup()));
 			this.groups.push(this.layout.addControl(new LifetimeColor()));
+			this.groups.push(this.layout.addControl(new ShapeGroup()));
 			this.groups.push(this.layout.addControl(new LifetimeSize()));
 			this.groups.push(this.layout.addControl(new LifetimeSpeedX()))
 			this.groups.push(this.layout.addControl(new LifetimeSpeedY()));
 			this.groups.push(this.layout.addControl(new LifetimeSpeedZ()));
-			this.groups.push(this.layout.addControl(new LifetimeRotX()));
-			this.groups.push(this.layout.addControl(new LifetimeRotY()));
-			this.groups.push(this.layout.addControl(new LifetimeRotZ()));
+			this.groups.push(this.layout.addControl(new LifetimeRotAxisX()));
+			this.groups.push(this.layout.addControl(new LifetimeRotAxisY()));
+			this.groups.push(this.layout.addControl(new LifetimeRotAxisZ()));
+			this.groups.push(this.layout.addControl(new LifetimeRotAngle()));
 		}
 		
 		override public function update(app : App) : Boolean {

@@ -6,9 +6,9 @@ package ide.plugins.groups.particles.start {
 	import ide.events.SelectionEvent;
 	
 	import monkey.core.entities.particles.ParticleSystem;
-	import monkey.core.entities.particles.prop.value.PropConst;
-	import monkey.core.entities.particles.prop.value.PropCurves;
-	import monkey.core.entities.particles.prop.value.PropRandomTwoConst;
+	import monkey.core.entities.particles.prop.value.DataConst;
+	import monkey.core.entities.particles.prop.value.DataCurves;
+	import monkey.core.entities.particles.prop.value.DataRandomTwoConst;
 	
 	import ui.core.Menu;
 	import ui.core.container.Box;
@@ -69,27 +69,27 @@ package ide.plugins.groups.particles.start {
 		}
 		
 		private function changeToRandomTwoConst(e : Event) : void {
-			this.particle.startSpeed = new PropRandomTwoConst(5, 5);
+			this.particle.startSpeed = new DataRandomTwoConst(5, 5);
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeToCurve(e : Event) : void {
-			this.particle.startSpeed = new PropCurves();
+			this.particle.startSpeed = new DataCurves();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeToConst(e : Event) : void {
-			this.particle.startSpeed = new PropConst();
+			this.particle.startSpeed = new DataConst();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeRandomTwoConst(event:Event) : void {
-			this.particle.startSpeed = new PropRandomTwoConst(minConst.value, maxConst.value);	
+			this.particle.startSpeed = new DataRandomTwoConst(minConst.value, maxConst.value);	
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
 		
 		private function changeCurves(event:Event) : void {
-			var data : PropCurves = new PropCurves();
+			var data : DataCurves = new DataCurves();
 			data.curve.datas = new Vector.<Point>();
 			for each (var point : Point in this.curves.points) {
 				data.curve.datas.push(point.clone());
@@ -100,7 +100,7 @@ package ide.plugins.groups.particles.start {
 		}
 		
 		private function changeOne(event:Event) : void {
-			this.particle.startSpeed = new PropConst(this.oneConst.value);		
+			this.particle.startSpeed = new DataConst(this.oneConst.value);		
 		}
 		
 		override public function updateGroup(app:App, particle:ParticleSystem):void {
@@ -110,24 +110,24 @@ package ide.plugins.groups.particles.start {
 			this.addControl(this.header);
 			this.particle.addEventListener(ParticleSystem.BUILD, onParticleBuild);
 			
-			if (particle.startSpeed is PropConst) {
+			if (particle.startSpeed is DataConst) {
 				this.orientation = HORIZONTAL;
 				this.addControl(this.oneConst);
-				this.oneConst.value = (particle.startSpeed as PropConst).value;
+				this.oneConst.value = (particle.startSpeed as DataConst).value;
 				this.minHeight = 20;
 				this.maxHeight = 20;
-			} else if (particle.startSpeed is PropRandomTwoConst) {
+			} else if (particle.startSpeed is DataRandomTwoConst) {
 				this.orientation = HORIZONTAL;
-				var randomTwoConst : PropRandomTwoConst = particle.startSpeed as PropRandomTwoConst;
+				var randomTwoConst : DataRandomTwoConst = particle.startSpeed as DataRandomTwoConst;
 				this.addControl(this.minConst);
 				this.addControl(this.maxConst);
 				this.minConst.value = randomTwoConst.minValue;
 				this.maxConst.value = randomTwoConst.maxValue;
 				this.minHeight = 20;
 				this.maxHeight = 20;
-			} else if (particle.startSpeed is PropCurves) {
+			} else if (particle.startSpeed is DataCurves) {
 				this.orientation = VERTICAL;
-				var propCurves : PropCurves = particle.startSpeed as PropCurves;
+				var propCurves : DataCurves = particle.startSpeed as DataCurves;
 				this.addControl(this.curves);
 				this.curves.axisXValue = particle.duration;
 				this.curves.axisYValue = propCurves.yValue;
