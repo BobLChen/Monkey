@@ -48,7 +48,7 @@ package blog.samples {
 			anim.fps = 15;
 			anim.play();
 			
-			obj.addEventListener(Object3D.ENTER_FRAME, function(e:Event):void{
+			obj.addEventListener(Object3D.ENTER_FRAME_EVENT, function(e:Event):void{
 				trace(anim.currentFrame);
 				skeleton.data = anim.getBoneBytes(0, int(anim.currentFrame));
 			});

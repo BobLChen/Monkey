@@ -14,9 +14,9 @@ package monkey.core.animator {
 	 */	
 	public class Animator extends Component3D {
 		
-		public static const ANIMATION_COMPLETE		: String = "Animator:ANIMATION_COMPLETE";
+		public static const ANIMATION_COMPLETE_EVENT: String = "Animator:ANIMATION_COMPLETE";
 		
-		protected static const animCompleteEvent 	: Event = new Event(ANIMATION_COMPLETE);
+		protected static const animCompleteEvent 	: Event = new Event(ANIMATION_COMPLETE_EVENT);
 		
 		/** 循环动画 */
 		public static const ANIMATION_LOOP_MODE 	: int = 0;
@@ -234,7 +234,7 @@ package monkey.core.animator {
 				}
 			}
 			this.currentFrame = this._currentFrame;
-			if (complete) {
+			if (complete && hasEventListener(ANIMATION_COMPLETE_EVENT)) {
 				this.dispatchEvent(animCompleteEvent);
 			}
 		}
@@ -262,7 +262,7 @@ package monkey.core.animator {
 				}
 			}
 			this.currentFrame = this._currentFrame;
-			if (complete) {
+			if (complete && hasEventListener(ANIMATION_COMPLETE_EVENT)) {
 				this.dispatchEvent(animCompleteEvent);
 			}
 		}

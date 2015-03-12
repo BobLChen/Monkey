@@ -19,8 +19,8 @@ package monkey.core.components {
 		/** disable */
 		public static const DISABLE 		: String = "Component3D:DISABLE";
 		// 事件
-		private static const ENABLE_EVENT   : Event = new Event(ENABLE);
-		private static const DISABLE_EVENT  : Event = new Event(DISABLE);
+		private static const enableEvent    : Event = new Event(ENABLE);
+		private static const disableEvent   : Event = new Event(DISABLE);
 		
 		private var _object3D : Object3D;	// object3d
 		private var _enable   : Boolean;	// 是否启用
@@ -108,10 +108,10 @@ package monkey.core.components {
 				return;
 			}
 			this._enable = value;
-			if (value) {
-				this.dispatchEvent(ENABLE_EVENT);
-			} else {
-				this.dispatchEvent(DISABLE_EVENT);
+			if (value && hasEventListener(ENABLE)) {
+				this.dispatchEvent(enableEvent);
+			} else if (hasEventListener(DISABLE)) {
+				this.dispatchEvent(disableEvent);
 			}
 		}
 		

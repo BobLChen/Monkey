@@ -106,7 +106,9 @@ package monkey.core.entities {
 				surf.dispose(force);
 			}
 			this.surfaces = new Vector.<Surface3D>();
-			this.dispatchEvent(disposeEvent);
+			if (hasEventListener(DISPOSE)) {
+				this.dispatchEvent(disposeEvent);
+			}
 		}
 		
 	}

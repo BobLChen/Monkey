@@ -110,7 +110,7 @@ package ide.plugins {
 			this.context.enableErrorChecking = true;
 			this._scenePanel.update();
 			this._scenePanel.draw();
-			this.addEventListener(ENTER_FRAME, onEnterFrame);
+			this.addEventListener(ENTER_FRAME_EVENT, onEnterFrame);
 		}
 				
 		public function init(app : App) : void {

@@ -34,7 +34,7 @@ package monkey.core.camera {
 			this._viewProjection = new Matrix3D();
 			this.lens = lens;
 			this.lens.addEventListener(Lens3D.PROJECTION_UPDATE, onLensProjChanged);
-			this.transform.addEventListener(Transform3D.UPDATE_TRANSFORM, onUpdateTransform);
+			this.transform.addEventListener(Transform3D.UPDATE_TRANSFORM_EVENT, onUpdateTransform);
 		}
 		
 		override public function clone():Object3D {

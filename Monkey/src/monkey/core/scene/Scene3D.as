@@ -43,7 +43,7 @@ package monkey.core.scene {
 		public static const RENDER				: String = "Scene3D:RENDER";
 		
 		/** enterframe事件 */
-		private static var enterFrameEvent : Event = new Event(ENTER_FRAME);
+		private static var enterFrameEvent : Event = new Event(ENTER_FRAME_EVENT);
 		/** exitframe事件 */
 		private static var exitFrameEvent  : Event = new Event(EXIT_FRAME);
 		/** pre render */

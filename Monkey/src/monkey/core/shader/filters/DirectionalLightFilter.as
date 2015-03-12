@@ -45,11 +45,11 @@ package monkey.core.shader.filters {
 			
 			if (this._light) {
 				this._light.removeEventListener(Event.CHANGE, change);
-				this._light.transform.removeEventListener(Transform3D.UPDATE_TRANSFORM, change);
+				this._light.transform.removeEventListener(Transform3D.UPDATE_TRANSFORM_EVENT, change);
 			}
 			this._light = light;
 			this._light.addEventListener(Event.CHANGE, change);
-			this._light.transform.addEventListener(Transform3D.UPDATE_TRANSFORM, change);
+			this._light.transform.addEventListener(Transform3D.UPDATE_TRANSFORM_EVENT, change);
 			light.transform.getDir(false, Vector3DUtils.vec0);
 			this.dirData 		= Vector3DUtils.vec0;
 			this.lightColor 	= light.color;

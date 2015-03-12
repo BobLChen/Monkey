@@ -157,7 +157,10 @@ package monkey.core.entities.particles {
 			this.createParticleMesh();			// 生成粒子对应的网格
 			this.shape.generate(this);			// 生成shape对应的数据，包括粒子的位置、方向、uv、索引
 			this.createParticleAttribute();		// 更新粒子属性
-			this.dispatchEvent(buildEvent); 	// 完成事件
+			
+			if (hasEventListener(BUILD)) {
+				this.dispatchEvent(buildEvent); 	// 完成事件
+			}
 		}
 		
 		/**
@@ -748,7 +751,9 @@ package monkey.core.entities.particles {
 			if (!visible) {
 				return;
 			}
-			this.dispatchEvent(enterDrawEvent);
+			if (hasEventListener(ENTER_DRAW)) {
+				this.dispatchEvent(enterDrawEvent);
+			}
 			// build
 			if (this._needBuild) {
 				this.build();
@@ -780,7 +785,9 @@ package monkey.core.entities.particles {
 					child.draw(scene, includeChildren);
 				}
 			}
-			this.dispatchEvent(exitDrawEvent);
+			if (hasEventListener(EXIT_DRAW)) {
+				this.dispatchEvent(exitDrawEvent);
+			}
 		}
 				
 	}

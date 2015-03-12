@@ -16,9 +16,9 @@ package monkey.core.components {
 	 */	
 	public class Transform3D extends Component3D {
 		
-		public static const UPDATE_TRANSFORM 	  : String = "UPDATE_TRANSFORM";
+		public static const UPDATE_TRANSFORM_EVENT: String = "UPDATE_TRANSFORM";
 		
-		private static const updateTransformEvent : Event = new Event(UPDATE_TRANSFORM);
+		private static const updateTransformEvent : Event = new Event(UPDATE_TRANSFORM_EVENT);
 		
 		private var _local 		: Matrix3D; 			// 本地transform
 		private var _world 		: Matrix3D; 			// 全局transform
@@ -571,7 +571,7 @@ package monkey.core.components {
 					child.transform.updateTransforms(includeChildren);
 				}
 			}
-			if (this.hasEventListener(UPDATE_TRANSFORM)) {
+			if (this.hasEventListener(UPDATE_TRANSFORM_EVENT)) {
 				this.dispatchEvent(updateTransformEvent);
 			}
 		}

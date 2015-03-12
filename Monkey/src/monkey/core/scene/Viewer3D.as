@@ -24,7 +24,7 @@ package monkey.core.scene {
 			this._out 		 = new Vector3D();
 			this.smooth 	 = smooth;
 			this.speedFactor = speedFactor;
-			this.addEventListener(Object3D.ENTER_FRAME, updateEvent);
+			this.addEventListener(Object3D.ENTER_FRAME_EVENT, updateEvent);
 		}
 		
 		private function updateEvent(event:Event) : void {

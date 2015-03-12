@@ -9,7 +9,7 @@ package monkey.core.camera.lens {
 	 * 
 	 */	
 	public class PerspectiveLens extends Lens3D {
-
+		
 		private static const rawData : Vector.<Number> = new Vector.<Number>(16, true);
 
 		private var _fieldOfView : Number;			// field of view
@@ -86,7 +86,8 @@ package monkey.core.camera.lens {
 			rawData[8] = 1  - (viewPort.width  / w) - (viewPort.x / w) * 2;
 			rawData[9] = -1 + (viewPort.height / h) + (viewPort.y / h) * 2;
 			
-			this._aspect = a;
+			this._projDirty = false;
+			this._aspect    = a;
 			this._projection.copyRawDataFrom(rawData);
 			this._projection.prependScale(1, 1, -1);
 			this.dispatchEvent(projectionEvent);

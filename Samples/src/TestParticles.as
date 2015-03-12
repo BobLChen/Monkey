@@ -5,6 +5,7 @@ package  {
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.utils.getTimer;
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.scene.Viewer3D;
@@ -13,7 +14,8 @@ package  {
 	
 	public class TestParticles extends Sprite {
 		
-		[Embed(source="../assets/123.particle", mimeType="application/octet-stream")]
+//		[Embed(source="../assets/123.particle", mimeType="application/octet-stream")]
+		[Embed(source="../assets/234.particle", mimeType="application/octet-stream")]
 		private var DATA  : Class;
 		
 		private var scene : Viewer3D;
@@ -39,11 +41,12 @@ package  {
 		protected function onComplete(event:Event) : void {
 			var loader : ParticleLoader = event.target as ParticleLoader;
 			list.push(loader);
-			for (var i:int = 0; i < 10; i++) {
-				for (var j:int = 0; j < 10; j++) {
+			
+			for (var i:int = 0; i < 30; i++) {
+				for (var j:int = 0; j < 30; j++) {
 					var c : Object3D = loader.clone();
-					c.transform.x = (i - 5) * 50;
-					c.transform.y = (j - 5) * 50;
+					c.transform.x = (i - 15) * 30;
+					c.transform.y = (j - 15) * 30;
 					this.scene.addChild(c);
 					list.push(c);
 				}

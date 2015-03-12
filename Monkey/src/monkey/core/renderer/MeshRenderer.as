@@ -38,11 +38,11 @@ package monkey.core.renderer {
 		
 		override public function onAdd(master : Object3D):void {
 			if (object3D) {
-				object3D.transform.removeEventListener(Transform3D.UPDATE_TRANSFORM, onUpdateTransforms);
+				object3D.transform.removeEventListener(Transform3D.UPDATE_TRANSFORM_EVENT, onUpdateTransforms);
 			}
 			super.onAdd(master);
 			if (object3D) {
-				object3D.transform.addEventListener(Transform3D.UPDATE_TRANSFORM, onUpdateTransforms);
+				object3D.transform.addEventListener(Transform3D.UPDATE_TRANSFORM_EVENT, onUpdateTransforms);
 			}
 		}
 		

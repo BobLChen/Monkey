@@ -23,34 +23,34 @@ package monkey.core.base {
 		
 		// -------------------------------- 事件定义 --------------------------------
 		/** 开始绘制 */
-		public static const ENTER_FRAME 		: String = "Object3D:ENTER_FRAME";
+		public static const ENTER_FRAME_EVENT 		: String = "Object3D:ENTER_FRAME";
 		/** 结束绘制 */
-		public static const EXIT_FRAME 			: String = "Object3D:EXIT_FRAME";
+		public static const EXIT_FRAME_EVENT 		: String = "Object3D:EXIT_FRAME";
 		/** 进入帧循环 */
-		public static const ENTER_DRAW			: String = "Object3D:ENTER_DRAW";
+		public static const ENTER_DRAW_EVENT		: String = "Object3D:ENTER_DRAW";
 		/** 退出帧循环 */
-		public static const EXIT_DRAW			: String = "Object3D:EXIT_DRAW";
+		public static const EXIT_DRAW_EVENT			: String = "Object3D:EXIT_DRAW";
 		/** 添加一个子节点 */
-		public static const ADD_CHILD			: String = "Object3D:ADD_CHILD";
+		public static const ADD_CHILD_EVENT			: String = "Object3D:ADD_CHILD";
 		/** 移除一个子节点 */
-		public static const REMOVE_CHILD		: String = "Object3D:REMOVE_CHILD";
+		public static const REMOVE_CHILD_EVENT		: String = "Object3D:REMOVE_CHILD";
 		/** 被添加 */
-		public static const ADDED				: String = "Object3D:ADDED";
+		public static const ADDED_EVENT				: String = "Object3D:ADDED";
 		/** 被移除 */
-		public static const REMOVED				: String = "Object3D:REMOVED";
+		public static const REMOVED_EVENT			: String = "Object3D:REMOVED";
 		/** 被销毁 */
-		public static const DISPOSED			: String = "Object3D:DISPOSED";
+		public static const DISPOSED_EVENT			: String = "Object3D:DISPOSED";
 		
 		// -------------------------------- 所有事件 --------------------------------
-		protected static const enterDrawEvent 	: Event = new Event(ENTER_DRAW);
-		protected static const exitDrawEvent  	: Event = new Event(EXIT_DRAW);
-		protected static const enterFrameEvent	: Event = new Event(ENTER_FRAME);
-		protected static const exitFrameEvent	: Event = new Event(EXIT_FRAME);
-		protected static const addChildEvent	: Event = new Event(ADD_CHILD);
-		protected static const removeChildEvent	: Event = new Event(REMOVE_CHILD);
-		protected static const addedEvent		: Event = new Event(ADDED);
-		protected static const removedEvent		: Event = new Event(REMOVED);
-		protected static const disposedEvent	: Event = new Event(DISPOSED);
+		protected static const enterDrawEvent 	: Event = new Event(ENTER_DRAW_EVENT);
+		protected static const exitDrawEvent  	: Event = new Event(EXIT_DRAW_EVENT);
+		protected static const enterFrameEvent	: Event = new Event(ENTER_FRAME_EVENT);
+		protected static const exitFrameEvent	: Event = new Event(EXIT_FRAME_EVENT);
+		protected static const addChildEvent	: Event = new Event(ADD_CHILD_EVENT);
+		protected static const removeChildEvent	: Event = new Event(REMOVE_CHILD_EVENT);
+		protected static const addedEvent		: Event = new Event(ADDED_EVENT);
+		protected static const removedEvent		: Event = new Event(REMOVED_EVENT);
+		protected static const disposedEvent	: Event = new Event(DISPOSED_EVENT);
 				
 		/** 名称 */
 		public var name 	: String = "";
@@ -112,8 +112,12 @@ package monkey.core.base {
 			child._parent = this;
 			child.visible = visible;
 			children.push(child);
-			child.dispatchEvent(addedEvent);
-			this.dispatchEvent(addChildEvent);
+			if (child.hasEventListener(ADDED_EVENT)) {
+				child.dispatchEvent(addedEvent);
+			}
+			if (hasEventListener(ADD_CHILD_EVENT)) {
+				this.dispatchEvent(addChildEvent);
+			}
 		}
 		
 		/**
@@ -128,8 +132,12 @@ package monkey.core.base {
 			}
 			children.splice(idx, 1);
 			child._parent = null;
-			child.dispatchEvent(removedEvent);
-			this.dispatchEvent(removeChildEvent);
+			if (child.hasEventListener(REMOVED_EVENT)) {
+				child.dispatchEvent(removedEvent);
+			}
+			if (hasEventListener(REMOVE_CHILD_EVENT)) {
+				this.dispatchEvent(removeChildEvent);
+			}
 		}
 		
 		/**
@@ -277,18 +285,27 @@ package monkey.core.base {
 			if (!visible) {
 				return;
 			}
-			this.dispatchEvent(enterFrameEvent);
+			
+			if (hasEventListener(ENTER_FRAME_EVENT)) {
+				this.dispatchEvent(enterFrameEvent);
+			}
+			
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {
 					icom.onUpdate();
 				}
 			}
+			
 			if (includeChildren) {
 				for each (var child : Object3D in children) {
 					child.update(includeChildren);
 				}
 			}
-			this.dispatchEvent(exitFrameEvent);
+			
+			if (hasEventListener(EXIT_FRAME_EVENT)) {
+				this.dispatchEvent(exitFrameEvent);
+			}
+			
 		}
 		
 		/**
@@ -301,8 +318,11 @@ package monkey.core.base {
 			if (!visible) {
 				return;
 			}
-			this.dispatchEvent(enterDrawEvent);
 			
+			if (hasEventListener(ENTER_DRAW_EVENT)) {
+				this.dispatchEvent(enterDrawEvent);
+			}
+						
 			Device3D.world.copyFrom(transform.world);
 			Device3D.mvp.copyFrom(Device3D.world);
 			Device3D.mvp.append(scene.camera.viewProjection);
@@ -313,12 +333,16 @@ package monkey.core.base {
 					icom.onDraw(scene);
 				}
 			}
+			
 			if (includeChildren) {
 				for each (var child : Object3D in children) {
 					child.draw(scene, includeChildren);
 				}
 			}
-			this.dispatchEvent(exitDrawEvent);
+			
+			if (hasEventListener(EXIT_DRAW_EVENT)) {
+				this.dispatchEvent(exitDrawEvent);
+			}
 		}
 		
 		/**
@@ -404,7 +428,9 @@ package monkey.core.base {
 			while (children.length > 0) {
 				children[0].dispose();
 			}
-			this.dispatchEvent(disposedEvent);
+			if (hasEventListener(DISPOSED_EVENT)) {
+				this.dispatchEvent(disposedEvent);
+			}
 		}
 		
 		/**
