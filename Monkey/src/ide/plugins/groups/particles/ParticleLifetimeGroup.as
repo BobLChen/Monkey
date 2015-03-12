@@ -31,6 +31,8 @@ package ide.plugins.groups.particles {
 			var menu : Menu = new Menu();
 			menu.addMenuItem("Build", onChangeLifetime);
 			this.curve.view.contextMenu = menu.menu;
+			
+			this.open = false;
 		}
 		
 		protected function onChangeLifetime(e : Event) : void {
@@ -48,8 +50,9 @@ package ide.plugins.groups.particles {
 		}
 		
 		public function updateGroup(app : App, particle : ParticleSystem) : void {
-			this.app = app;
+			this.app 	  = app;
 			this.particle = particle;
+			this.open 	  = false;
 		}
 	}
 }

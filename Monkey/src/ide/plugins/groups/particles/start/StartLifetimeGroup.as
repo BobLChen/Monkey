@@ -61,6 +61,9 @@ package ide.plugins.groups.particles.start {
 			this.minConst.addEventListener(ControlEvent.CHANGE, changeRandomTwoConst);
 			this.maxConst.addEventListener(ControlEvent.CHANGE, changeRandomTwoConst);
 			
+			this.minHeight = 20;
+			this.maxHeight = 20;
+			
 			this.arrow.addMenu("Const", changeToConst);
 			this.arrow.addMenu("Curve", changeToCurve);
 			this.arrow.addMenu("RandomTwoConst", changeToRandomTwoConst);
@@ -112,6 +115,8 @@ package ide.plugins.groups.particles.start {
 			this.data = particle.userData.lifetime;
 			this.removeAllControls();
 			this.addControl(this.header);
+			this.minHeight = 20;
+			this.maxHeight = 20;
 			this.particle.addEventListener(ParticleSystem.BUILD, onParticleBuild);
 			if (particle.startLifeTime is DataConst) {
 				this.orientation = HORIZONTAL;

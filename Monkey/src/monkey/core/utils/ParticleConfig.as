@@ -87,11 +87,29 @@ package monkey.core.utils {
 		private var _startRotation	: Object  = {};					// 初始旋转
 		private var _startOffset	: Object  = {};					// 初始位移
 		private var _colorLifetime	: Object  = {};					// 运行期颜色
-		private var _image			: Object  = {};					// 图片
+		private var _imageName		: Object  = {};					// 图片
 		private var _keyFrames		: Object  = {};					// 关键帧数据
+		private var _lifetimeData	: Object  = {};					// 运行期关键帧。
 		
 		public function ParticleConfig() {
 			super();
+		}
+		
+		public function get lifetimeData():Object {
+			return _lifetimeData;
+		}
+
+		public function set lifetimeData(value:Object):void {
+			_lifetimeData = {};
+			_lifetimeData.speedX	= getLinearData(value.speedX);
+			_lifetimeData.speedY	= getLinearData(value.speedY);
+			_lifetimeData.speedZ	= getLinearData(value.speedZ);
+			_lifetimeData.axisX		= getLinearData(value.axisX);
+			_lifetimeData.axisY		= getLinearData(value.axisY);
+			_lifetimeData.axisZ		= getLinearData(value.axisZ);
+			_lifetimeData.angle		= getLinearData(value.angle);
+			_lifetimeData.size		= getLinearData(value.size);
+			_lifetimeData.lifetime	= value.lifetime;
 		}
 		
 		public function get keyFrames():Object {
@@ -114,8 +132,8 @@ package monkey.core.utils {
 			_keyFrames = datas;
 		}
 		
-		public function get image():Object {
-			return _image;
+		public function get imageName():Object {
+			return _imageName;
 		}
 		
 		/**
@@ -123,8 +141,8 @@ package monkey.core.utils {
 		 * @param value
 		 * 
 		 */		
-		public function set image(value:Object):void {
-			_image = value;
+		public function set imageName(value:Object):void {
+			_imageName = value;
 		}
 		
 		public function get colorLifetime():Object {
@@ -515,6 +533,16 @@ package monkey.core.utils {
 			}
 			return ret;
 		}
-				
+		
+		public static function getLinearData(value : Linears) : Object {
+			var ret : Object= {};
+			ret.value = [];
+			ret.yValue= value.yValue;
+			for each (var p : Point in value.datas) {
+				ret.value.push(p.x, p.y);
+			}
+			return ret;
+		}
+		
 	}
 }

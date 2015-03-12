@@ -1,9 +1,6 @@
 package ide.plugins.groups.properties {
 
-	import flash.events.Event;
-	
 	import ide.App;
-	import ide.events.LogEvent;
 	import ide.plugins.groups.particles.TimeGroup;
 	import ide.plugins.groups.particles.base.BillboardGroup;
 	import ide.plugins.groups.particles.base.MaxParticleGroup;
@@ -53,7 +50,8 @@ package ide.plugins.groups.properties {
 			this.accordion.contentHeight = 1500;
 			this.layout.margins = 2.5;
 			this.layout.space = 1;
-			this.time = this.layout.addControl(new TimeGroup()) as TimeGroup;
+			this.time = new TimeGroup();
+			this.accordion.addControlAt(this.time, 0);
 			this.groups.push(time);
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new MaxParticleGroup()));
@@ -95,11 +93,20 @@ package ide.plugins.groups.properties {
 			this.groups.push(this.layout.addControl(new LifetimeRotAngle()));
 		}
 		
+		public function get particles():ParticleSystem {
+			return _particles;
+		}
+
 		override public function update(app : App) : Boolean {
 			this._app = app;
 			if (app.selection.main is ParticleSystem) {
-				this._particles = _app.selection.main as ParticleSystem;
-				this._particles.addEventListener(ParticleSystem.BUILD, onBuildParticle);
+				this._particles = app.selection.main as ParticleSystem;
+				if (this._particles.userData.optimize) {
+					this.layout.enabled = false;
+					this.time.updateGroup(app, _particles);
+					return true;
+				}
+				this.layout.enabled = true;
 				for each (var group : Object in this.groups) {
 					group.updateGroup(app, _particles);
 				}
@@ -107,10 +114,6 @@ package ide.plugins.groups.properties {
 				return true;
 			}
 			return false;
-		}
-		
-		private function onBuildParticle(event:Event) : void {
-			this._app.dispatchEvent(new LogEvent("Particle Build Success"));
 		}
 		
 	}

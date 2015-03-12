@@ -38,11 +38,11 @@ package ide.plugins.groups.particles.lifetime {
 			this.speedX = lifetimes[0];
 			this.speedY = lifetimes[1];
 			this.speedZ = lifetimes[2];
-			this.axisX = lifetimes[3];
-			this.axisY = lifetimes[4];
-			this.axisZ = lifetimes[5];
-			this.angle = lifetimes[6];
-			this.size = lifetimes[7];
+			this.axisX  = lifetimes[3];
+			this.axisY  = lifetimes[4];
+			this.angle  = lifetimes[5];
+			this.axisZ  = lifetimes[6];
+			this.size   = lifetimes[7];
 		}
 		
 	}

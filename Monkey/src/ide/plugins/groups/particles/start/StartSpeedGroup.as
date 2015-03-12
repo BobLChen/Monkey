@@ -4,6 +4,8 @@ package ide.plugins.groups.particles.start {
 	
 	import ide.App;
 	import ide.events.SelectionEvent;
+	import ide.plugins.groups.particles.ImageButtonMenu;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 	
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.entities.particles.prop.value.DataConst;
@@ -16,8 +18,6 @@ package ide.plugins.groups.particles.start {
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
-	import ide.plugins.groups.particles.ImageButtonMenu;
-	import ide.plugins.groups.particles.ParticleBaseGroup;
 
 	/**
 	 * 初始速度 
@@ -63,6 +63,9 @@ package ide.plugins.groups.particles.start {
 			this.minConst.addEventListener(ControlEvent.CHANGE, changeRandomTwoConst);
 			this.maxConst.addEventListener(ControlEvent.CHANGE, changeRandomTwoConst);
 			
+			this.minHeight = 20;
+			this.maxHeight = 20;
+			
 			this.arrow.addMenu("Const", changeToConst);
 			this.arrow.addMenu("Curve", changeToCurve);
 			this.arrow.addMenu("RandomTwoConst", changeToRandomTwoConst);
@@ -105,11 +108,9 @@ package ide.plugins.groups.particles.start {
 		
 		override public function updateGroup(app:App, particle:ParticleSystem):void {
 			super.updateGroup(app, particle);
-			
 			this.removeAllControls();
 			this.addControl(this.header);
 			this.particle.addEventListener(ParticleSystem.BUILD, onParticleBuild);
-			
 			if (particle.startSpeed is DataConst) {
 				this.orientation = HORIZONTAL;
 				this.addControl(this.oneConst);

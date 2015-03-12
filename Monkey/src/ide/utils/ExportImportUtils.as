@@ -37,12 +37,12 @@ package ide.utils {
 			var zip : Zip = new Zip();
 			zip.addString("config", JSON.stringify(config));
 			obj.forEach(function(particle : ParticleSystem):void{
-				zip.addFile(particle.userData.uuid,	 	getParticleData(particle));
-				zip.addFile(particle.userData.imageKey, particle.userData.image);
+				zip.addFile(particle.userData.uuid,	getParticleData(particle));
+				zip.addFile(particle.userData.imageName,particle.userData.imageData);
 			}, ParticleSystem);
 			if (obj is ParticleSystem) {
-				zip.addFile(obj.userData.uuid, 			getParticleData(obj as ParticleSystem));
-				zip.addFile(obj.userData.imageKey, 		obj.userData.image);
+				zip.addFile(obj.userData.uuid, getParticleData(obj as ParticleSystem));
+				zip.addFile(obj.userData.imageName, obj.userData.imageData);
 			}
 			var bytes : ByteArray = new ByteArray();
 			zip.serialize(bytes);
@@ -118,7 +118,7 @@ package ide.utils {
 		private static function getParticleConfig(particle : ParticleSystem, optimize : Boolean) : Object {
 			var config : ParticleConfig = new ParticleConfig();
 			config.totalFrames 	= particle.animator.totalFrames;
-			config.image		= particle.userData.imageKey;
+			config.imageName	= particle.userData.imageName;
 			config.uuid			= particle.userData.uuid;
 			config.world		= particle.worldspace;
 			config.colorLifetime= particle.colorLifetime;
@@ -131,9 +131,11 @@ package ide.utils {
 			config.keyFrames	= particle.keyFrames;
 			config.rate			= particle.rate;
 			config.totalLife  	= particle.totalLife;
+			config.optimize		= optimize;
 			if (optimize) {
 				return config;
 			}
+			config.lifetimeData = particle.userData.lifetime;
 			config.shape		= particle.shape;
 			config.startColor	= particle.startColor;
 			config.startDelay	= particle.startDelay;

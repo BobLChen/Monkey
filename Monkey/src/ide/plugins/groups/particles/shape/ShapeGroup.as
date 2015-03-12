@@ -33,11 +33,12 @@ package ide.plugins.groups.particles.shape {
 			this.header.addControl(this.shapes, "Shape");
 			this.addControl(this.header);
 			this.sphere = new SphereShapeGroup();
+			this.open = false;
 		}
 		
 		public function updateGroup(app : App, particle : ParticleSystem) : void {
-			this.open = false;
-			this.app = app;
+			this.open 	  = false;
+			this.app 	  = app;
 			this.particle = particle;
 			this.removeAllControls();
 			this.addControl(this.header);

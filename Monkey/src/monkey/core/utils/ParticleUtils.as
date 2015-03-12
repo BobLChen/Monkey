@@ -132,7 +132,7 @@ package monkey.core.utils {
 		private static function createParticle(config : Object) : ParticleSystem {
 			var ret : ParticleSystem= new ParticleSystem();
 			ret.animator.totalFrames= config.totalFrames;
-			ret.userData.image 		= config.image;
+			ret.userData.imageName 	= config.imageName;
 			ret.userData.uuid 		= config.uuid;
 			ret.worldspace 			= config.world;
 			ret.loops 	  			= config.loops;
@@ -160,24 +160,26 @@ package monkey.core.utils {
 				keyFrames.writeFloat(config.keyFrames[i]);
 				i += 1;
 			}
-			ret.keyFrames 		= keyFrames;
-			ret.rate	  		= config.rate;
+			ret.keyFrames 		  = keyFrames;
+			ret.rate	  		  = config.rate;
+			ret.userData.optimize = config.optimize;
 			// 删减版粒子
 			if (config.optimize) {
 				return ret;
 			}
-			ret.shape	  		= ParticleConfig.getShape(config.shape);
-			ret.startColor		= ParticleConfig.getColor(config.startColor);
-			ret.startDelay		= config.startDelay;
-			ret.startLifeTime	= ParticleConfig.getData(config.startLifeTime);
-			ret.startOffset[0]	= ParticleConfig.getData(config.startOffset.x);
-			ret.startOffset[1]	= ParticleConfig.getData(config.startOffset.y);
-			ret.startOffset[2]	= ParticleConfig.getData(config.startOffset.z);
-			ret.startRotation[0]= ParticleConfig.getData(config.startRotation.x);
-			ret.startRotation[1]= ParticleConfig.getData(config.startRotation.y);
-			ret.startRotation[2]= ParticleConfig.getData(config.startRotation.z);
-			ret.startSize		= ParticleConfig.getData(config.startSize);
-			ret.startSpeed		= ParticleConfig.getData(config.startSpeed);
+			ret.shape	  		  = ParticleConfig.getShape(config.shape);
+			ret.startColor		  = ParticleConfig.getColor(config.startColor);
+			ret.startDelay		  = config.startDelay;
+			ret.startLifeTime	  = ParticleConfig.getData(config.startLifeTime);
+			ret.startOffset[0]	  = ParticleConfig.getData(config.startOffset.x);
+			ret.startOffset[1]	  = ParticleConfig.getData(config.startOffset.y);
+			ret.startOffset[2]	  = ParticleConfig.getData(config.startOffset.z);
+			ret.startRotation[0]  = ParticleConfig.getData(config.startRotation.x);
+			ret.startRotation[1]  = ParticleConfig.getData(config.startRotation.y);
+			ret.startRotation[2]  = ParticleConfig.getData(config.startRotation.z);
+			ret.startSize		  = ParticleConfig.getData(config.startSize);
+			ret.startSpeed		  = ParticleConfig.getData(config.startSpeed);
+			ret.userData.lifetimeData = config.lifetimeData;
 			
 			return ret;
 		}

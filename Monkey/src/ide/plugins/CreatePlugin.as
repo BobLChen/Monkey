@@ -111,8 +111,8 @@ package ide.plugins {
 			data.init();
 			particle.userData.lifetime  = data;
 			particle.userData.uuid 		= UUID.generate();		
-			particle.userData.image 	= PNGEncoder.encode(particle.image);
-			particle.userData.imageKey  = "default_image";
+			particle.userData.imageData = PNGEncoder.encode(particle.image);
+			particle.userData.imageName = "default_image";
 				
 			this._app.scene.addChild(particle);
 			this._app.selection.objects = [particle];

@@ -4,6 +4,8 @@ package ide.plugins.groups.particles.start {
 	
 	import ide.App;
 	import ide.events.SelectionEvent;
+	import ide.plugins.groups.particles.ImageButtonMenu;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 	
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.entities.particles.prop.color.ColorConst;
@@ -16,8 +18,6 @@ package ide.plugins.groups.particles.start {
 	import ui.core.controls.Label;
 	import ui.core.event.ControlEvent;
 	import ui.core.type.ColorMode;
-	import ide.plugins.groups.particles.ImageButtonMenu;
-	import ide.plugins.groups.particles.ParticleBaseGroup;
 
 	/**
 	 * 初始颜色 
@@ -60,6 +60,9 @@ package ide.plugins.groups.particles.start {
 			
 			this.gradColor.mode = ColorMode.MODE_RGB;
 			this.gradAlpha.mode = ColorMode.MODE_A;
+			
+			this.minHeight = 20;
+			this.maxHeight = 20;
 			
 			this.oneColor.addEventListener(ControlEvent.CHANGE, changeOne);
 			this.minColor.addEventListener(ControlEvent.CHANGE, changeRandomTwoConst);
@@ -106,10 +109,6 @@ package ide.plugins.groups.particles.start {
 			super.updateGroup(app, particle);
 			this.removeAllControls();
 			this.addControl(this.header);
-			
-			this.minHeight = 20;
-			this.maxHeight = 20;
-			
 			if (particle.startColor is ColorConst) {
 				this.orientation = HORIZONTAL;
 				this.addControl(oneColor);

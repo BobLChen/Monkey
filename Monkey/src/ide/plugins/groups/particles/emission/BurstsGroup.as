@@ -6,6 +6,7 @@ package ide.plugins.groups.particles.emission {
 	
 	import ide.App;
 	import ide.events.SelectionEvent;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 	
 	import monkey.core.entities.particles.ParticleSystem;
 	
@@ -14,7 +15,6 @@ package ide.plugins.groups.particles.emission {
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
-	import ide.plugins.groups.particles.ParticleBaseGroup;
 
 	public class BurstsGroup extends ParticleBaseGroup {
 		
@@ -112,8 +112,6 @@ package ide.plugins.groups.particles.emission {
 			this.removeAllControls();
 			this.addControl(title);
 			this.addControl(header);
-			this.maxHeight = 60;
-			this.minHeight = 60;
 			for each (var point : Point in particle.bursts) {
 				this.createItem(point);
 			}

@@ -52,6 +52,7 @@ package ide.plugins.groups.particles.base {
 			this.rows.addEventListener(ControlEvent.CHANGE, 	changeFrame);
 			this.columns.addEventListener(ControlEvent.CHANGE, 	changeFrame);
 			this.image.addEventListener(ControlEvent.CLICK,	 	changeImage);
+			this.open = false;
 		}
 		
 		private function changeImage(event:Event) : void {
@@ -59,8 +60,8 @@ package ide.plugins.groups.particles.base {
 			file.openForImage(function(bmp : BitmapData):void{
 				particle.image = bmp;
 				image.source = bmp;
-				particle.userData.image = file.bytes;
-				particle.userData.imageKey = file.file.nativePath;
+				particle.userData.imageData = file.bytes;
+				particle.userData.imageName = file.file.nativePath;
 			});
 		}
 				
@@ -69,9 +70,12 @@ package ide.plugins.groups.particles.base {
 		}
 		
 		public function updateGroup(app : App, particle:ParticleSystem):void {
+			this.open = false;
 			this.app = app;
 			this.particle = particle;
-			
+			if (particle.userData.optimize) {
+				this.enabled = false;
+			}
 			this.rows.value    = particle.frame.x;
 			this.columns.value = particle.frame.y;
 			this.image.source  = particle.image;

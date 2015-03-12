@@ -1,10 +1,13 @@
 package ide.plugins {
 	
+	import com.adobe.images.PNGEncoder;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
+	import flash.geom.Point;
 	import flash.net.FileFilter;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
@@ -12,10 +15,12 @@ package ide.plugins {
 	import ide.App;
 	import ide.events.LogEvent;
 	import ide.events.SceneEvent;
+	import ide.plugins.groups.particles.lifetime.LifetimeData;
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
+	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.parser.Max3DSParser;
 	import monkey.core.parser.NavMeshParser;
@@ -23,6 +28,7 @@ package ide.plugins {
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.utils.AssetsType;
 	import monkey.core.utils.Color;
+	import monkey.core.utils.Linears;
 	import monkey.core.utils.Mesh3DUtils;
 	import monkey.loader.ParticleLoader;
 	import monkey.loader.SkyboxLoader;
@@ -243,9 +249,37 @@ package ide.plugins {
 			var loader : ParticleLoader = new ParticleLoader("");
 			loader.loadBytes(bytes);
 			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
+				loader.forEach(function(particle : ParticleSystem):void{
+					if (particle.userData.optimize) {
+						return;
+					}
+					particle.userData.imageData = PNGEncoder.encode(particle.image);
+					var value : Object = particle.userData.lifetimeData;
+					var data  : LifetimeData = new LifetimeData();
+					data.speedX   = convert2Linears(value.speedX);
+					data.speedY   = convert2Linears(value.speedY);
+					data.speedZ   = convert2Linears(value.speedZ);
+					data.axisX    = convert2Linears(value.axisX);
+					data.axisY    = convert2Linears(value.axisY);
+					data.axisZ    = convert2Linears(value.axisZ);
+					data.angle    = convert2Linears(value.angle);
+					data.size     = convert2Linears(value.size);
+					data.lifetime = value.lifetime;
+					particle.userData.lifetime = data;
+					
+				}, ParticleSystem);
 				App.core.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));
 			});
 			return loader;
+		}
+		
+		private static function convert2Linears(data : Object) : Linears {
+			var ret : Linears = new Linears();
+			for (var i:int = 0; i < data.value.length; i += 2) {
+				ret.datas.push(new Point(data.value[i], data.value[i + 1]));				
+			}
+			ret.yValue = data.yValue;
+			return ret;
 		}
 		
 	}

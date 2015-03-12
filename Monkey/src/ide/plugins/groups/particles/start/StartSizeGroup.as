@@ -62,6 +62,9 @@ package ide.plugins.groups.particles.start {
 			this.minConst.addEventListener(ControlEvent.CHANGE, changeRandomTwoConst);
 			this.maxConst.addEventListener(ControlEvent.CHANGE, changeRandomTwoConst);
 			
+			this.minHeight = 20;
+			this.maxHeight = 20;
+			
 			this.arrow.addMenu("Const", changeToConst);
 			this.arrow.addMenu("Curve", changeToCurve);
 			this.arrow.addMenu("RandomTwoConst", changeToRandomTwoConst);

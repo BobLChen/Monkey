@@ -2,11 +2,11 @@ package ide.plugins.groups.particles.base {
 	import flash.events.Event;
 	
 	import ide.App;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 	
 	import monkey.core.entities.particles.ParticleSystem;
 	
 	import ui.core.controls.Label;
-	import ide.plugins.groups.particles.ParticleBaseGroup;
 
 	public class MaxParticleGroup extends ParticleBaseGroup {
 		

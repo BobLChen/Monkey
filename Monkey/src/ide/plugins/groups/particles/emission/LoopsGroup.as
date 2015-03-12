@@ -3,13 +3,13 @@ package ide.plugins.groups.particles.emission {
 	import flash.events.Event;
 	
 	import ide.App;
+	import ide.plugins.groups.particles.ParticleBaseGroup;
 	
 	import monkey.core.entities.particles.ParticleSystem;
 	
 	import ui.core.controls.CheckBox;
 	import ui.core.controls.Label;
 	import ui.core.event.ControlEvent;
-	import ide.plugins.groups.particles.ParticleBaseGroup;
 
 	public class LoopsGroup extends ParticleBaseGroup {
 		

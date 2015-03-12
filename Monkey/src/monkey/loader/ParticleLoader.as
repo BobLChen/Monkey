@@ -72,11 +72,11 @@ package monkey.loader {
 			
 			for each (var pivot : ParticleSystem in this.list) {
 				// 图片
-				if (!this.texMap[pivot.userData.image]) {
+				if (!this.texMap[pivot.userData.imageName]) {
 					var loader : Loader = new Loader();
 					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoadComplete);
-					loader.loadBytes(zip.getFileByName(pivot.userData.image));
-					this.texMap[pivot.userData.image] = loader;
+					loader.loadBytes(zip.getFileByName(pivot.userData.imageName));
+					this.texMap[pivot.userData.imageName] = loader;
 					this.count++;
 				}
 				// 粒子数据
@@ -102,7 +102,7 @@ package monkey.loader {
 		private function parseComplete() : void {
 			// 设置粒子的贴图以及数据
 			for each (var pivot : ParticleSystem in this.list) {
-				var loader : Loader = texMap[pivot.userData.image] as Loader;
+				var loader : Loader = texMap[pivot.userData.imageName] as Loader;
 				pivot.image = (loader.content as Bitmap).bitmapData;
 				for each (var surf : Surface3D in sufMap[pivot.userData.uuid]) {
 					pivot.renderer.mesh.surfaces.push(surf.clone());

@@ -15,12 +15,12 @@ package ide.plugins.groups.particles.lifetime {
 	import ui.core.type.ColorMode;
 
 	public class LifetimeColor extends ParticleLifetimeGroup {
-		
-		private var _colors  : GradientColorBar;
-		private var _alphas  : GradientColorBar;
+
+		private var _colors : GradientColorBar;
+		private var _alphas : GradientColorBar;
 		private var _texture : Image;
-		private var layout   : Layout;
-		
+		private var layout : Layout;
+
 		public function LifetimeColor() {
 			super("LifetimeColor");
 			this.removeAllControls();
@@ -34,27 +34,25 @@ package ide.plugins.groups.particles.lifetime {
 			this._alphas.addEventListener(ControlEvent.CHANGE, changeColorAndAlphas);
 			this._colors.addEventListener(ControlEvent.CHANGE, changeColorAndAlphas);
 		}
-		
-		private function changeColorAndAlphas(event:Event) : void {
+
+		private function changeColorAndAlphas(event : Event) : void {
 			var grad : GradientColor = new GradientColor();
 			grad.setColors(_colors.colors, _colors.ratios);
 			grad.setAlphas(_alphas.alphas, _alphas.ratios);
 			this.particle.colorLifetime = grad;
 		}
-		
-		override public function updateGroup(app:App, particle:ParticleSystem):void {
+
+		override public function updateGroup(app : App, particle : ParticleSystem) : void {
 			super.updateGroup(app, particle);
-			this.open = false;
 			this._colors.removeAllKeys();
 			this._alphas.removeAllKeys();
 			var colorLifetime : GradientColor = particle.colorLifetime;
-			for (var i:int = 0; i < particle.colorLifetime.colors.length; i++) {
+			for (var i : int = 0; i < particle.colorLifetime.colors.length; i++) {
 				this._colors.addKey(colorLifetime.colors[i], 1, colorLifetime.colorRatios[i]);
 			}
-			for (var j:int = 0; j < particle.colorLifetime.alphas.length; j++) {
+			for (var j : int = 0; j < particle.colorLifetime.alphas.length; j++) {
 				this._alphas.addKey(0, colorLifetime.alphas[j], colorLifetime.alphaRatios[j]);
 			}
 		}
-		
 	}
 }
