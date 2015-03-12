@@ -182,7 +182,7 @@ package monkey.loader {
 				this.loader = null;
 			}
 		}
-
+		
 		public function get bytesTotal() : uint {
 			return this._bytesTotal;
 		}

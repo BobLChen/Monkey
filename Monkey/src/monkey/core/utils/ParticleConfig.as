@@ -360,16 +360,18 @@ package monkey.core.utils {
 				return ranConst;
 			} else if (config.type == DATA_RAND_CURVE) {
 				var ranCurve : DataRandomTwoCurves = new DataRandomTwoCurves();
-				ranCurve.minCurves.datas = new Vector.<Point>();
-				ranCurve.maxCurves.datas = new Vector.<Point>();
+				ranCurve.minCurves.curve.datas = new Vector.<Point>();
+				ranCurve.maxCurves.curve.datas = new Vector.<Point>();
+				ranCurve.minCurves.yValue = config.minYValue;
+				ranCurve.maxCurves.yValue = config.maxYValue;
 				i = 0;
 				while (i < config.minCurves.length) {
-					ranCurve.minCurves.datas.push(new Point(config.minCurves[i], config.minCurves[i + 1]));
+					ranCurve.minCurves.curve.datas.push(new Point(config.minCurves[i], config.minCurves[i + 1]));
 					i += 2;
 				}
 				i = 0;
 				while (i < config.maxCurves.length) {
-					ranCurve.minCurves.datas.push(new Point(config.maxCurves[i], config.maxCurves[i + 1]));
+					ranCurve.minCurves.curve.datas.push(new Point(config.maxCurves[i], config.maxCurves[i + 1]));
 					i += 2;
 				}
 			} else if (config.type == DATA_LINEAR) {
@@ -518,10 +520,12 @@ package monkey.core.utils {
 				var ranCurve : DataRandomTwoCurves = data as DataRandomTwoCurves;
 				ret.minCurves = [];
 				ret.maxCurves = [];
-				for each (p in ranCurve.minCurves.datas) {
+				ret.minYValue = ranCurve.minCurves.yValue;
+				ret.maxYValue = ranCurve.maxCurves.yValue;
+				for each (p in ranCurve.minCurves.curve.datas) {
 					ret.minCurves.push(p.x, p.y);
 				}
-				for each (p in ranCurve.maxCurves.datas) {
+				for each (p in ranCurve.maxCurves.curve.datas) {
 					ret.maxCurves.push(p.x, p.y);
 				}
 			} else if (data is DataLinear) {

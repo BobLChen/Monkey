@@ -1,5 +1,5 @@
 package monkey.core.entities.particles.prop.value {
-	import monkey.core.utils.Curves;
+	
 	import monkey.core.utils.MathUtils;
 		
 	/**
@@ -9,18 +9,18 @@ package monkey.core.entities.particles.prop.value {
 	 */	
 	public class DataRandomTwoCurves extends PropData {
 		
-		public var minCurves : Curves;
-		public var maxCurves : Curves;
+		public var minCurves : DataCurves;
+		public var maxCurves : DataCurves;
 				
 		public function DataRandomTwoCurves() {
 			super();
-			this.minCurves = new Curves();
-			this.maxCurves = new Curves();
+			this.minCurves = new DataCurves();
+			this.maxCurves = new DataCurves();
 		}
 		
 		override public function getValue(x : Number) : Number {
-			var min : Number = minCurves.getY(x);
-			var max : Number = maxCurves.getY(x);
+			var min : Number = minCurves.curve.getY(x);
+			var max : Number = maxCurves.curve.getY(x);
 			return MathUtils.clamp(min, max, Math.random());
 		}
 		
