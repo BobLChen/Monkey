@@ -566,7 +566,7 @@ package monkey.core.components {
 		public function updateTransforms(includeChildren : Boolean) : void {
 			this._dirty = true;
 			this._dirtyInv = true;
-			if (includeChildren) {
+			if (includeChildren && object3D) {
 				for each (var child : Object3D in object3D.children) {
 					child.transform.updateTransforms(includeChildren);
 				}

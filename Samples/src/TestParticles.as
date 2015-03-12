@@ -4,6 +4,7 @@ package  {
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.scene.Viewer3D;
@@ -28,15 +29,35 @@ package  {
 			this.scene.camera.transform.lookAt(0, 0, 0);
 			this.addChild(new FPSStats());
 			
+			var loader : ParticleLoader = new ParticleLoader();
+			loader.addEventListener(Event.COMPLETE, onComplete);
+			loader.loadBytes(new DATA());
+		}
+		
+		private var list : Vector.<Object3D> = new Vector.<Object3D>();
+		
+		protected function onComplete(event:Event) : void {
+			var loader : ParticleLoader = event.target as ParticleLoader;
+			list.push(loader);
 			for (var i:int = 0; i < 20; i++) {
 				for (var j:int = 0; j < 20; j++) {
-					var loader : ParticleLoader = new ParticleLoader();
-					loader.loadBytes(new DATA());
-					this.scene.addChild(loader);
-					loader.transform.x = (i - 10) * 50;
-					loader.transform.y = (j - 10) * 50;
+					var c : Object3D = loader.clone();
+					c.transform.x = (i - 10) * 25;
+					c.transform.y = (j - 10) * 25;
+					this.scene.addChild(c);
+					list.push(c);
 				}
 			}
+			
+			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		}
+		
+		protected function onKeyDown(event:KeyboardEvent) : void {
+			var obj : Object3D = list.shift();
+			if (obj) {
+				obj.dispose();
+			}
+			trace(list.length);
 		}
 		
 	}

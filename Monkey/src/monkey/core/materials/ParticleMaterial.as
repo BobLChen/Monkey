@@ -24,6 +24,7 @@ package monkey.core.materials {
 		
 		public function ParticleMaterial() {
 			super();
+			this._time		= 0;
 			this._shader 	= ParticleShader.instance;
 			this.blendMode 	= BLEND_SCREEN;
 			this.depthWrite = false;
@@ -31,13 +32,15 @@ package monkey.core.materials {
 		
 		override public function clone():Material3D {
 			var c : ParticleMaterial = new ParticleMaterial();
-			c.texture = texture.clone();
-			c.blendTexture = blendTexture.clone();
-			c.keyframes = new ByteArray();
-			c.keyframes.readBytes(keyframes, 0, keyframes.length);
-			c.time = time;
-			c.totalLife = totalLife;
-			c.billboard = billboard;
+			c.texture 		= texture.clone();
+			c.blendTexture 	= blendTexture.clone();
+			c.keyframes 	= new ByteArray();
+			this.keyframes.position  = 0;
+			this.keyframes.readBytes(c.keyframes, 0, keyframes.length);
+			c.time 			= time;
+			c.totalLife 	= totalLife;
+			c.billboard 	= billboard;
+			c.frame			= new Point(frame.x, frame.y);
 			return c;
 		}
 		

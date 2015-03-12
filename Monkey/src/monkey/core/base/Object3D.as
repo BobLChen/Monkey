@@ -220,6 +220,17 @@ package monkey.core.base {
 		}
 		
 		/**
+		 * 移除除Transform3D组件以外所有组件 
+		 */		
+		public function removeAllComponents() : void {
+			var temp : IComponent = this.transform;
+			while (components.length) {
+				this.removeComponent(components[0]);
+			}
+			this.addComponent(temp);
+		}
+		
+		/**
 		 * 根据类型获取component 
 		 * @param clazz	类型
 		 * @return 
@@ -395,7 +406,7 @@ package monkey.core.base {
 			}
 			this.dispatchEvent(disposedEvent);
 		}
-				
+		
 		/**
 		 * 克隆 
 		 * @return 
@@ -407,7 +418,7 @@ package monkey.core.base {
 				c.addComponent(icom.clone());
 			}
 			for each (var child : Object3D in children) {
-				c.children.push(child.clone());
+				c.addChild(child.clone());
 			}
 			return c;
 		}

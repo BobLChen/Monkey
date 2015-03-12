@@ -23,7 +23,7 @@ package monkey.core.light {
 				c.addComponent(icom.clone());
 			}
 			for each (var child : Object3D in children) {
-				c.children.push(child.clone());
+				c.addChild(child.clone());
 			}
 			return c;
 		}

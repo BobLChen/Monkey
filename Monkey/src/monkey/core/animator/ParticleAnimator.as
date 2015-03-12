@@ -1,6 +1,7 @@
 package monkey.core.animator {
 	
 	import monkey.core.base.Object3D;
+	import monkey.core.interfaces.IComponent;
 	import monkey.core.utils.Time3D;
 
 	/**
@@ -14,6 +15,14 @@ package monkey.core.animator {
 		
 		public function ParticleAnimator() {
 			super();
+		}
+		
+		override public function clone():IComponent {
+			var c : ParticleAnimator = new ParticleAnimator();
+			c._time    = this._time;
+			c._playing = this._playing;
+			c.totalFrames = this.totalFrames;
+			return c;
 		}
 		
 		override public function gotoAndPlay(frame:Object, animationMode:int=ANIMATION_LOOP_MODE, includeChildren:Boolean=true):void {
@@ -62,7 +71,7 @@ package monkey.core.animator {
 				this.dispatchEvent(animCompleteEvent);
 			}
 		}
-				
+		
 		override public function get currentFrame():Number {
 			return this._time;
 		}

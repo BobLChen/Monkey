@@ -70,8 +70,6 @@ package monkey.core.entities.particles {
 		private var _totalLife				: Number;						// 周期
 		private var _texture				: Bitmap2DTexture;				// 粒子贴图
 		private var blendTexture   			: Bitmap2DTexture;				// color over lifetime贴图
-		private var mesh 					: Mesh3D;						// mesh
-		private var material				: ParticleMaterial;				// material
 		
 		/**
 		 *  粒子系统
@@ -81,16 +79,53 @@ package monkey.core.entities.particles {
 			this.init();
 		}
 		
+		override public function clone():Object3D {
+			var c : ParticleSystem = new ParticleSystem();
+			c.removeAllComponents();
+			for each (var icom : IComponent in components) {
+				c.addComponent(icom.clone());
+			}
+			for each (var child : Object3D in children) {
+				c.addChild(child.clone());
+			}
+			c.blendTexture		= this.blendTexture;
+			c._duration 		= this._duration;
+			c._loops			= this._loops;
+			c._startDelay		= this._startDelay;
+			c._startLifeTime	= this._startLifeTime;
+			c._startSpeed		= this._startSpeed;
+			c._startOffset  	= this._startOffset;
+			c._startSize		= this._startSize;
+			c._startRotation	= this._startRotation;
+			c._startColor		= this._startColor;
+			c._shape			= this._shape;
+			c._rate				= this._rate;
+			c._bursts			= this._bursts;
+			c._particleNum		= this._particleNum;
+			c._totalTime		= this._totalTime;
+			c._needBuild		= this._needBuild;
+			c._image			= this._image;
+			c._texture			= this._texture;
+			c._totalLife		= this._totalLife;
+			c._keyfsOverLifetime= this._keyfsOverLifetime;
+			c._colorOverLifetime= this._colorOverLifetime;
+			c._simulationSpace	= this._simulationSpace;
+			return c;
+		}
+				
 		/**
 		 *  初始化粒子系统参数
 		 */		
 		private function init() : void {
+			var material : ParticleMaterial = new ParticleMaterial();
+			var mode : Surface3D = new Plane(1, 1, 1).surfaces[0];
+			var mesh : Mesh3D = new Mesh3D([]);
+			mesh.bounds	= mode.bounds;
+			this.addComponent(new ParticleAnimator());
+			this.addComponent(new MeshRenderer(mesh, material));
 			this.name			 = "Particle";
-			this.material 		 = new ParticleMaterial();
-			this.mesh			 = new Mesh3D([]);
 			this.shape 			 = new SphereShape();
-			this.shape.mode 	 = new Plane(1, 1, 1).surfaces[0];				
-			this.mesh.bounds	 = shape.mode.bounds;
+			this.shape.mode 	 = mode;				
 			this.rate 			 = 10;											
 			this.bursts 		 = new Vector.<Point>();		
 			this.billboard		 = true;
@@ -104,12 +139,10 @@ package monkey.core.entities.particles {
 			this.startLifeTime   = new DataConst(5);							
 			this.startRotation   = Vector.<PropData>([new DataConst(0), new DataConst(0), new DataConst(0)])
 			this.startOffset 	 = Vector.<PropData>([new DataConst(0), new DataConst(0), new DataConst(0)]);;
-			this.worldspace 			 = false;										
+			this.worldspace 	 = false;										
 			this.colorLifetime 	 = new GradientColor();
 			this.image			 = new DEFAULT_IMG().bitmapData;
 			this.keyFrames		 = keyframeDatas;
-			this.addComponent(new ParticleAnimator());
-			this.addComponent(new MeshRenderer(this.mesh, this.material));
 		}
 		
 		/**
@@ -118,13 +151,13 @@ package monkey.core.entities.particles {
 		 */		
 		public function build() : void {
 			this._needBuild = false;
-			this.mesh.dispose(true);		// 释放所有的数据
-			this.caculateTotalTime();		// 首先计算出粒子的生命周期
-			this.caculateParticleNum();		// 计算所有的粒子数量
-			this.createParticleMesh();		// 生成粒子对应的网格
-			this.shape.generate(this);		// 生成shape对应的数据，包括粒子的位置、方向、uv、索引
-			this.createParticleAttribute();	// 更新粒子属性
-			this.dispatchEvent(buildEvent); // 完成事件
+			this.renderer.mesh.dispose(true);	// 释放所有的数据
+			this.caculateTotalTime();			// 首先计算出粒子的生命周期
+			this.caculateParticleNum();			// 计算所有的粒子数量
+			this.createParticleMesh();			// 生成粒子对应的网格
+			this.shape.generate(this);			// 生成shape对应的数据，包括粒子的位置、方向、uv、索引
+			this.createParticleAttribute();		// 更新粒子属性
+			this.dispatchEvent(buildEvent); 	// 完成事件
 		}
 		
 		/**
@@ -198,7 +231,7 @@ package monkey.core.entities.particles {
 				surface.setVertexVector(Surface3D.CUSTOM2, new Vector.<Number>(num * shape.vertNum * 2, true), 2);
 				// custom3存放粒子颜色，分别对应rgba
 				surface.setVertexVector(Surface3D.CUSTOM3, new Vector.<Number>(num * shape.vertNum * 4, true), 4);
-				this.mesh.surfaces.push(surface);
+				this.renderer.mesh.surfaces.push(surface);
 			}
 		}
 		
@@ -309,6 +342,14 @@ package monkey.core.entities.particles {
 		
 		public function set billboard(value:Boolean):void {
 			this.material.billboard = value;
+		}
+		
+		private function get mesh() : Mesh3D {
+			return this.renderer.mesh;
+		}
+		
+		private function get material() : ParticleMaterial {
+			return this.renderer.material as ParticleMaterial;
 		}
 		
 		/**
@@ -726,7 +767,7 @@ package monkey.core.entities.particles {
 			Device3D.mvp.append(scene.camera.viewProjection);
 			Device3D.drawOBJNum++;
 			// 设置时间
-			this.material.time = this.animator.currentFrame - this.startDelay
+			this.material.time = this.animator.currentFrame - this.startDelay;
 			// 绘制组件
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {
