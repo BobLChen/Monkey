@@ -39,11 +39,11 @@ package  {
 		protected function onComplete(event:Event) : void {
 			var loader : ParticleLoader = event.target as ParticleLoader;
 			list.push(loader);
-			for (var i:int = 0; i < 20; i++) {
-				for (var j:int = 0; j < 20; j++) {
+			for (var i:int = 0; i < 10; i++) {
+				for (var j:int = 0; j < 10; j++) {
 					var c : Object3D = loader.clone();
-					c.transform.x = (i - 10) * 25;
-					c.transform.y = (j - 10) * 25;
+					c.transform.x = (i - 5) * 50;
+					c.transform.y = (j - 5) * 50;
 					this.scene.addChild(c);
 					list.push(c);
 				}
