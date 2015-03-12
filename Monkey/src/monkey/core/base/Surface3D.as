@@ -250,7 +250,7 @@ package monkey.core.base {
 			}
 			// 从场景中移除
 			if (scene) {
-				scene.removeEventListener(Scene3D.CREATE, contextEvent);
+				scene.removeEventListener(Scene3D.CREATE_EVENT, contextEvent);
 				var idx : int = scene.surfaces.indexOf(this);
 				if (idx != -1) {
 					scene.surfaces.splice(idx, 1);
@@ -301,7 +301,7 @@ package monkey.core.base {
 		 * context event
 		 */
 		protected function contextEvent(e : Event = null) : void {
-			this.scene.addEventListener(Scene3D.CREATE, contextEvent, false, 0, true);
+			this.scene.addEventListener(Scene3D.CREATE_EVENT, contextEvent, false, 0, true);
 			if (this.scene.surfaces.indexOf(this) == -1) {
 				this.scene.surfaces.push(this);
 			}

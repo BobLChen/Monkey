@@ -70,7 +70,7 @@ package ide.plugins {
 			this.autoResize 	= false;
 			this.background		= new Color(0x505050);
 			this.addEventListener(Event.CONTEXT3D_CREATE, contextCreateEvent);
-			this.addEventListener(Scene3D.POST_RENDER, onPostRender);
+			this.addEventListener(Scene3D.POST_RENDER_EVENT, onPostRender);
 		}
 						
 		public function get mouse():MouseCollision {

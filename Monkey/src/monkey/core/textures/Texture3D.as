@@ -116,7 +116,7 @@ package monkey.core.textures {
 			if (this.scene.textures.indexOf(this) == -1) {
 				this.scene.textures.push(this);
 			}
-			this.scene.addEventListener(Scene3D.CREATE, contextEvent, false, 0, true);
+			this.scene.addEventListener(Scene3D.CREATE_EVENT, contextEvent, false, 0, true);
 			this.unloadTexture();
 		}
 		
@@ -130,7 +130,7 @@ package monkey.core.textures {
 				return;
 			}
 			if (scene) {
-				scene.removeEventListener(Scene3D.CREATE, contextEvent);
+				scene.removeEventListener(Scene3D.CREATE_EVENT, contextEvent);
 				var idx : int = scene.textures.indexOf(this);
 				if (idx != -1) {
 					scene.textures.splice(idx, 1);

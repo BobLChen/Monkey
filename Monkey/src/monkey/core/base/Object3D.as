@@ -39,7 +39,7 @@ package monkey.core.base {
 		/** 被移除 */
 		public static const REMOVED_EVENT			: String = "Object3D:REMOVED";
 		/** 被销毁 */
-		public static const DISPOSED_EVENT			: String = "Object3D:DISPOSED";
+		public static const DISPOSE_EVENT			: String = "Object3D:DISPOSED";
 		
 		// -------------------------------- 所有事件 --------------------------------
 		protected static const enterDrawEvent 	: Event = new Event(ENTER_DRAW_EVENT);
@@ -50,7 +50,7 @@ package monkey.core.base {
 		protected static const removeChildEvent	: Event = new Event(REMOVE_CHILD_EVENT);
 		protected static const addedEvent		: Event = new Event(ADDED_EVENT);
 		protected static const removedEvent		: Event = new Event(REMOVED_EVENT);
-		protected static const disposedEvent	: Event = new Event(DISPOSED_EVENT);
+		protected static const disposedEvent	: Event = new Event(DISPOSE_EVENT);
 				
 		/** 名称 */
 		public var name 	: String = "";
@@ -428,7 +428,7 @@ package monkey.core.base {
 			while (children.length > 0) {
 				children[0].dispose();
 			}
-			if (hasEventListener(DISPOSED_EVENT)) {
+			if (hasEventListener(DISPOSE_EVENT)) {
 				this.dispatchEvent(disposedEvent);
 			}
 		}

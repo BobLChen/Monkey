@@ -28,30 +28,29 @@ package monkey.core.scene {
 	public class Scene3D extends Object3D {
 		
 		/** 不支持该profile */
-		public static const UNSUPORT_PROFILE 	: String = "Scene3D:UNSUPORT_PROFILE";
+		public static const UNSUPORT_PROFILE_EVENT 	: String = "Scene3D:UNSUPORT_PROFILE";
 		/** 软解模式 */
-		public static const SOFTWARE 			: String = "Scene3D:SOFTWARE";
+		public static const SOFTWARE_EVENT 			: String = "Scene3D:SOFTWARE";
 		/** 创建完成 */
-		public static const CREATE   			: String = Event.CONTEXT3D_CREATE;
+		public static const CREATE_EVENT   			: String = Event.CONTEXT3D_CREATE;
 		/** context被销毁 */
-		public static const DISPOSED 			: String = "Scene3D:DISPOSED";
+		public static const CONTEXT_DISPOSE 		: String = "Scene3D:DISPOSED";
 		/** pre render */
-		public static const PRE_RENDER 			: String = "Scene3D:PRE_RENDER";
+		public static const PRE_RENDER_EVENT 		: String = "Scene3D:PRE_RENDER";
 		/** post render */
-		public static const POST_RENDER 		: String = "Scene3D:POST_RENDER";
+		public static const POST_RENDER_EVENT 		: String = "Scene3D:POST_RENDER";
 		/** render */
-		public static const RENDER				: String = "Scene3D:RENDER";
-		
+		public static const RENDER_EVENT			: String = "Scene3D:RENDER";
 		/** enterframe事件 */
 		private static var enterFrameEvent : Event = new Event(ENTER_FRAME_EVENT);
 		/** exitframe事件 */
 		private static var exitFrameEvent  : Event = new Event(EXIT_FRAME_EVENT);
 		/** pre render */
-		private static var preRenderEvent  : Event = new Event(PRE_RENDER);
+		private static var preRenderEvent  : Event = new Event(PRE_RENDER_EVENT);
 		/** post render */
-		private static var postRenderEvent : Event = new Event(POST_RENDER);
+		private static var postRenderEvent : Event = new Event(POST_RENDER_EVENT);
 		/** render event */
-		private static var renderEvent	   : Event = new Event(RENDER);
+		private static var renderEvent	   : Event = new Event(RENDER_EVENT);
 		
 		/** stage3d设备索引 */
 		private static var stage3dIdx 	: int = 0;
@@ -208,7 +207,7 @@ package monkey.core.scene {
 			try {
 				this.stage3d.requestContext3D(Context3DRenderMode.AUTO, Device3D.profile);
 			} catch (e : Error) {
-				this.dispatchEvent(new Event(UNSUPORT_PROFILE));
+				this.dispatchEvent(new Event(UNSUPORT_PROFILE_EVENT));
 				this.stage3d.requestContext3D(Context3DRenderMode.AUTO);
 			}
 			stage3dIdx++;
@@ -218,9 +217,9 @@ package monkey.core.scene {
 			this.resume();
 			this._context3d = stage3d.context3D;
 			if (context.driverInfo.indexOf("Software") != -1) {
-				this.dispatchEvent(new Event(SOFTWARE));		// 软解模式
+				this.dispatchEvent(new Event(SOFTWARE_EVENT));		// 软解模式
 			} else if (context.driverInfo.indexOf("disposed") != -1) {
-				this.dispatchEvent(new Event(DISPOSED));		// context被销毁
+				this.dispatchEvent(new Event(CONTEXT_DISPOSE));		// context被销毁
 				this.pause(); 									// context被销毁，需要暂停渲染
 			}
 			if (!this.viewPort) {
