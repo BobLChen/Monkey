@@ -163,7 +163,7 @@ package monkey.core.entities {
 			if (!visible) {
 				return;
 			}
-			if (hasEventListener(ENTER_DRAW)) {
+			if (hasEventListener(ENTER_DRAW_EVENT)) {
 				this.dispatchEvent(enterDrawEvent);
 			}
 			
@@ -185,7 +185,7 @@ package monkey.core.entities {
 					child.draw(scene, includeChildren);
 				}
 			}
-			if (hasEventListener(EXIT_DRAW)) {
+			if (hasEventListener(EXIT_DRAW_EVENT)) {
 				this.dispatchEvent(exitDrawEvent);
 			}
 		}

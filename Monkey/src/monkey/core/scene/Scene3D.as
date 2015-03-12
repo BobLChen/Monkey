@@ -45,7 +45,7 @@ package monkey.core.scene {
 		/** enterframe事件 */
 		private static var enterFrameEvent : Event = new Event(ENTER_FRAME_EVENT);
 		/** exitframe事件 */
-		private static var exitFrameEvent  : Event = new Event(EXIT_FRAME);
+		private static var exitFrameEvent  : Event = new Event(EXIT_FRAME_EVENT);
 		/** pre render */
 		private static var preRenderEvent  : Event = new Event(PRE_RENDER);
 		/** post render */

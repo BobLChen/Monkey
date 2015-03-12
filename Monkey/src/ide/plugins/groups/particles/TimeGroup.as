@@ -61,7 +61,7 @@ package ide.plugins.groups.particles {
 			super.updateGroup(app, particle);
 			this.play.text  = particle.animator.playing ? "Pause" : "Play";
 			this.time.value = particle.animator.currentFrame;
-			this.particle.addEventListener(Object3D.ENTER_DRAW, onUpdate);
+			this.particle.addEventListener(Object3D.ENTER_DRAW_EVENT, onUpdate);
 		}
 		
 		private function onUpdate(event:Event) : void {
