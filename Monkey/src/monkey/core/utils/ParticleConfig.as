@@ -3,6 +3,7 @@ package monkey.core.utils {
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
 	
 	import monkey.core.base.Bounds3D;
 	import monkey.core.base.Surface3D;
@@ -534,12 +535,65 @@ package monkey.core.utils {
 			return ret;
 		}
 		
+		/**
+		 * 获取线性曲线数据 
+		 * @param value
+		 * @return 
+		 * 
+		 */		
 		public static function getLinearData(value : Linears) : Object {
 			var ret : Object= {};
 			ret.value = [];
 			ret.yValue= value.yValue;
 			for each (var p : Point in value.datas) {
 				ret.value.push(p.x, p.y);
+			}
+			return ret;
+		}
+		
+		/**
+		 * 获取颜色 
+		 * @param colorLifetime
+		 * @return 
+		 * 
+		 */		
+		public static function getGradientColor(colorLifetime : Object) : GradientColor {
+			var ret : GradientColor = new GradientColor();
+			ret.setColors(colorLifetime.colors, colorLifetime.colorRatios);
+			ret.setAlphas(colorLifetime.alphas, colorLifetime.alphaRatios);
+			return ret;
+		}
+		
+		/**
+		 * 获取爆炸数据 
+		 * @param bursts
+		 * @return 
+		 * 
+		 */		
+		public static function getBursts(bursts : Object) : Vector.<Point> {
+			var ret : Vector.<Point> = new Vector.<Point>();
+			// 爆炸数据
+			var i:int = 0;
+			while (i < bursts.length) {
+				ret.push(new Point(bursts[i], bursts[i + 1]));
+				i += 2;
+			}
+			return ret;	
+		}
+		
+		/**
+		 * 获取关键帧数据 
+		 * @param keyFrames
+		 * @return 
+		 * 
+		 */		
+		public static function getKeyFrames(keyFrames : Object) : ByteArray {
+			var ret : ByteArray = new ByteArray();
+			ret.endian = Endian.LITTLE_ENDIAN;
+			var i : int = 0;
+			while (i < keyFrames.length) {
+				ret.writeFloat(keyFrames[i]);
+				i += 1;
 			}
 			return ret;
 		}

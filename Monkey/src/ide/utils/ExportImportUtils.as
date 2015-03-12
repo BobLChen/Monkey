@@ -4,7 +4,6 @@ package ide.utils {
 	
 	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
 	import flash.utils.Endian;
 	
 	import monkey.core.base.Object3D;
@@ -32,10 +31,11 @@ package ide.utils {
 		 * 
 		 */		
 		public static function exportParticle(obj : Object3D, optimize : Boolean) : ByteArray {
-			var config : Object = exportParticleConfig(obj, optimize);
-			var map : Dictionary = new Dictionary();
+			var cfg : Object = exportParticleConfig(obj, optimize);
 			var zip : Zip = new Zip();
-			zip.addString("config", JSON.stringify(config));
+			// 保存粒子配置文件
+			zip.addString("config", JSON.stringify(cfg));
+			// 遍历容器
 			obj.forEach(function(particle : ParticleSystem):void{
 				zip.addFile(particle.userData.uuid,	getParticleData(particle));
 				zip.addFile(particle.userData.imageName,particle.userData.imageData);
@@ -50,7 +50,7 @@ package ide.utils {
 		}
 		
 		/**
-		 * 导出粒子数据 
+		 * 获取粒子数据
 		 * @param particle
 		 * @return 
 		 * 
@@ -95,17 +95,17 @@ package ide.utils {
 		 * 
 		 */		
 		private static function exportParticleConfig(obj : Object3D, optimize : Boolean) : Object {
-			var config : Object = {};
-			config.name 	 = obj.name;
-			config.transform = obj.transform.local.rawData;
-			config.children  = [];
+			var cfg : Object = {};
+			cfg.name = obj.name;
+			cfg.children = [];
+			cfg.transform = obj.transform.local.rawData;
 			if (obj is ParticleSystem) {
-				config.particle = getParticleConfig(obj as ParticleSystem, optimize);
+				cfg.particle = getParticleConfig(obj as ParticleSystem, optimize);
 			}
 			for each (var child : Object3D in obj.children) {
-				config.children.push(exportParticleConfig(child, optimize));
+				cfg.children.push(exportParticleConfig(child, optimize));
 			}
-			return config;
+			return cfg;
 		}
 		
 		/**
@@ -116,7 +116,9 @@ package ide.utils {
 		 * 
 		 */		
 		private static function getParticleConfig(particle : ParticleSystem, optimize : Boolean) : Object {
+			
 			var config : ParticleConfig = new ParticleConfig();
+			
 			config.totalFrames 	= particle.animator.totalFrames;
 			config.imageName	= particle.userData.imageName;
 			config.uuid			= particle.userData.uuid;
@@ -132,9 +134,11 @@ package ide.utils {
 			config.rate			= particle.rate;
 			config.totalLife  	= particle.totalLife;
 			config.optimize		= optimize;
+			
 			if (optimize) {
 				return config;
 			}
+			
 			config.lifetimeData = particle.userData.lifetime;
 			config.shape		= particle.shape;
 			config.startColor	= particle.startColor;
@@ -144,6 +148,7 @@ package ide.utils {
 			config.startRotation= particle.startRotation;
 			config.startSize	= particle.startSize;
 			config.startSpeed	= particle.startSpeed;
+			
 			return config;
 		}
 				

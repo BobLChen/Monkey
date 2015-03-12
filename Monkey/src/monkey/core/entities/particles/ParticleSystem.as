@@ -68,7 +68,7 @@ package monkey.core.entities.particles {
 		private var _keyfsOverLifetime 		: ByteArray;					// 缩放旋转速度 over lifetime
 		private var _image					: BitmapData;					// image
 		private var _totalLife				: Number;						// 周期
-		private var texture					: Bitmap2DTexture;				// 粒子贴图
+		private var _texture				: Bitmap2DTexture;				// 粒子贴图
 		private var blendTexture   			: Bitmap2DTexture;				// color over lifetime贴图
 		private var mesh 					: Mesh3D;						// mesh
 		private var material				: ParticleMaterial;				// material
@@ -361,14 +361,22 @@ package monkey.core.entities.particles {
 		 * 
 		 */		
 		public function set image(value:BitmapData):void {
-			if (texture) {
-				texture.dispose(true);
+			if (this.texture) {
+				this.texture.dispose(true);
 			}
-			_image = value;
-			texture = new Bitmap2DTexture(value);
-			material.texture = texture;
+			this._image = value;
+			this.texture = new Bitmap2DTexture(value);
 		}
 		
+		public function get texture():Bitmap2DTexture {
+			return _texture;
+		}
+		
+		public function set texture(value:Bitmap2DTexture):void {
+			this._texture = value;
+			this.material.texture = value;
+		}
+				
 		public function get frame():Point {
 			return this.material.frame;
 		}
@@ -685,7 +693,6 @@ package monkey.core.entities.particles {
 			this.material.totalLife = value;
 		}
 
-
 		/**
 		 * 发射持续时间
 		 * @return
@@ -709,14 +716,17 @@ package monkey.core.entities.particles {
 			if (!loops && !animator.playing) {
 				return;
 			}
-			
+			// 延时未到
+			if (this.animator.currentFrame < this.startDelay) {
+				return;
+			}
+			// 模型数据
 			Device3D.world.copyFrom(transform.world);
 			Device3D.mvp.copyFrom(Device3D.world);
 			Device3D.mvp.append(scene.camera.viewProjection);
 			Device3D.drawOBJNum++;
-			
-			// draw
-			this.material.time = animator.currentFrame
+			// 设置时间
+			this.material.time = this.animator.currentFrame - this.startDelay
 			// 绘制组件
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {

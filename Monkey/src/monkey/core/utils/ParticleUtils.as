@@ -1,6 +1,5 @@
 package monkey.core.utils {
 	
-	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
@@ -120,6 +119,7 @@ package monkey.core.utils {
 			for each (var child : Object in config.children) {
 				ret.addChild(readParticles(child));
 			}
+			ret.transform.updateTransforms(true);
 			return ret;
 		}
 		
@@ -130,60 +130,41 @@ package monkey.core.utils {
 		 * 
 		 */		
 		private static function createParticle(config : Object) : ParticleSystem {
-			var ret : ParticleSystem= new ParticleSystem();
-			ret.animator.totalFrames= config.totalFrames;
-			ret.userData.imageName 	= config.imageName;
-			ret.userData.uuid 		= config.uuid;
-			ret.worldspace 			= config.world;
-			ret.loops 	  			= config.loops;
-			ret.billboard 			= config.billboard;
-			ret.duration 			= config.duration;
-			ret.frame.x  			= config.frame[0];
-			ret.frame.y  			= config.frame[1];
-			ret.totalLife			= config.totalLife;
-			// 运行期颜色
-			var colorLifetime : GradientColor = new GradientColor();
-			colorLifetime.setColors(config.colorLifetime.colors, config.colorLifetime.colorRatios);
-			colorLifetime.setAlphas(config.colorLifetime.alphas, config.colorLifetime.alphaRatios);
-			ret.colorLifetime = colorLifetime;
-			// 爆炸数据
-			var i:int = 0;
-			while (i < config.bursts.length) {
-				ret.bursts.push(new Point(config.bursts[i], config.bursts[i + 1]));
-				i += 2;
-			}
-			// 关键帧
-			var keyFrames : ByteArray = new ByteArray();
-			keyFrames.endian = Endian.LITTLE_ENDIAN;
-			i = 0;
-			while (i < config.keyFrames.length) {
-				keyFrames.writeFloat(config.keyFrames[i]);
-				i += 1;
-			}
-			ret.keyFrames 		  = keyFrames;
-			ret.rate	  		  = config.rate;
-			ret.userData.optimize = config.optimize;
+			var ret : ParticleSystem	= new ParticleSystem();
+			ret.animator.totalFrames	= config.totalFrames;
+			ret.userData.imageName 		= config.imageName;
+			ret.userData.uuid 			= config.uuid;
+			ret.worldspace 				= config.world;
+			ret.loops 	  				= config.loops;
+			ret.billboard 				= config.billboard;
+			ret.frame.x  				= config.frame[0];
+			ret.frame.y  				= config.frame[1];
+			ret.totalLife				= config.totalLife;
+			ret.startDelay		    	= config.startDelay;
+			ret.userData.optimize   	= config.optimize;
+			ret.colorLifetime 	   	 	= ParticleConfig.getGradientColor(config.colorLifetime);
+			ret.keyFrames 		    	= ParticleConfig.getKeyFrames(config.keyFrames);
 			// 删减版粒子
 			if (config.optimize) {
 				return ret;
 			}
-			ret.shape	  		  = ParticleConfig.getShape(config.shape);
-			ret.startColor		  = ParticleConfig.getColor(config.startColor);
-			ret.startDelay		  = config.startDelay;
-			ret.startLifeTime	  = ParticleConfig.getData(config.startLifeTime);
-			ret.startOffset[0]	  = ParticleConfig.getData(config.startOffset.x);
-			ret.startOffset[1]	  = ParticleConfig.getData(config.startOffset.y);
-			ret.startOffset[2]	  = ParticleConfig.getData(config.startOffset.z);
-			ret.startRotation[0]  = ParticleConfig.getData(config.startRotation.x);
-			ret.startRotation[1]  = ParticleConfig.getData(config.startRotation.y);
-			ret.startRotation[2]  = ParticleConfig.getData(config.startRotation.z);
-			ret.startSize		  = ParticleConfig.getData(config.startSize);
-			ret.startSpeed		  = ParticleConfig.getData(config.startSpeed);
-			ret.userData.lifetimeData = config.lifetimeData;
-			
+			ret.duration 				= config.duration;
+			ret.rate	  		    	= config.rate;
+			ret.bursts					= ParticleConfig.getBursts(config.bursts);
+			ret.shape	  		  		= ParticleConfig.getShape(config.shape);
+			ret.startColor		  		= ParticleConfig.getColor(config.startColor);
+			ret.startLifeTime	  		= ParticleConfig.getData(config.startLifeTime);
+			ret.startOffset[0]	  		= ParticleConfig.getData(config.startOffset.x);
+			ret.startOffset[1]	  		= ParticleConfig.getData(config.startOffset.y);
+			ret.startOffset[2]	  		= ParticleConfig.getData(config.startOffset.z);
+			ret.startRotation[0]  		= ParticleConfig.getData(config.startRotation.x);
+			ret.startRotation[1]  		= ParticleConfig.getData(config.startRotation.y);
+			ret.startRotation[2]  		= ParticleConfig.getData(config.startRotation.z);
+			ret.startSize		  		= ParticleConfig.getData(config.startSize);
+			ret.startSpeed		  		= ParticleConfig.getData(config.startSpeed);
+			ret.userData.lifetimeData 	= config.lifetimeData;	// lifetimeData由IDE自己去组装
 			return ret;
 		}
-		
 		
 	}
 }
