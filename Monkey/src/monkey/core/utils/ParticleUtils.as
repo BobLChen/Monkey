@@ -134,6 +134,7 @@ package monkey.core.utils {
 			ret.animator.totalFrames	= config.totalFrames;
 			ret.userData.imageName 		= config.imageName;
 			ret.userData.uuid 			= config.uuid;
+			ret.userData.optimize   	= config.optimize;
 			ret.worldspace 				= config.world;
 			ret.loops 	  				= config.loops;
 			ret.billboard 				= config.billboard;
@@ -141,10 +142,8 @@ package monkey.core.utils {
 			ret.frame.y  				= config.frame[1];
 			ret.totalLife				= config.totalLife;
 			ret.startDelay		    	= config.startDelay;
-			ret.userData.optimize   	= config.optimize;
 			ret.colorLifetime 	   	 	= ParticleConfig.getGradientColor(config.colorLifetime);
 			ret.keyFrames 		    	= ParticleConfig.getKeyFrames(config.keyFrames);
-			// 删减版粒子
 			if (config.optimize) {
 				return ret;
 			}

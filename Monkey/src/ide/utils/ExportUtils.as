@@ -22,7 +22,7 @@ package ide.utils {
 	 * @author Neil
 	 * 
 	 */	
-	public class ExportImportUtils {
+	public class ExportUtils {
 		
 		/**
 		 * 导出粒子
@@ -122,27 +122,26 @@ package ide.utils {
 			config.totalFrames 	= particle.animator.totalFrames;
 			config.imageName	= particle.userData.imageName;
 			config.uuid			= particle.userData.uuid;
-			config.world		= particle.worldspace;
-			config.colorLifetime= particle.colorLifetime;
 			config.optimize		= optimize;
+			config.world		= particle.worldspace;
 			config.loops		= particle.loops;
 			config.billboard	= particle.billboard;
-			config.bursts	 	= particle.bursts;
-			config.duration		= particle.duration;
 			config.frame		= particle.frame;
-			config.keyFrames	= particle.keyFrames;
-			config.rate			= particle.rate;
 			config.totalLife  	= particle.totalLife;
-			config.optimize		= optimize;
+			config.startDelay	= particle.startDelay;
+			config.colorLifetime= particle.colorLifetime;
+			config.keyFrames	= particle.keyFrames;
 			
 			if (optimize) {
 				return config;
 			}
 			
+			config.bursts	 	= particle.bursts;
+			config.duration		= particle.duration;
+			config.rate			= particle.rate;
 			config.lifetimeData = particle.userData.lifetime;
 			config.shape		= particle.shape;
 			config.startColor	= particle.startColor;
-			config.startDelay	= particle.startDelay;
 			config.startLifeTime= particle.startLifeTime;
 			config.startOffset	= particle.startOffset;
 			config.startRotation= particle.startRotation;

@@ -7,7 +7,7 @@ package ide.plugins {
 	import flash.utils.ByteArray;
 	
 	import ide.App;
-	import ide.utils.ExportImportUtils;
+	import ide.utils.ExportUtils;
 	import ide.utils.FileUtils;
 	
 	import monkey.core.entities.SkyBox;
@@ -37,21 +37,21 @@ package ide.plugins {
 		private function exportNavmesh(e : Event) : void {
 			if (this._app.selection.main is NavigationMesh) {
 				var file : FileUtils = new FileUtils();
-				file.save(ExportImportUtils.exportNavmesh(this._app.selection.main as NavigationMesh), AssetsType.NAV);
+				file.save(ExportUtils.exportNavmesh(this._app.selection.main as NavigationMesh), AssetsType.NAV);
 			}
 		}
 		
 		private function exportSkybox(e : Event) : void {
 			if (this._app.selection.main is SkyBox) {
 				var file : FileUtils = new FileUtils();
-				file.save(ExportImportUtils.exportSkybox(this._app.selection.main as SkyBox), AssetsType.SKYBOX);
+				file.save(ExportUtils.exportSkybox(this._app.selection.main as SkyBox), AssetsType.SKYBOX);
 			}
 		}
 		
 		private function exportWater(e : Event) : void {
 			if (this._app.selection.main is Water3D) {
 				var file : FileUtils = new FileUtils();
-				file.save(ExportImportUtils.exportWater(this._app.selection.main as Water3D), AssetsType.WATER);
+				file.save(ExportUtils.exportWater(this._app.selection.main as Water3D), AssetsType.WATER);
 			}
 		}
 		
@@ -60,8 +60,8 @@ package ide.plugins {
 				var file : File = new File();
 				file.browseForSave("Save As");
 				file.addEventListener(Event.SELECT, function(e : Event):void{
-					var optimize : ByteArray = ExportImportUtils.exportParticle(_app.selection.main, true);
-					var original : ByteArray = ExportImportUtils.exportParticle(_app.selection.main, false);
+					var optimize : ByteArray = ExportUtils.exportParticle(_app.selection.main, true);
+					var original : ByteArray = ExportUtils.exportParticle(_app.selection.main, false);
 					var f  : File = new File(file.url + "_optimize" + "." + AssetsType.PARTICLE);
 					var fs : FileStream = new FileStream();
 					fs.open(f, FileMode.WRITE);
