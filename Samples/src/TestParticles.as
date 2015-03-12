@@ -24,17 +24,19 @@ package  {
 			this.stage.frameRate = 60;
 			this.scene = new Viewer3D(this);
 			this.scene.autoResize = true;  
-			this.scene.camera.transform.z = -300;
-			this.scene.camera.transform.y = 50;
+			this.scene.camera.transform.z = -1000;
 			this.scene.camera.transform.lookAt(0, 0, 0);
 			this.addChild(new FPSStats());
-			var loader : ParticleLoader = new ParticleLoader();
-			loader.loadBytes(new DATA());
-			this.scene.addChild(loader);
 			
-			this.scene.addEventListener(Object3D.ENTER_FRAME, function(e:Event):void{
-				loader.transform.rotateY(1);
-			});
+			for (var i:int = 0; i < 20; i++) {
+				for (var j:int = 0; j < 20; j++) {
+					var loader : ParticleLoader = new ParticleLoader();
+					loader.loadBytes(new DATA());
+					this.scene.addChild(loader);
+					loader.transform.x = (i - 10) * 50;
+					loader.transform.y = (j - 10) * 50;
+				}
+			}
 		}
 		
 	}

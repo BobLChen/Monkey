@@ -3,6 +3,7 @@ package monkey.core.utils {
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
 	
 	import monkey.core.base.Bounds3D;
 	import monkey.core.base.Surface3D;
@@ -87,11 +88,29 @@ package monkey.core.utils {
 		private var _startRotation	: Object  = {};					// 初始旋转
 		private var _startOffset	: Object  = {};					// 初始位移
 		private var _colorLifetime	: Object  = {};					// 运行期颜色
-		private var _image			: Object  = {};					// 图片
+		private var _imageName		: Object  = {};					// 图片
 		private var _keyFrames		: Object  = {};					// 关键帧数据
+		private var _lifetimeData	: Object  = {};					// 运行期关键帧。
 		
 		public function ParticleConfig() {
 			super();
+		}
+		
+		public function get lifetimeData():Object {
+			return _lifetimeData;
+		}
+
+		public function set lifetimeData(value:Object):void {
+			_lifetimeData = {};
+			_lifetimeData.speedX	= getLinearData(value.speedX);
+			_lifetimeData.speedY	= getLinearData(value.speedY);
+			_lifetimeData.speedZ	= getLinearData(value.speedZ);
+			_lifetimeData.axisX		= getLinearData(value.axisX);
+			_lifetimeData.axisY		= getLinearData(value.axisY);
+			_lifetimeData.axisZ		= getLinearData(value.axisZ);
+			_lifetimeData.angle		= getLinearData(value.angle);
+			_lifetimeData.size		= getLinearData(value.size);
+			_lifetimeData.lifetime	= value.lifetime;
 		}
 		
 		public function get keyFrames():Object {
@@ -114,8 +133,8 @@ package monkey.core.utils {
 			_keyFrames = datas;
 		}
 		
-		public function get image():Object {
-			return _image;
+		public function get imageName():Object {
+			return _imageName;
 		}
 		
 		/**
@@ -123,8 +142,8 @@ package monkey.core.utils {
 		 * @param value
 		 * 
 		 */		
-		public function set image(value:Object):void {
-			_image = value;
+		public function set imageName(value:Object):void {
+			_imageName = value;
 		}
 		
 		public function get colorLifetime():Object {
@@ -341,16 +360,18 @@ package monkey.core.utils {
 				return ranConst;
 			} else if (config.type == DATA_RAND_CURVE) {
 				var ranCurve : DataRandomTwoCurves = new DataRandomTwoCurves();
-				ranCurve.minCurves.datas = new Vector.<Point>();
-				ranCurve.maxCurves.datas = new Vector.<Point>();
+				ranCurve.minCurves.curve.datas = new Vector.<Point>();
+				ranCurve.maxCurves.curve.datas = new Vector.<Point>();
+				ranCurve.minCurves.yValue = config.minYValue;
+				ranCurve.maxCurves.yValue = config.maxYValue;
 				i = 0;
 				while (i < config.minCurves.length) {
-					ranCurve.minCurves.datas.push(new Point(config.minCurves[i], config.minCurves[i + 1]));
+					ranCurve.minCurves.curve.datas.push(new Point(config.minCurves[i], config.minCurves[i + 1]));
 					i += 2;
 				}
 				i = 0;
 				while (i < config.maxCurves.length) {
-					ranCurve.minCurves.datas.push(new Point(config.maxCurves[i], config.maxCurves[i + 1]));
+					ranCurve.minCurves.curve.datas.push(new Point(config.maxCurves[i], config.maxCurves[i + 1]));
 					i += 2;
 				}
 			} else if (config.type == DATA_LINEAR) {
@@ -499,10 +520,12 @@ package monkey.core.utils {
 				var ranCurve : DataRandomTwoCurves = data as DataRandomTwoCurves;
 				ret.minCurves = [];
 				ret.maxCurves = [];
-				for each (p in ranCurve.minCurves.datas) {
+				ret.minYValue = ranCurve.minCurves.yValue;
+				ret.maxYValue = ranCurve.maxCurves.yValue;
+				for each (p in ranCurve.minCurves.curve.datas) {
 					ret.minCurves.push(p.x, p.y);
 				}
-				for each (p in ranCurve.maxCurves.datas) {
+				for each (p in ranCurve.maxCurves.curve.datas) {
 					ret.maxCurves.push(p.x, p.y);
 				}
 			} else if (data is DataLinear) {
@@ -515,6 +538,69 @@ package monkey.core.utils {
 			}
 			return ret;
 		}
-				
+		
+		/**
+		 * 获取线性曲线数据 
+		 * @param value
+		 * @return 
+		 * 
+		 */		
+		public static function getLinearData(value : Linears) : Object {
+			var ret : Object= {};
+			ret.value = [];
+			ret.yValue= value.yValue;
+			for each (var p : Point in value.datas) {
+				ret.value.push(p.x, p.y);
+			}
+			return ret;
+		}
+		
+		/**
+		 * 获取颜色 
+		 * @param colorLifetime
+		 * @return 
+		 * 
+		 */		
+		public static function getGradientColor(colorLifetime : Object) : GradientColor {
+			var ret : GradientColor = new GradientColor();
+			ret.setColors(colorLifetime.colors, colorLifetime.colorRatios);
+			ret.setAlphas(colorLifetime.alphas, colorLifetime.alphaRatios);
+			return ret;
+		}
+		
+		/**
+		 * 获取爆炸数据 
+		 * @param bursts
+		 * @return 
+		 * 
+		 */		
+		public static function getBursts(bursts : Object) : Vector.<Point> {
+			var ret : Vector.<Point> = new Vector.<Point>();
+			// 爆炸数据
+			var i:int = 0;
+			while (i < bursts.length) {
+				ret.push(new Point(bursts[i], bursts[i + 1]));
+				i += 2;
+			}
+			return ret;	
+		}
+		
+		/**
+		 * 获取关键帧数据 
+		 * @param keyFrames
+		 * @return 
+		 * 
+		 */		
+		public static function getKeyFrames(keyFrames : Object) : ByteArray {
+			var ret : ByteArray = new ByteArray();
+			ret.endian = Endian.LITTLE_ENDIAN;
+			var i : int = 0;
+			while (i < keyFrames.length) {
+				ret.writeFloat(keyFrames[i]);
+				i += 1;
+			}
+			return ret;
+		}
+		
 	}
 }

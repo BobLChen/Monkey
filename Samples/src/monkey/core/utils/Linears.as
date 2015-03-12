@@ -10,6 +10,7 @@ package monkey.core.utils {
 	public class Linears {
 				
 		public var datas : Vector.<Point>;
+		public var yValue: Number = 1;
 		
 		public function Linears() {
 			this.datas = Vector.<Point>([]);
