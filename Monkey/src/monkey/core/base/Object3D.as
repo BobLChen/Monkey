@@ -322,10 +322,10 @@ package monkey.core.base {
 			if (hasEventListener(ENTER_DRAW_EVENT)) {
 				this.dispatchEvent(enterDrawEvent);
 			}
-						
+			
 			Device3D.world.copyFrom(transform.world);
 			Device3D.mvp.copyFrom(Device3D.world);
-			Device3D.mvp.append(scene.camera.viewProjection);
+			Device3D.mvp.append(Device3D.viewProjection);
 			Device3D.drawOBJNum++;
 			
 			for each (var icom : IComponent in components) {

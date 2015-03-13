@@ -21,8 +21,8 @@ package monkey.core.renderer {
 	 */	
 	public class MeshRenderer extends Component3D {
 		
-		private var _mesh 			: Mesh3D;
-		private var _mat  			: Material3D;
+		private var _mesh 			: Mesh3D;					// mesh
+		private var _mat  			: Material3D;				// 材质
 		private var _boundsCenter 	: Vector3D;					// 包围盒中心点
 		private var _boundsRadius 	: Number = 1;				// 包围盒半径
 		private var _boundsScaled 	: Boolean = true;			// 包围盒
@@ -109,10 +109,9 @@ package monkey.core.renderer {
 					return false;
 				}
 			}
-			
 			return true;
 		}
-		
+				
 		override public function onDraw(scene:Scene3D):void {
 			if (!material || !mesh) {
 				return;

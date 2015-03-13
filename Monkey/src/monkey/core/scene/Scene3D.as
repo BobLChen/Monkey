@@ -248,6 +248,7 @@ package monkey.core.scene {
 			if (this.paused) {
 				return;
 			}
+			this.setupFrame(this.camera);
 			this.update(true);
 			this.setupFrame(this.camera);
 			this.renderScene();
@@ -269,7 +270,8 @@ package monkey.core.scene {
 				this.skipCurrentRender = false;
 				this.dispatchEvent(preRenderEvent);
 				if (!this.skipCurrentRender) {
-					this.render(this.camera);
+					this.dispatchEvent(renderEvent);
+					this.render();
 				}
 				this.dispatchEvent(postRenderEvent);
 				this.context.present();
@@ -309,8 +311,7 @@ package monkey.core.scene {
 		 * @param camera
 		 * 
 		 */		
-		public function render(camera : Camera3D) : void {
-			this.dispatchEvent(renderEvent);
+		public function render() : void {
 			for each (var child : Object3D in children) {
 				child.draw(this, true);
 			}

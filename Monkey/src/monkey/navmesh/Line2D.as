@@ -97,6 +97,48 @@ package monkey.navmesh {
 			this.initNormal();
 		}
 		
+		/**
+		 * 判断两线段是否相交
+		 * 相交检测算法:
+		 *  +---------------------------+
+		 |           PB              |
+		 |           ^               |
+		 |           |               |
+		 |           |               |
+		 |           |               |
+		 |PC+--------------------->PD|
+		 |           |               |
+		 |           |               |
+		 |           +               |
+		 |           PA              |
+		 |                           |
+		 +---------------------------+
+		 * 如果PA,PB边和PC,PD边相交。那么PA,PB一定是在PC,PD两侧。PC,PD一定是在PA,PB两侧。
+		 * @param	a
+		 * @param	b
+		 */
+		public function interact(line : Line2D) : Boolean {
+			var la : int = this.classifyPoint(line.pa);
+			var lb : int = this.classifyPoint(line.pb);
+			// 检测直线的端点是否和当前线段同侧。
+			if (la == ON_LINE || lb == ON_LINE) {
+				return true;
+			}
+			if (la == lb) {
+				return false;
+			}
+			// 检测当前线段端点是在line直线同侧。
+			var sa : int = line.classifyPoint(pa);
+			var sb : int = line.classifyPoint(pb);
+			if (sa == ON_LINE || sb == ON_LINE) {
+				return true;
+			}
+			if (sa == sb) {
+				return false;
+			}
+			return true;
+		}
+		
 		public function toString() : String {
 			return "[pa:" + pa + ";pb:" + pb + "]" ;
 		}

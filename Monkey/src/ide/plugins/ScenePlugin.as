@@ -309,11 +309,11 @@ package ide.plugins {
 			this.context.drawToBitmapData(bmp);
 		}
 		
-		override public function render(camera:Camera3D):void {
+		override public function render():void {
 			if (this._showGrid) {
 				this._grid.draw(this);
 			}
-			super.render(camera);
+			super.render();
 		}
 			
 	}
