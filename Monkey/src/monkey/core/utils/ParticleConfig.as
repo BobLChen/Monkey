@@ -18,6 +18,9 @@ package monkey.core.utils {
 	import monkey.core.entities.particles.prop.value.DataRandomTwoConst;
 	import monkey.core.entities.particles.prop.value.DataRandomTwoCurves;
 	import monkey.core.entities.particles.prop.value.PropData;
+	import monkey.core.entities.particles.shape.BoxShape;
+	import monkey.core.entities.particles.shape.ConeShape;
+	import monkey.core.entities.particles.shape.MeshShape;
 	import monkey.core.entities.particles.shape.ParticleShape;
 	import monkey.core.entities.particles.shape.SphereShape;
 	
@@ -304,6 +307,7 @@ package monkey.core.utils {
 			mode.setVertexVector(Surface3D.POSITION, Vector.<Number>(config.mode.position), 3);
 			mode.setVertexVector(Surface3D.UV0,		 Vector.<Number>(config.mode.uv), 2);
 			mode.indexVector = Vector.<uint>(config.mode.index);
+			
 			var bounds : Bounds3D = new Bounds3D();
 			bounds.min.x = config.mode.bounds[0];
 			bounds.min.y = config.mode.bounds[1];
@@ -318,6 +322,7 @@ package monkey.core.utils {
 			bounds.center.y = bounds.length.y * 0.5 + bounds.min.y;
 			bounds.center.z = bounds.length.z * 0.5 + bounds.min.z;
 			bounds.radius = Vector3D.distance(bounds.center, bounds.max);
+			
 			mode.bounds = bounds;
 			
 			if (config.type == SHAPE_SPHERE) {
@@ -328,6 +333,34 @@ package monkey.core.utils {
 				sphere.random = config.random;
 				sphere.hemi	  = config.hemi;
 				return sphere;
+			} else if (config.type == SHAPE_BOX) {
+				var box : BoxShape = new BoxShape();
+				box.mode = mode;
+				box.min.setTo(config.min[0], config.min[1], config.min[2]);
+				box.max.setTo(config.max[0], config.max[1], config.max[2]);
+				box.smooth = config.smooth;
+				box.random = config.random;
+				return box;
+			} else if (config.type == SHAPE_CONE) {
+				var cone : ConeShape = new ConeShape();
+				cone.mode   = mode;
+				cone.height = config.height;
+				cone.angle  = config.angle;
+				cone.radius = config.radius;
+				cone.shell  = config.shell;
+				cone.volume = config.volume;
+				return cone;
+			} else if (config.type == SHAPE_MESH) {
+				var mesh : MeshShape = new MeshShape();
+				var surf : Surface3D = new Surface3D();
+				surf.setVertexVector(Surface3D.POSITION, Vector.<Number>(config.vertices), 3);
+				surf.indexVector = Vector.<uint>(config.indices);
+				if (config.normals) {
+					surf.setVertexVector(Surface3D.NORMAL, Vector.<Number>([config.normals]), 3);
+				}
+				mesh.mode = mode;
+				mesh.surf = surf;
+				return mesh;
 			}
 						
 			return new SphereShape();
@@ -480,12 +513,33 @@ package monkey.core.utils {
 			ret.mode.index		= shape.mode.indexVector;
 			ret.mode.bounds 	= [aabb.min.x, aabb.min.y, aabb.min.z, aabb.max.x, aabb.max.y, aabb.max.z];
 			if (shape is SphereShape) {
-				var ss : SphereShape = shape as SphereShape;
+				var sphere : SphereShape = shape as SphereShape;
 				ret.type 	= SHAPE_SPHERE;
-				ret.radius 	= ss.radius;
-				ret.shell	= ss.shell;
-				ret.random	= ss.random;
-				ret.hemi	= ss.hemi;
+				ret.radius 	= sphere.radius;
+				ret.shell	= sphere.shell;
+				ret.random	= sphere.random;
+				ret.hemi	= sphere.hemi;
+			} else if (shape is BoxShape) {
+				var box : BoxShape = shape as BoxShape;
+				ret.type    = SHAPE_BOX;
+				ret.min		= [box.min.x, box.min.y, box.min.z];
+				ret.max		= [box.max.x, box.max.y, box.max.z];
+				ret.smooth	= box.smooth;
+				ret.random	= box.random;
+			} else if (shape is ConeShape) {
+				var cone : ConeShape = shape as ConeShape;
+				ret.type	= SHAPE_CONE;
+				ret.height  = cone.height;
+				ret.angle	= cone.angle;
+				ret.radius	= cone.radius;
+				ret.shell	= cone.shell;
+				ret.volume	= cone.volume;
+			} else if (shape is MeshShape) {
+				var mesh : MeshShape = shape as MeshShape;
+				ret.type	= SHAPE_MESH;
+				ret.vertices= mesh.surf.getVertexVector(Surface3D.POSITION);
+				ret.normals = mesh.surf.getVertexVector(Surface3D.NORMAL);
+				ret.indices = mesh.surf.indexVector;
 			}
 			return ret;
 		}
