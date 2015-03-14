@@ -1,6 +1,7 @@
 package monkey.core.entities.particles.shape {
 
 	import monkey.core.base.Surface3D;
+	import monkey.core.entities.particles.ParticleSystem;
 
 	/**
 	 * sphere发射器
@@ -22,7 +23,7 @@ package monkey.core.entities.particles.shape {
 			super();
 		}
 		
-		override protected function createVerticesVelecityOffset(i:int, vertices:Vector.<Number>, velocity:Vector.<Number>, offsets:Vector.<Number>):void {
+		override protected function createVerticesVelecityOffset(i:int, particle : ParticleSystem, vertices:Vector.<Number>, velocity:Vector.<Number>, offsets:Vector.<Number>):void {
 			// mode顶点数据
 			var modeVertices : Vector.<Number> = mode.getVertexVector(Surface3D.POSITION);
 			// 位置

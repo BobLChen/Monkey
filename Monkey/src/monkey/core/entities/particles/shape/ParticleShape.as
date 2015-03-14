@@ -85,12 +85,21 @@ package monkey.core.entities.particles.shape {
 				particle.surfaces[n].setVertexVector(Surface3D.CUSTOM4,  offsets,  3);
 				// 生成对应的位置数据以及方向
 				for (var i : int = 0; i < num; i++) {
-					createVerticesVelecityOffset(i, vertices, velocity, offsets);
+					createVerticesVelecityOffset(i, particle, vertices, velocity, offsets);
 				}
 			}
 		}
-
-		protected function createVerticesVelecityOffset(i : int, vertices : Vector.<Number>, velocity : Vector.<Number>, offsets : Vector.<Number>) : void {
+		
+		/**
+		 * 生成顶点、速度、偏移数据 
+		 * @param i			当前粒子索引
+		 * @param particle	粒子
+		 * @param vertices	顶点数据
+		 * @param velocity	速度矢量
+		 * @param offsets	偏移量
+		 * 
+		 */		
+		protected function createVerticesVelecityOffset(i : int, particle : ParticleSystem, vertices : Vector.<Number>, velocity : Vector.<Number>, offsets : Vector.<Number>) : void {
 
 		}
 

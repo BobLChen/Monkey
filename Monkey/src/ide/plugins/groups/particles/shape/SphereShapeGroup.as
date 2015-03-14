@@ -31,6 +31,8 @@ package ide.plugins.groups.particles.shape {
 			this.hemi	= this.addControl(new CheckBox(), "HemiSphere") as CheckBox;
 			this.shell  = this.addControl(new CheckBox(), "Emit from shell") as CheckBox;
 			this.random = this.addControl(new CheckBox(), "RandomDirection") as CheckBox;
+			this.minHeight = 80;
+			this.maxHeight = 80;
 			
 			this.radius.addEventListener(ControlEvent.CHANGE, change);
 			this.hemi.addEventListener(ControlEvent.CHANGE,   change);
