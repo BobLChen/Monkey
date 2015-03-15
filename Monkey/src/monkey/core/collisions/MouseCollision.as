@@ -20,7 +20,7 @@ package monkey.core.collisions {
 		
 		private var _cam : Camera3D;
 		private var _ray : RayCollision;
-		
+				
 		public function MouseCollision(camera : Camera3D = null) {
 			this._ray = new RayCollision();
 			this._cam = camera;

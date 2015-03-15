@@ -108,51 +108,11 @@ package ide.help {
 		}
 		
 		public function getBounds(pivot : Object3D) : Bounds3D {
-			
 			var bounds : Bounds3D = new Bounds3D();
-			var renderer : MeshRenderer = (pivot.getComponent(MeshRenderer) as MeshRenderer);
-			if (renderer && renderer.mesh && pivot.children.length == 0) {
-				bounds.copyFrom(renderer.mesh.bounds);
-				return bounds;
-			} else if (!renderer && pivot.children.length == 0) {
+			if (!pivot.renderer || !pivot.renderer.mesh) {
 				return bounds;
 			}
-			
-			bounds.max.setTo(Number.MIN_VALUE, Number.MIN_VALUE, Number.MIN_VALUE);
-			bounds.min.setTo(Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE);
-			
-			pivot.forEach(function(child : Object3D) : void {
-				renderer = child.getComponent(MeshRenderer) as MeshRenderer;
-				if (renderer && renderer.mesh) {
-					if (bounds.min.x > renderer.mesh.bounds.min.x) {
-						bounds.min.x = renderer.mesh.bounds.min.x;
-					}
-					if (bounds.min.y > renderer.mesh.bounds.min.y) {
-						bounds.min.y = renderer.mesh.bounds.min.y;
-					}
-					if (bounds.min.z > renderer.mesh.bounds.min.z) {
-						bounds.min.z = renderer.mesh.bounds.min.z;
-					}
-					if (bounds.max.x < renderer.mesh.bounds.max.x) {
-						bounds.max.x = renderer.mesh.bounds.max.x;
-					}
-					if (bounds.max.y < renderer.mesh.bounds.max.y) {
-						bounds.max.y = renderer.mesh.bounds.max.y;
-					}
-					if (bounds.max.z < renderer.mesh.bounds.max.z) {
-						bounds.max.z = renderer.mesh.bounds.max.z;
-					}					
-				}
-			});
-			
-			bounds.length.x = bounds.max.x - bounds.min.x;
-			bounds.length.y = bounds.max.y - bounds.min.y;
-			bounds.length.z = bounds.max.z - bounds.min.z;
-			bounds.center.x = bounds.length.x * 0.5 + bounds.min.x;
-			bounds.center.y = bounds.length.y * 0.5 + bounds.min.y;
-			bounds.center.z = bounds.length.z * 0.5 + bounds.min.z;
-			bounds.radius = Vector3D.distance(bounds.center, bounds.max);
-			
+			bounds.copyFrom(pivot.renderer.mesh.bounds);
 			return bounds;
 		}
 		

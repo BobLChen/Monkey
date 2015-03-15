@@ -94,8 +94,8 @@ package ide {
 			
 			var baseLayer : Sprite = new Sprite();
 			var popLayer  : Sprite = new Sprite();
-			popLayer.addChild(ToolTip.toolTip);
 			popLayer.addChild(Window.popWindow.view);
+			popLayer.addChild(ToolTip.toolTip);
 			Window.popWindow.visible = false;
 			Window.popWindow.x = stage.stageWidth / 2;
 			Window.popWindow.y = stage.stageHeight / 2;

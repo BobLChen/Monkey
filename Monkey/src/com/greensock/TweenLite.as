@@ -470,6 +470,7 @@ package com.greensock {
 				
 			} else {
 				_propLookup = {};
+				
 				if (!(_siblings = _tweenLookup[target])) { //the next few lines accomplish the same thing as _siblings = _register(target, this, false) but faster and only slightly more verbose.
 					_siblings = _tweenLookup[target] = [this];
 				} else {

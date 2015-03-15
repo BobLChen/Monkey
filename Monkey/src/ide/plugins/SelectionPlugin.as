@@ -50,8 +50,9 @@ package ide.plugins {
 		private var _showShapes 		: Boolean = true;		// 显示shape
 		private var _showParticles 		: Boolean = true;		// 显示粒子图标
 		private var _selecting 			: Boolean = false;		// 选中状态
+		private var _enableMouse		: Boolean = true;
 		private var _sprite 			: Sprite;				// sprite
-		private var _showGizmo 			: Boolean = true;		// 显示gizmo
+		private var _showGizmo 			: Boolean = false;		// 显示gizmo
 		private var gizmos 				: Dictionary;			// gizmos
 		private var cameraGizmos		: Dictionary;			// debug cameras
 		
@@ -81,6 +82,11 @@ package ide.plugins {
 			this._app.addMenu("Helper/ShowShapes",		showShapes);
 			this._app.addMenu("Helper/ShowGizmo",		showGizmo);
 			this._app.addMenu("Helper/ResetCamera",		resetCamera);
+			this._app.addMenu("Helper/MouseCollision",	enableMouseCollision);
+		}
+		
+		private function enableMouseCollision(e : Event) : void {
+			this._enableMouse = !this._enableMouse;
 		}
 		
 		private function resetCamera(e : Event) : void {
@@ -138,7 +144,7 @@ package ide.plugins {
 						this._app.selection.push([this._currentGizmo.object]);
 					}
 					this._currentGizmo = null;
-				} else if (ScenePlugin(this._app.scene).mouse.test(this._app.stage.mouseX, this._app.stage.mouseY, this._app.selection.pickInfo)) {
+				} else if (_enableMouse && ScenePlugin(this._app.scene).mouse.test(this._app.stage.mouseX, this._app.stage.mouseY, this._app.selection.pickInfo)) {
 					if (Input3D.keyDown(Input3D.CONTROL)) {
 						this._selecting = true;
 					} else if (this._app.selection.objects.indexOf(this._app.selection.pickInfo.object) == -1) {
@@ -188,7 +194,7 @@ package ide.plugins {
 					this._sprite.removeChildAt(0);
 				}
 			}
-						
+			
 			this.overlayRender();
 		}
 		
