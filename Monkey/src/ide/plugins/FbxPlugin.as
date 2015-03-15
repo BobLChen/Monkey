@@ -6,6 +6,7 @@ package ide.plugins {
 	import ide.App;
 	import ide.events.LogEvent;
 	import ide.utils.FbxParserMacCMD;
+	import ide.utils.FbxParserWinCMD;
 	import ide.utils.FbxSceneLoader;
 	
 	import ui.core.controls.Button;
@@ -80,6 +81,10 @@ package ide.plugins {
 				var macParser : FbxParserMacCMD = new FbxParserMacCMD(normal.value, tangent.value, uv0.value, uv1.value, anim.value, geometry.value,
 					world.value, quat.value, quatNum.value, m34Num.value, mount.text, fbxPath);
 				macParser.addEventListener(Event.COMPLETE, onParseComplete);
+			} else {
+				var winParser : FbxParserWinCMD = new FbxParserWinCMD(normal.value, tangent.value, uv0.value, uv1.value, anim.value, geometry.value,
+					world.value, quat.value, quatNum.value, m34Num.value, mount.text, fbxPath);
+				winParser.addEventListener(Event.COMPLETE, onParseComplete);
 			}
 		}
 		
