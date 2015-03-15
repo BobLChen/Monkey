@@ -13,7 +13,6 @@ package ide.help {
 	import monkey.core.camera.Camera3D;
 	import monkey.core.collisions.CollisionInfo;
 	import monkey.core.materials.Material3D;
-	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.utils.Vector3DUtils;
 
 	public class Selection {
@@ -138,13 +137,9 @@ package ide.help {
 		 * 剪切
 		 */		
 		public function cut() : void {
-			if (this._objects.length == 0) {
-				return;
-			}
 			this._clipboardState = "cut";
 			this._clipboard 	 = [];
-			var pivot : Object3D = null;
-			for each (pivot in this.objects) {
+			for each (var pivot : Object3D in this.objects) {
 				this._clipboard.push(pivot);
 				if (pivot.parent) {
 					pivot.parent.removeChild(pivot);
@@ -157,9 +152,6 @@ package ide.help {
 		 * 复制
 		 */		
 		public function copy() : void {
-			if (this._objects.length == 0) {
-				return;
-			}
 			this._clipboardState = "copy";
 			this._clipboard 	 = [];
 			var pivot : Object3D = null;
@@ -167,21 +159,19 @@ package ide.help {
 				this._clipboard.push(pivot.clone());
 			}
 		}
-						
+		
 		/**
 		 * 粘贴 
 		 */		
 		public function paste() : void {
-			if (this._clipboardState == "cut") {
-				var parent : Object3D = null;
-				if (objects.length >= 1) {
-					parent = this.objects[0];
-				} else {
-					parent = this._app.scene;
-				}
-				for each (var pivot : Object3D in this._clipboard) {
-					parent.addChild(pivot);
-				}
+			var parent : Object3D = null;
+			if (objects.length >= 1) {
+				parent = this.objects[0];
+			} else {
+				parent = this._app.scene;
+			}
+			for each (var pivot : Object3D in this._clipboard) {
+				parent.addChild(pivot);
 			}
 			if (this._clipboard) {
 				this.objects = this._clipboard;
@@ -284,6 +274,7 @@ package ide.help {
 		public function deleted() : void {
 			if (this.main && this.main.parent) {
 				this.main.parent.removeChild(this.main);
+				this.main.dispose();
 			}
 			this.objects = [];
 		}

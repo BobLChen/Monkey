@@ -35,12 +35,12 @@ package monkey.core.materials {
 			c.texture 		= texture.clone();
 			c.blendTexture 	= blendTexture.clone();
 			c.keyframes 	= new ByteArray();
-			this.keyframes.position  = 0;
-			this.keyframes.readBytes(c.keyframes, 0, keyframes.length);
 			c.time 			= time;
 			c.totalLife 	= totalLife;
 			c.billboard 	= billboard;
 			c.frame			= new Point(frame.x, frame.y);
+			this.keyframes.position  = 0;
+			this.keyframes.readBytes(c.keyframes, 0, keyframes.length);
 			return c;
 		}
 		
@@ -58,7 +58,6 @@ package monkey.core.materials {
 		public function set frame(value:Point):void {
 			_frame = value;
 		}
-
 		
 		public function get billboard():Boolean {
 			return _billboard;

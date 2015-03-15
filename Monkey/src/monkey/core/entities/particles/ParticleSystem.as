@@ -387,9 +387,16 @@ package monkey.core.entities.particles {
 				}
 				_defKeyframe = bytes;
 			}
-			return _defKeyframe;
+			
+			var data : ByteArray = new ByteArray();
+			data.endian = Endian.LITTLE_ENDIAN;
+			
+			_defKeyframe.position = 0;
+			_defKeyframe.readBytes(data, 0, _defKeyframe.length);
+			
+			return data;
 		}
-				
+		
 		/**
 		 * 粒子贴图 
 		 * @return 

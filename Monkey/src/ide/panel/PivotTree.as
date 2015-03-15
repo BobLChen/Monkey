@@ -117,7 +117,7 @@
 			this.update();
 			this.dispatchEvent(new ControlEvent(ControlEvent.CHANGE, this));
 		}
-
+		
 		public function update() : void {
 			this._labels = [];
 			if (this._pivot) {
