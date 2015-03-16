@@ -21,7 +21,7 @@ package monkey.core.materials {
 		public function ColorMaterial(color : Color) {
 			super();
 			this._shader = ColorShader.instance; 
-			this.color  = color;
+			this.color   = color;
 		}
 		
 		public function get color() : Color {
@@ -34,6 +34,7 @@ package monkey.core.materials {
 		
 		override public function clone() : Material3D {
 			var c : ColorMaterial = new ColorMaterial(color);
+			c.copyFrom(this);
 			return c;
 		}
 		

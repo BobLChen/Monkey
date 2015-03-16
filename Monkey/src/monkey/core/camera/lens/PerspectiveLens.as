@@ -61,7 +61,7 @@ package monkey.core.camera.lens {
 		}
 		
 		override public function updateProjectionMatrix() : void {
-			
+						
 			var w : Number = viewPort.width;
 			var h : Number = viewPort.height;
 			var n : Number = near;
@@ -86,11 +86,12 @@ package monkey.core.camera.lens {
 			rawData[8] = 1  - (viewPort.width  / w) - (viewPort.x / w) * 2;
 			rawData[9] = -1 + (viewPort.height / h) + (viewPort.y / h) * 2;
 			
-			this._projDirty = false;
 			this._aspect    = a;
 			this._projection.copyRawDataFrom(rawData);
 			this._projection.prependScale(1, 1, -1);
-			this.dispatchEvent(projectionEvent);
+			
+			super.updateProjectionMatrix();
 		}
+		
 	}
 }

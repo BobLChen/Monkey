@@ -16,15 +16,15 @@ package monkey.core.camera.lens {
 		
 		protected static const projectionEvent : Event  = new Event(PROJECTION_UPDATE);
 		
-		protected var _projection 	: Matrix3D;			// 投影矩阵
-		protected var _viewPort   	: Rectangle;		// 相机视口
-		protected var _near		  	: Number;			// 近裁面
-		protected var _far		  	: Number;			// 远裁面
-		protected var _projDirty  	: Boolean;			// 投影矩阵需要更新
-		protected var _invProjDirty	: Boolean;			// 投影逆矩阵需要更新
-		protected var _invProjection: Matrix3D;			// 投影逆矩阵
-		protected var _zoom			: Number;			// 焦距
-						
+		protected var _projection 		: Matrix3D;			// 投影矩阵
+		protected var _viewPort   		: Rectangle;		// 相机视口
+		protected var _near		  		: Number;			// 近裁面
+		protected var _far		  		: Number;			// 远裁面
+		protected var _projDirty  		: Boolean;			// 投影矩阵需要更新
+		protected var _invProjDirty		: Boolean;			// 投影逆矩阵需要更新
+		protected var _invProjection	: Matrix3D;			// 投影逆矩阵
+		protected var _zoom				: Number;			// 焦距
+		
 		public function Lens3D() {
 			super();
 			this._viewPort		= new Rectangle();
@@ -43,14 +43,14 @@ package monkey.core.camera.lens {
 		}
 		
 		public function copyfrom(lens : Lens3D) : void {
-			this._projection.copyFrom(lens._projection);
 			this._viewPort.copyFrom(lens._viewPort);
-			this._near = lens._near;
-			this._far = lens._far;
-			this._projDirty = lens._projDirty;
-			this._invProjDirty = lens._invProjDirty;
+			this._projection.copyFrom(lens._projection);
 			this._invProjection.copyFrom(lens._invProjection);
-			this._zoom = lens.zoom;
+			this._near 			= lens._near;
+			this._far 			= lens._far;
+			this._projDirty 	= lens._projDirty;
+			this._invProjDirty 	= lens._invProjDirty;
+			this._zoom 			= lens.zoom;
 		}
 		
 		public function get aspect():Number {
@@ -180,8 +180,9 @@ package monkey.core.camera.lens {
 		 * 更新投影矩阵 
 		 */		
 		public function updateProjectionMatrix() : void {
-			this._projDirty = false;	
-			this._invProjDirty = true;
+			this._projDirty 	= false;	
+			this._invProjDirty 	= true;
+			this.dispatchEvent(projectionEvent);
 		}
 		
 	}

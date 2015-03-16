@@ -14,6 +14,7 @@ package monkey.core.scene {
 	import monkey.core.base.Surface3D;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.camera.lens.PerspectiveLens;
+	import monkey.core.shader.Shader3D;
 	import monkey.core.textures.Texture3D;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Device3D;
@@ -57,10 +58,12 @@ package monkey.core.scene {
 		/** 所有网格数据 */
 		public var surfaces				: Vector.<Surface3D>;
 		/** 所有材质数据 */
-		public var textures				: Vector.<Texture3D>;		
+		public var textures				: Vector.<Texture3D>;	
+		/** 所有的shader */
+		public var shaders				: Vector.<Shader3D>;
 		/** 跳过本次渲染 */
 		public var skipCurrentRender	: Boolean;
-						
+		
 		private var _container 			: DisplayObject;		// 2d容器
 		private var _backgroundColor 	: Color;				// 背景色
 		private var _clearColor			: Vector3D;				// 后台缓冲区颜色
@@ -71,7 +74,7 @@ package monkey.core.scene {
 		private var _antialias			: int;					// 抗锯齿等级
 		private var _paused				: Boolean;				// 是否暂停
 		private var _camera				: Camera3D;				// camera
-		
+				
 		/**
 		 * @param dispObject
 		 */		
@@ -79,6 +82,7 @@ package monkey.core.scene {
 			super();
 			this.surfaces	= new Vector.<Surface3D>();
 			this.textures   = new Vector.<Texture3D>();
+			this.shaders	= new Vector.<Shader3D>();
 			this.container  = dispObject;
 			this.antialias  = 4;
 			this.background = new Color(0x333333);
@@ -450,9 +454,6 @@ package monkey.core.scene {
 			}
 		}
 		
-		/**
-		 *  shader由自己释放
-		 */		
 		override public function dispose():void {
 			while (this.textures.length > 0) {
 				this.textures[0].dispose(true);
@@ -460,9 +461,15 @@ package monkey.core.scene {
 			while (this.surfaces.length > 0) {
 				this.surfaces[0].dispose(true);
 			}
+			while (this.shaders.length > 0) {
+				this.shaders[0].dispose(true);
+			}
 			this.children.length = 0;
+			if (this.context) {
+				this.context.dispose();
+			}
 		}
-				
+		
 		/**
 		 * 释放显存，shader由自己释放。
 		 */		

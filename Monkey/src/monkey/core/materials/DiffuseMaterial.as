@@ -51,6 +51,11 @@ package monkey.core.materials {
 
 		override public function clone():Material3D {
 			var c : DiffuseMaterial = new DiffuseMaterial(texture.clone());
+			c.copyFrom(this);
+			c._repeatX = _repeatX;
+			c._repeatY = _repeatY;
+			c._offsetX = _offsetX;
+			c._offsetY = _offsetY;
 			return c;
 		}
 		

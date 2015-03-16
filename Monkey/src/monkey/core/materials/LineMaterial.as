@@ -14,5 +14,6 @@ package monkey.core.materials {
 			this._shader = LineShader.instance;
 			this.blendMode = BLEND_ALPHA;
 		}
+				
 	}
 }

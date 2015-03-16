@@ -32,6 +32,7 @@ package monkey.core.materials {
 		
 		override public function clone():Material3D {
 			var c : ParticleMaterial = new ParticleMaterial();
+			c.copyFrom(this);
 			c.texture 		= texture.clone();
 			c.blendTexture 	= blendTexture.clone();
 			c.keyframes 	= new ByteArray();

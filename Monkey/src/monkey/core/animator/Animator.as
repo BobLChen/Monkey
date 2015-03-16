@@ -5,6 +5,7 @@ package monkey.core.animator {
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.components.Component3D;
+	import monkey.core.interfaces.IComponent;
 	import monkey.core.utils.Time3D;
 
 	/**
@@ -45,6 +46,39 @@ package monkey.core.animator {
 			this.fps = 60;
 			this.labels = new Dictionary();
 			this.frameSpeed = 1.0;
+		}
+		
+		/**
+		 * 拷贝目标所有属性 
+		 * @param animator
+		 * 
+		 */		
+		public function copyFrom(animator : Animator) : void {
+			this.labels = new Dictionary();
+			for (var key : Object in animator.labels) {
+				this.labels[key] = animator[key];
+			}
+			this.totalFrames 	= animator.totalFrames;
+			this._fps 			= animator._fps;
+			this._hz  			= animator._hz;
+			this._from			= animator._from;
+			this._to			= animator._to;
+			this._playing		= animator._playing;
+			this._currentFrame	= animator._currentFrame;
+			this._currentLabel	= animator._currentLabel;
+			this._frameSpeed	= animator._frameSpeed;
+			this._animationMode	= animator._animationMode;
+		}
+		
+		/**
+		 * 克隆 
+		 * @return 
+		 * 
+		 */		
+		override public function clone():IComponent {
+			var c : Animator = new Animator();
+			c.copyFrom(this);
+			return c;
 		}
 		
 		/**

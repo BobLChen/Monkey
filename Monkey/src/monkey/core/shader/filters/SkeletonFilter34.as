@@ -28,7 +28,7 @@ package monkey.core.shader.filters {
 		 * @param bytes
 		 * 
 		 */		
-		public function set data(bytes : ByteArray) : void {
+		public function set boneData(bytes : ByteArray) : void {
 			this.boneLabel.bytes = bytes;
 		}
 		

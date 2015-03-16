@@ -16,12 +16,11 @@ package monkey.core.entities {
 	 */
 	public class Mesh3D extends EventDispatcher {
 		
-		public static const DISPOSE : String = "DISPOSE_EVENT";
-		protected static const disposeEvent : Event = new Event(DISPOSE);
+		public static const DISPOSE_EVENT   : String = "DISPOSE_EVENT";
+		protected static const disposeEvent : Event = new Event(DISPOSE_EVENT);
 		
 		/** 网格数据 */
 		public var surfaces   : Vector.<Surface3D>;
-		
 		private var _bounds   : Bounds3D;
 		
 		public function Mesh3D(surfaces : Array) {
@@ -94,6 +93,7 @@ package monkey.core.entities {
 			for each (var surf : Surface3D in surfaces) {
 				c.surfaces.push(surf.clone());
 			}
+			c._bounds = bounds.clone();
 			return c;
 		}
 		
@@ -106,7 +106,7 @@ package monkey.core.entities {
 				surf.dispose(force);
 			}
 			this.surfaces = new Vector.<Surface3D>();
-			if (hasEventListener(DISPOSE)) {
+			if (this.hasEventListener(DISPOSE_EVENT)) {
 				this.dispatchEvent(disposeEvent);
 			}
 		}

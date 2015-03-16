@@ -32,7 +32,7 @@ package monkey.core.camera {
 			this._projDirty 	 = true;
 			this._viewProjDirty  = true;
 			this._viewProjection = new Matrix3D();
-			this.lens = lens;
+			this.lens 			 = lens;
 			this.lens.addEventListener(Lens3D.PROJECTION_UPDATE, onLensProjChanged);
 			this.transform.addEventListener(Transform3D.UPDATE_TRANSFORM_EVENT, onUpdateTransform);
 		}
@@ -41,6 +41,9 @@ package monkey.core.camera {
 			var c : Camera3D = new Camera3D(lens.clone());
 			for each (var icom : IComponent in components) {
 				c.addComponent(icom.clone());
+			}
+			for each (var child : Object3D in children) {
+				c.addChild(child.clone());
 			}
 			return c;
 		}

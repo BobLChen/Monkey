@@ -52,7 +52,6 @@ package monkey.core.renderer {
 		
 		override public function clone():IComponent {
 			var c : MeshRenderer = new MeshRenderer(mesh.clone(), material.clone());
-			c.copyfrom(this);
 			return c;
 		}
 		

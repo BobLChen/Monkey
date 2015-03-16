@@ -15,27 +15,22 @@ package monkey.core.components {
 	public class Component3D extends EventDispatcher implements IComponent {
 		
 		/** 启用组件 */
-		public static const ENABLE 			: String = "Component3D:ENABLE";
+		public static const ENABLE_EVENT 	: String = "Component3D:ENABLE";
 		/** disable */
-		public static const DISABLE 		: String = "Component3D:DISABLE";
+		public static const DISABLE_EVENT   : String = "Component3D:DISABLE";
 		// 事件
-		private static const enableEvent    : Event = new Event(ENABLE);
-		private static const disableEvent   : Event = new Event(DISABLE);
+		private static const enableEvent    : Event = new Event(ENABLE_EVENT);
+		private static const disableEvent   : Event = new Event(DISABLE_EVENT);
 		
-		private var _object3D : Object3D;	// object3d
-		private var _enable   : Boolean;	// 是否启用
-		private var _disposed : Boolean;	// 是否被摧毁
+		protected var _object3D : Object3D;	// object3d
+		protected var _enable   : Boolean;	// 是否启用
+		protected var _disposed : Boolean;	// 是否被摧毁
 		
 		public function Component3D() {
 			super();
 			this._enable = true;
 		}
 		
-		public function copyfrom(icom : Component3D) : void {
-			this._enable   = icom.enable;
-			this._disposed = icom.disposed;
-		}
-				
 		/**
 		 * master 
 		 * @return 
@@ -108,9 +103,9 @@ package monkey.core.components {
 				return;
 			}
 			this._enable = value;
-			if (value && hasEventListener(ENABLE)) {
+			if (value && hasEventListener(ENABLE_EVENT)) {
 				this.dispatchEvent(enableEvent);
-			} else if (hasEventListener(DISABLE)) {
+			} else if (hasEventListener(DISABLE_EVENT)) {
 				this.dispatchEvent(disableEvent);
 			}
 		}

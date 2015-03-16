@@ -5,21 +5,42 @@ package monkey.core.collisions.collider {
 	import monkey.core.base.Bounds3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
+	import monkey.core.interfaces.IComponent;
 
 	public class BoxCollider extends Collider {
 		
-		public var bounds : Bounds3D;
+		private var _bounds : Bounds3D;
 		
 		public function BoxCollider(bounds : Bounds3D) {
 			super(null);
 			this.bounds = bounds;
-			this.initBoxMesh(bounds);
+		}
+		
+		override public function clone():IComponent {
+			var c : BoxCollider = new BoxCollider(null);
+			c._bounds = _bounds.clone();
+			c.mesh	  = mesh.clone();
+			return c;
+		}
+		
+		public function get bounds():Bounds3D {
+			return _bounds;
+		}
+
+		public function set bounds(value:Bounds3D):void {
+			if (_bounds == value) {
+				return;
+			}
+			_bounds = value;
+			if (_bounds) {
+				this.initBoxMesh(value);
+			}
 		}
 		
 		private function initBoxMesh(bounds : Bounds3D) : void {
 			
-			if (this.colliderMesh) {
-				this.colliderMesh.dispose();
+			if (this.mesh) {
+				this.mesh.dispose();
 			}
 			
 			var min : Vector3D = bounds.min;
@@ -81,7 +102,7 @@ package monkey.core.collisions.collider {
 			for (var i:int = 0; i < len; i++) {
 				surf.indexVector.push(i);
 			}
-			this.colliderMesh = new Mesh3D([surf]);
+			this.mesh = new Mesh3D([surf]);
 		}
 		
 	}

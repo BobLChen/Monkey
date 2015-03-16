@@ -50,7 +50,7 @@ package blog.samples {
 			
 			obj.addEventListener(Object3D.ENTER_FRAME_EVENT, function(e:Event):void{
 				trace(anim.currentFrame);
-				skeleton.data = anim.getBoneBytes(0, int(anim.currentFrame));
+//				skeleton.data = anim.getBoneBytes(0, int(anim.currentFrame));
 			});
 			
 			trace(anim.totalFrames);

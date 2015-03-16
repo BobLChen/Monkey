@@ -19,9 +19,8 @@ package monkey.core.animator {
 		
 		override public function clone():IComponent {
 			var c : ParticleAnimator = new ParticleAnimator();
-			c._time    = this._time;
-			c._playing = this._playing;
-			c.totalFrames = this.totalFrames;
+			c.copyFrom(this);
+			c._time = this._time;
 			return c;
 		}
 		

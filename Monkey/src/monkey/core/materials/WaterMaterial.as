@@ -39,6 +39,7 @@ package monkey.core.materials {
 		
 		override public function clone():Material3D {
 			var c : WaterMaterial = new WaterMaterial(cubeTexture.clone() as CubeTextue3D, normalTexture.clone(), wave, waveHeight, blendColor);
+			c.copyFrom(this);
 			return c;
 		}
 		
@@ -46,8 +47,6 @@ package monkey.core.materials {
 			super.dispose();
 			this.cubeTexture.dispose();
 			this.normalTexture.dispose();
-			this.cubeTexture = null;
-			this.normalTexture = null;
 		}
 		
 		override protected function setShaderDatas(scene:Scene3D):void {

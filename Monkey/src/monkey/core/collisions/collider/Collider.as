@@ -12,7 +12,7 @@ package monkey.core.collisions.collider {
 	public class Collider extends Component3D {
 		
 		/** 碰撞体mesh */
-		public var colliderMesh : Mesh3D;
+		public var mesh : Mesh3D;
 		
 		/**
 		 *  
@@ -20,21 +20,22 @@ package monkey.core.collisions.collider {
 		 * 
 		 */		
 		public function Collider(mesh : Mesh3D) {
-			this.colliderMesh = mesh;
+			this.mesh = mesh;
 		}
 		
 		override public function clone():IComponent {
-			var c : Collider = new Collider(colliderMesh);
+			var c : Collider = new Collider(mesh.clone());
 			return c;
 		}
 		
 		override public function dispose():void {
-			if (disposed) {
+			if (this.disposed) {
 				return;
 			}
 			super.dispose();
-			if (colliderMesh) {
-				colliderMesh.dispose();
+			if (this.mesh) {
+				this.mesh.dispose();
+				this.mesh = null;
 			}
 		}
 		

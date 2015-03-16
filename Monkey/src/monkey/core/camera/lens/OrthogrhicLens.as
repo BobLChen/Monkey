@@ -16,13 +16,28 @@ package monkey.core.camera.lens {
 			super();
 			this.setOrth(left, right, bottom, top);
 		}
-				
+		
 		public function setOrth(left : Number, right : Number, bottom : Number, top : Number) : void {
 			this._left 	= left;
 			this._right = right;
 			this._top 	= top;
 			this._bottom= bottom;
 			this.invalidateProjection();
+		}
+		
+		override public function clone():Lens3D {
+			return super.clone();
+		}
+		
+		override public function copyfrom(lens:Lens3D):void {
+			super.copyfrom(lens);
+			if (lens is OrthogrhicLens) {
+				var orth : OrthogrhicLens = lens as OrthogrhicLens;
+				this._left 	= orth._left;
+				this._right	= orth._right;
+				this._top	= orth._top;
+				this._bottom= orth._bottom;
+			}
 		}
 		
 		public function get top():Number {
@@ -43,14 +58,14 @@ package monkey.core.camera.lens {
 		
 		override public function setViewPort(x:int, y:int, width:int, height:int):void {
 			super.setViewPort(x, y, width, height);
-			this._left 	= -width / 2;
-			this._right = width / 2;
-			this._top 	= height / 2;
-			this._bottom= -height / 2;
+			this._left 	= -width 	/ 2;
+			this._right = width 	/ 2;
+			this._top 	= height 	/ 2;
+			this._bottom= -height 	/ 2;
 		}
 		
 		override public function updateProjectionMatrix():void {
-			super.updateProjectionMatrix();
+			
 			var rawData : Vector.<Number> = _projection.rawData;
 			rawData[0] = 2 / (_right - _left);
 			rawData[1] = 0;
@@ -72,7 +87,8 @@ package monkey.core.camera.lens {
 			rawData[14] = 0;
 			rawData[15] = 1;
 			this._projection.copyRawDataFrom(rawData);
-			this.dispatchEvent(projectionEvent);
+			
+			super.updateProjectionMatrix();
 		}
 		
 	}

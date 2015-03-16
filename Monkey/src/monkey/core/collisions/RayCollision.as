@@ -43,7 +43,7 @@ package monkey.core.collisions {
 			var collisionDistance : Number = 0;
 			
 			for each (var collider : Collider in this.list) {
-				if (!collider.colliderMesh || !collider.object3D.visible || !collider.enable) {
+				if (!collider.mesh || !collider.object3D.visible || !collider.enable) {
 					continue;
 				}
 				// 转换起点和方向到模型local空间
@@ -51,7 +51,7 @@ package monkey.core.collisions {
 				collider.object3D.transform.globalToLocalVector(dir, RayDir);
 				RayDir.normalize();
 				// 遍历所有的surface
-				for each (var surf : Surface3D in collider.colliderMesh.surfaces) {
+				for each (var surf : Surface3D in collider.mesh.surfaces) {
 					var polys : Vector.<Triangle3D> = surf.ploys;
 					var length : int = polys.length;
 					var pn : int = 0;
@@ -77,7 +77,7 @@ package monkey.core.collisions {
 						if (collisionDistance < distance) {
 							collided = true;
 							distance = collisionDistance;
-							info.mesh = collider.colliderMesh;
+							info.mesh = collider.mesh;
 							info.tri = tri;
 							info.surface = surf;
 							info.object = collider.object3D;

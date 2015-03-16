@@ -41,6 +41,16 @@ package monkey.core.materials {
 			this._sourceFactor	= Device3D.defaultSourceFactor;
 			this._destFactor	= Device3D.defaultDestFactor;
 		}
+		
+		public function copyFrom(material : Material3D) : void {
+			this._shader 		= material.shader;
+			this._stateDirty 	= material._stateDirty;
+			this._depthWrite	= material._depthWrite;
+			this._depthCompare	= material._depthCompare;
+			this._cullFace		= material._cullFace;
+			this._sourceFactor	= material._sourceFactor;
+			this._destFactor	= material._destFactor;
+		}
 				
 		/**
 		 * 材质使用的shader 
@@ -83,7 +93,7 @@ package monkey.core.materials {
 		 */		
 		public function clone():Material3D {
 			var c : Material3D = new Material3D();
-			c._shader = shader;
+			c.copyFrom(this);
 			return c;
 		}
 		

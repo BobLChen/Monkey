@@ -1,21 +1,15 @@
 package monkey.core.entities {
 	
-	import flash.geom.Rectangle;
-	
 	import monkey.core.base.Surface3D;
-	import monkey.core.materials.Material3D;
-	import monkey.core.scene.Scene3D;
-	import monkey.core.utils.Device3D;
 
 	public class Quad extends Mesh3D {
 		
-		public var fullScreenMode : Boolean = true;
-		
-		private var _x 		: Number;
-		private var _y 		: Number;
-		private var _width 	: Number;
-		private var _height : Number;
-		private var _surf 	: Surface3D;
+		public var fullScreen 	: Boolean = true;
+		private var _x 			: Number;
+		private var _y 			: Number;
+		private var _width 		: Number;
+		private var _height 	: Number;
+		private var _surf 		: Surface3D;
 		
 		public function Quad(x : Number = 0, y : Number = 0, width : Number = 100, height : Number = 100, fullScreenMode : Boolean = false) {
 			super([]);
@@ -35,28 +29,28 @@ package monkey.core.entities {
 			this._y = y;
 			this._width = width;
 			this._height = height;
-			this.fullScreenMode = fullScreenMode;
+			this.fullScreen = fullScreenMode;
 		}
 		
-		override public function draw(scene:Scene3D, material:Material3D):void {
-			var x : Number = 0;
-			var y : Number = 0;
-			var w : Number = 0;
-			var h : Number = 0;
-			var v : Rectangle = scene.viewPort;
-			x = this._x / v.width;
-			y = this._y / v.height;
-			w = this._width / v.width;
-			h = this._height / v.height;
-			if (this.fullScreenMode) {
-				w = 1 - x - w;
-				h = 1 - y - h;
-			}
-			object3D.transform.local.identity();
-			object3D.transform.local.appendScale(w, h, 1);
-			object3D.transform.local.appendTranslation((-1 + w + x * 2), (1 - h - y * 2), 0);
-			Device3D.mvp.copyFrom(object3D.transform.local);
-			super.draw(scene, material);
-		}
+//		override public function draw(scene:Scene3D, material:Material3D):void {
+//			var x : Number = 0;
+//			var y : Number = 0;
+//			var w : Number = 0;
+//			var h : Number = 0;
+//			var v : Rectangle = scene.viewPort;
+//			x = this._x / v.width;
+//			y = this._y / v.height;
+//			w = this._width / v.width;
+//			h = this._height / v.height;
+//			if (this.fullScreenMode) {
+//				w = 1 - x - w;
+//				h = 1 - y - h;
+//			}
+//			object3D.transform.local.identity();
+//			object3D.transform.local.appendScale(w, h, 1);
+//			object3D.transform.local.appendTranslation((-1 + w + x * 2), (1 - h - y * 2), 0);
+//			Device3D.mvp.copyFrom(object3D.transform.local);
+//			super.draw(scene, material);
+//		}
 	}
 }

@@ -42,13 +42,10 @@ package monkey.core.components {
 			this.updateTransforms(true);
 		}
 				
-		override public function copyfrom(icom : Component3D) : void {
-			super.copyfrom(icom);
-			var transform : Transform3D = icom as Transform3D;
-			if (!transform) {
-				return;
-			}
-			this.local.copyFrom(transform.world);
+		public function copyfrom(value : Transform3D) : void {
+			this._enable   = value.enable;
+			this._disposed = value.disposed;
+			this.local.copyFrom(value.world);
 			this.updateTransforms(true);
 		}
 		

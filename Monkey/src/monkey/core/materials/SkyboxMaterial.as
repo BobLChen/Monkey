@@ -26,6 +26,7 @@ package monkey.core.materials {
 		
 		override public function clone():Material3D {
 			var c : SkyboxMaterial = new SkyboxMaterial([]);
+			c.copyFrom(this);
 			for each (var texture : Texture3D in textures) {
 				c.textures.push(texture.clone());
 			}

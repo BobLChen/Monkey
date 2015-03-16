@@ -231,15 +231,16 @@
 			vx.value = this.material[acc.@name].x;
 			vy.value = this.material[acc.@name].y;
 			vz.value = this.material[acc.@name].z;
-			vx.addEventListener(ControlEvent.CHANGE, change);
-			vy.addEventListener(ControlEvent.CHANGE, change);
-			vz.addEventListener(ControlEvent.CHANGE, change);
 			
 			var change : Function = function(e : Event):void{
 				material[acc.@name].x = vx.value;
 				material[acc.@name].y = vy.value;
 				material[acc.@name].z = vz.value;
 			};
+			
+			vx.addEventListener(ControlEvent.CHANGE, change);
+			vy.addEventListener(ControlEvent.CHANGE, change);
+			vz.addEventListener(ControlEvent.CHANGE, change);
 			
 			content.maxHeight += 20;
 			content.minHeight += 20;
@@ -264,13 +265,13 @@
 			px.value = this.material[acc.@name].x;
 			py.value = this.material[acc.@name].y;
 			
-			px.addEventListener(ControlEvent.CHANGE, change);
-			py.addEventListener(ControlEvent.CHANGE, change);
-			
 			var change : Function = function(e : Event):void{
 				material[acc.@name].x = px.value;
 				material[acc.@name].y = py.value;
 			};
+			
+			px.addEventListener(ControlEvent.CHANGE, change);
+			py.addEventListener(ControlEvent.CHANGE, change);
 			
 			content.maxHeight += 20;
 			content.minHeight += 20;

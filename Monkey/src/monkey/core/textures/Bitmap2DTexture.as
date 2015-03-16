@@ -136,12 +136,19 @@ package monkey.core.textures {
 		}
 		
 		public function set bitmapData(value : BitmapData) : void {
+			if (this._bitmapData == value) {
+				return;
+			}
+			if (this._bitmapData) {
+				this._bitmapData.dispose();
+			}
 			this._bitmapData = value;
 			if (value) {
 				this._width  = value.width;
 				this._height = value.height;
 				this._transparent = value.transparent;
 			}
+			this.download(true);
 		}
 		
 	}

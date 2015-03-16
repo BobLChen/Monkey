@@ -250,8 +250,12 @@ package monkey.core.shader {
 		public function download() : void {
 			if (this.scene) {
 				this.scene.removeEventListener(Scene3D.CREATE_EVENT, this.context3DEvent);
-				this.scene = null;
+				var idx : int = scene.shaders.indexOf(this);
+				if (idx != -1) {
+					this.scene.shaders.splice(idx, 1);
+				}
 			}
+			this.scene = null;
 			this.downloadProgram();
 		}
 				
@@ -294,6 +298,9 @@ package monkey.core.shader {
 		private function context3DEvent(event : Event = null) : void {
 			this.scene.addEventListener(Scene3D.CREATE_EVENT, context3DEvent);
 			this.build();
+			if (this.scene.shaders.indexOf(this) == -1) {
+				this.scene.shaders.push(this);
+			}
 		}
 		
 		/**
