@@ -94,7 +94,7 @@ package monkey.core.materials {
 		public function dispose():void {
 			this._shader = null;
 		}
-				
+		
 		/**
 		 * 更新材质 
 		 * 

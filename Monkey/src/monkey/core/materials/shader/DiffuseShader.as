@@ -16,8 +16,15 @@ package monkey.core.materials.shader {
 			this.addFilter(filter);
 		}
 		
-		public function set texture(value : Texture3D) : void {
-			this.filter.texture = value;
+		public function set texture(texture : Texture3D) : void {
+			this.filter.texture = texture;
+		}
+		
+		public function tillingOffset(repeatX:Number, repeatY:Number, offsetX:Number, offsetY:Number) : void {
+			this.filter.offsetX = offsetX;
+			this.filter.offsetY = offsetY;
+			this.filter.repeatX = repeatX;
+			this.filter.repeatY = repeatY;
 		}
 		
 		public static function get instance() : DiffuseShader {

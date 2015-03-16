@@ -7,12 +7,48 @@ package monkey.core.materials {
 	public class DiffuseMaterial extends Material3D {
 		
 		private var _texture : Texture3D;
+		private var _offsetX : Number = 0;
+		private var _offsetY : Number = 0;
+		private var _repeatX : Number = 1;
+		private var _repeatY : Number = 1;
 		
 		public function DiffuseMaterial(texture : Texture3D) {
 			super(DiffuseShader.instance);
 			this.texture = texture;
 		}
 		
+		public function get repeatY():Number {
+			return _repeatY;
+		}
+
+		public function set repeatY(value:Number):void {
+			_repeatY = value;
+		}
+
+		public function get repeatX():Number {
+			return _repeatX;
+		}
+
+		public function set repeatX(value:Number):void {
+			_repeatX = value;
+		}
+
+		public function get offsetY():Number {
+			return _offsetY;
+		}
+
+		public function set offsetY(value:Number):void {
+			_offsetY = value;
+		}
+
+		public function get offsetX():Number {
+			return _offsetX;
+		}
+
+		public function set offsetX(value:Number):void {
+			_offsetX = value;
+		}
+
 		override public function clone():Material3D {
 			var c : DiffuseMaterial = new DiffuseMaterial(texture.clone());
 			return c;
@@ -33,7 +69,8 @@ package monkey.core.materials {
 		
 		override protected function setShaderDatas(scene:Scene3D):void {
 			this.texture.upload(scene);
-			DiffuseShader(shader).texture = this.texture;			
+			DiffuseShader(shader).texture = this.texture;	
+			DiffuseShader(shader).tillingOffset(repeatX, repeatY, offsetX, offsetY);
 		}
 		
 	}

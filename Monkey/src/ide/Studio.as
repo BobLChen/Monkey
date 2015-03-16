@@ -155,8 +155,8 @@ package ide {
 			app.initPlugin(new CreatePlugin());
 			app.initPlugin(new SelectionPlugin());
 			app.initPlugin(new PropertiesPlugin());
-			app.initPlugin(new HierarchyPlugin());
 			app.initPlugin(new MaterialPlugin());
+			app.initPlugin(new HierarchyPlugin());
 			app.initPlugin(new ExportPlugin());
 			
 			this.stage.addEventListener(Event.RESIZE, onResize);

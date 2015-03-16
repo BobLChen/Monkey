@@ -42,6 +42,10 @@ package ide.utils {
 			
 			this.fbxPath = path;
 			
+			if (!NativeProcess.isSupported) {
+				App.core.dispatchEvent(new LogEvent("不支持Fbx插件"));
+			}
+			
 			var nativeProcessStartupInfo : NativeProcessStartupInfo = new NativeProcessStartupInfo();
 			var file : File = File.applicationDirectory.resolvePath("FbxParser.py");
 			nativeProcessStartupInfo.executable = file;
@@ -75,6 +79,8 @@ package ide.utils {
 			args.push("-max_m34=" + m34BoneNum);
 			args.push("-path=" + path);
 			args.push("-mount=" + mount);
+			
+			App.core.dispatchEvent(new LogEvent(file.url + "-" + file.exists));
 			
 			nativeProcessStartupInfo.arguments = args;
 			process = new NativeProcess();

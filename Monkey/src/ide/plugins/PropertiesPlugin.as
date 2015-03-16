@@ -19,6 +19,7 @@ package ide.plugins {
 	import ide.plugins.groups.properties.TransformGroup;
 	import ide.plugins.groups.properties.WaterGroup;
 	
+	import monkey.core.base.Bone3D;
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.entities.particles.ParticleSystem;
@@ -110,8 +111,10 @@ package ide.plugins {
 		}
 		
 		private function changeSelectionEvent(event : Event) : void {
+			
 			var objects : Array = this._app.selection.objects;
 			var main : Object3D = this._app.selection.main;
+			
 			if (!main) {
 				main = this._app.scene;
 			}
@@ -148,11 +151,9 @@ package ide.plugins {
 				this._icon.gotoAndStop(4);
 			} else if (main is Light3D) {
 				this._icon.gotoAndStop(11);
-			} 
-//			else if (main is Bone3D) {
-//				this._icon.gotoAndStop(10);
-//			} 
-			else {
+			}  else if (main is Bone3D) {
+				this._icon.gotoAndStop(10);
+			} else {
 				this._icon.gotoAndStop(2);
 			}
 			

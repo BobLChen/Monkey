@@ -4,15 +4,13 @@ package monkey.core.utils {
 
 	public class Color {
 		
-		public static const WHITE : Color = new Color(0xFFFFFF);
-		public static const GRAY  : Color = new Color(0x777777);
-		
 		private var _color : uint;
 		private var _rgba  : Vector3D;
-		
-		public function Color(color : uint = 0xFFFFFF) {
+				
+		public function Color(color : uint = 0xFFFFFF, alpha : Number = 1) {
 			this._rgba = new Vector3D();
 			this.color = color;
+			this.alpha = alpha;
 		}
 					
 		public function get color():uint {
@@ -39,11 +37,19 @@ package monkey.core.utils {
 		}
 		
 		public function set alpha(value : Number) : void {
-			this._rgba.w;	
+			this._rgba.w = value;	
 		}
 		
 		public function get alpha() : Number {
 			return this._rgba.w;
+		}
+		
+		public static function get WHITE() : Color {
+			return new Color(0xFFFFFF);
+		}
+		
+		public static function get GRAY() : Color {
+			return new Color(0x777777);
 		}
 
 	}

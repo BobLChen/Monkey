@@ -11,9 +11,9 @@ package {
 		public function Monkey() {
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
 			this.stage.align = StageAlign.TOP_LEFT;
-			this.addChild(new Studio());
+			this.addChild(new Studio());  
 			this.stage.nativeWindow.maximize(); 
-		}
+		}  
 		
 	}
 }

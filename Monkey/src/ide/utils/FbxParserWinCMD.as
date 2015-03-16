@@ -37,6 +37,10 @@ package ide.utils
 			
 			this.fbxPath = path;
 			
+			if (!NativeProcess.isSupported) {
+				App.core.dispatchEvent(new LogEvent("不支持Fbx插件"));
+			}
+			
 			var info : NativeProcessStartupInfo = new NativeProcessStartupInfo();
 			info.executable = new File("c:\\windows\\system32\\cmd.exe");
 			
@@ -80,6 +84,9 @@ package ide.utils
 			args.push("-max_m34=" + m34BoneNum);
 			args.push("-path=" + path);
 			args.push("-mount=" + mount);
+			
+			App.core.dispatchEvent(new LogEvent(info.executable.url + "-" + info.executable.exists));
+			
 			var cmd : String = args.join(" ");
 			process.standardInput.writeUTFBytes("python FbxParser.py " + cmd + "\n");
 		}

@@ -6,8 +6,7 @@ package ide.events {
 
 		public static const CHANGE 			: String = "selection:change";
 		public static const CHANGE_MATERIAL : String = "selection:changeMaterial";
-		public static const CHANGE_GEOMETRY : String = "selection:changeGeometry";
-		
+				
 		public function SelectionEvent(type : String) {
 			super(type, false, false);
 		}

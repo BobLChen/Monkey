@@ -39,7 +39,7 @@
 			this._box.margins = 0;
 			this._box.space = 1;
 			this._arrow = new Arrow();
-
+			
 			this._header.transform.colorTransform = Style.colorTransform;
 			this._header.addEventListener(MouseEvent.CLICK, this.clickHeaderEvent, false, 0, true);
 			this._header.buttonMode = true;
@@ -63,6 +63,10 @@
 			this._box.height = value;
 			this._box.update();
 			this._box.draw();
+		}
+		
+		public function get contentHeight() : Number {
+			return _box.maxHeight;
 		}
 		
 		public function set margins(margin : Number) : void {

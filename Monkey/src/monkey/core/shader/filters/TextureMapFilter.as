@@ -85,9 +85,9 @@ package monkey.core.shader.filters {
 				// 复制uv数据到ft0
 				code += "mov " + ft0 + ", " + regCache.getV(Surface3D.UV0) + " \n";
 				// uv * repeat
-				code += "mul " + ft0 + ".xy, " + ft0 + ".xy, " + fc0 + ".xy \n";
+				code += "mul " + ft0 + ".xy, " + ft0 + ".xyxy, " + fc0 + ".xyxy \n";
 				// uv * repeat + offset
-				code += "add " + ft0 + ".xy, " + ft0 + ".xy, " + fc0 + ".zw \n";
+				code += "add " + ft0 + ".xy, " + ft0 + ".xyxy, " + fc0 + ".zwzw \n";
 				// sample
 				code += "tex " + regCache.oc + ", " + ft0 + ".xy, " + fs0 + description(label.texture);
 			}

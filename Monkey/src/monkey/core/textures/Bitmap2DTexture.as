@@ -134,7 +134,7 @@ package monkey.core.textures {
 		public function get bitmapData() : BitmapData {
 			return _bitmapData;
 		}
-
+		
 		public function set bitmapData(value : BitmapData) : void {
 			this._bitmapData = value;
 			if (value) {

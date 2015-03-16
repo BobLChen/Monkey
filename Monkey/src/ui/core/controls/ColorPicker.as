@@ -21,12 +21,12 @@
 		private static var v : int;
 		private static var nullBitmapData : BitmapData = new BitmapData(32, 32, false, 0xFF0000);
 
-		private var _picker : Sprite;
-		private var _color : int = 0xFFFFFF;
-		private var _alpha : Number = 1;
-		private var _mode : int;
-		private var _colorPanel : ColorPanel;
-		private var _colorWindow : Window;
+		private var _picker 		: Sprite;
+		private var _color 			: int = 0xFFFFFF;
+		private var _alpha 			: Number = 1;
+		private var _mode 			: int;
+		private var _colorPanel 	: ColorPanel;
+		private var _colorWindow 	: Window;
 
 		public function ColorPicker(color : int = 0xFFFFFF, alpha : Number = 1, mode : int = 0) {
 			this._colorPanel = new ColorPanel();
@@ -114,7 +114,7 @@
 			this._alpha = value;
 			this.draw();
 		}
-
+		
 		public function get alpha() : Number {
 			return this._alpha;
 		}
