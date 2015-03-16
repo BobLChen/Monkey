@@ -121,7 +121,7 @@
 	<!-- only the profiles which your application does support. -->
 	<!-- <supportedProfiles>desktop extendedDesktop mobileDevice extendedMobileDevice</supportedProfiles> -->
 	
-	<supportedProfiles>desktop extendedDesktop</supportedProfiles>
+	<supportedProfiles>extendedDesktop desktop</supportedProfiles>
 	
 	<!-- Languages supported by application -->
 	<!-- Only these languages can be specified -->
