@@ -58,19 +58,25 @@ package ide.utils {
 			mesh.renderer.material = new ColorMaterial(Color.WHITE);
 			this.addChild(mesh);
 			// 读取贴图
-			var texFile : File = new File(this.file.parent.url + "/" + cfg.textures.DiffuseColor);
-			if (texFile.exists) {
-				fs = new FileStream();
-				fs.open(texFile, FileMode.READ);
-				var bmpBytes : ByteArray = new ByteArray();
-				fs.readBytes(bmpBytes, 0, fs.bytesAvailable);
-				fs.close();
-				var loader : Loader = new Loader();
+			if (cfg.textures.DiffuseColor.length >= 1) {
+				var loader : Loader = loadBitmapdata(new File(this.file.parent.url + "/" + cfg.textures.DiffuseColor[0]));
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
 					mesh.renderer.material = new DiffuseMaterial(new Bitmap2DTexture((loader.content as Bitmap).bitmapData));
 				});
-				loader.loadBytes(bmpBytes);
 			}
+		}
+		
+		private function loadBitmapdata(file : File) : Loader {
+			var loader : Loader = new Loader();
+			if (file.exists) {
+				var fs : FileStream = new FileStream();
+				fs.open(file, FileMode.READ);
+				var bytes : ByteArray = new ByteArray();
+				fs.readBytes(bytes, 0, fs.bytesAvailable);
+				fs.close();
+				loader.loadBytes(bytes);	
+			}
+			return loader;
 		}
 		
 	}
