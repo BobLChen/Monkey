@@ -15,7 +15,6 @@ package ide.plugins {
 	import monkey.core.collisions.MouseCollision;
 	import monkey.core.collisions.collider.Collider;
 	import monkey.core.entities.Grid3D;
-	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.FPSStats;
@@ -107,12 +106,11 @@ package ide.plugins {
 		
 		private function contextCreateEvent(event : Event) : void {
 			Input3D.rightClickEnabled = true;
-//			this.context.enableErrorChecking = true;
 			this._scenePanel.update();
 			this._scenePanel.draw();
 			this.addEventListener(ENTER_FRAME_EVENT, onEnterFrame);
 		}
-				
+		
 		public function init(app : App) : void {
 			this._app = app;
 			this._app.scene = this;
@@ -124,6 +122,9 @@ package ide.plugins {
 		}
 		
 		private function sceneChangeEvent(event:Event) : void {
+			if (this._app.selection.main && this._app.selection.main.animator) {
+				this._scenePanel.play = this._app.selection.main.animator.playing;
+			}
 			this.forEach(function(child:Object3D):void{
 				var collider : Collider = child.getComponent(Collider) as Collider;
 				if (!collider && child.renderer && child.renderer.mesh) {
@@ -137,53 +138,41 @@ package ide.plugins {
 		public function start() : void {
 			this._app.selection.objects = [this];
 			this._scenePanel.addEventListener(FrameEvent.CHANGE, changeFrame);
+			this._app.addEventListener(FrameEvent.STOP, onStopFrame);
+		}
+		
+		private function onStopFrame(event:Event) : void {
+			this._scenePanel.stopMovie();
+			if (this._app.selection.main && this._app.selection.main.animator) {
+				this._scenePanel.rule.currentFrame = this._app.selection.main.animator.currentFrame;
+			}
 		}
 		
 		private function changeFrame(event : Event) : void {
-			var obj : Object3D = this._app.selection.main;
-			if (obj) {
+			if (this._app.selection.main) {
 				this._lastFrame = this._scenePanel.rule.currentFrame;
-				if (obj.animator) {
-					obj.animator.gotoAndStop(this._scenePanel.rule.currentFrame);
-				}
-				if (obj is ParticleSystem) {
-					(obj as ParticleSystem).animator.gotoAndStop(this._lastFrame * 1 / this._app.stage.frameRate);
-				}
+				this._scenePanel.play = false;
+				this._app.selection.main.gotoAndStop(this._lastFrame);
 			}
 		}
 		
 		private function onEnterFrame(event:Event) : void {
-			
 			this._app.dispatchEvent(new SceneEvent(SceneEvent.UPDATE_EVENT));
-			
 			var inScene : Boolean = this.viewPort.contains(Input3D.mouseX, Input3D.mouseY);
 			if (inScene) {
 				if (Input3D.mouseDown || Input3D.rightMouseDown || Input3D.middleMouseDown) {
 					App.core.stage.focus = null;
 				}
-				if (Input3D.keyDown(Input3D.CONTROL) && Input3D.keyDown(Input3D.D)) {
-					this._app.selection.deleted();
-				} else if (Input3D.keyDown(Input3D.CONTROL) && Input3D.keyDown(Input3D.X)) {
-					this._app.selection.cut();
-				} else if (Input3D.keyDown(Input3D.CONTROL) && Input3D.keyDown(Input3D.V)) {
-					this._app.selection.paste();
-				}
 			}
-			
 			if (this._scenePanel.play) {
 				this._scenePanel.rule.currentFrame = this._lastFrame + Time3D.deltaTime * this._app.stage.frameRate;
 				this._lastFrame = this._scenePanel.rule.currentFrame;
-				var obj : Object3D = this._app.selection.main;
-				if (obj && obj.animator) {
-					obj.animator.gotoAndStop(this._scenePanel.rule.currentFrame);
+				if (this._app.selection.main) {
+					this._app.selection.main.gotoAndStop(this._lastFrame);
+				} else {
+					this.gotoAndStop(this._lastFrame);
 				}
-				if (obj && obj is ParticleSystem) {
-					(obj as ParticleSystem).animator.gotoAndStop(this._scenePanel.rule.currentFrame * 1.0 / this._app.stage.frameRate);
-				}
-//				this.gotoAndStop(this._scenePanel.rule.currentFrame);
-				this._app.dispatchEvent(new FrameEvent(FrameEvent.CHANGING));
 			}
-					
 			if (this._action == ACTION_NULL) {
 				if (inScene && Input3D.rightMouseHit) {
 					this._action = ACTION_ORIBIT;
@@ -198,10 +187,10 @@ package ide.plugins {
 			if (App.core.stage.focus) {
 				var speed : int = Input3D.keyDown(Input3D.SHIFT) ? 2 : 1;
 				if (Input3D.keyDown(Input3D.UP)) {
-					this.camera.transform.translateZ(_scenePanel.footsSpeed.value * speed);
+					this.camera.transform.translateZ(this._scenePanel.footsSpeed.value * speed);
 				}
 				if (Input3D.keyDown(Input3D.DOWN)) {
-					this.camera.transform.translateZ(-_scenePanel.footsSpeed.value * speed);
+					this.camera.transform.translateZ(-this._scenePanel.footsSpeed.value * speed);
 				}
 				if (Input3D.keyDown(Input3D.LEFT)) {
 					this.camera.transform.translateX(-this._scenePanel.footsSpeed.value * speed);
@@ -301,11 +290,11 @@ package ide.plugins {
 			}
 						
 		}
-				
-		public function renderToBitmapData(camera1 : Camera3D, bmp : BitmapData) : void {
+	
+		public function renderToBitmapData(camera : Camera3D, bmp : BitmapData) : void {
 			this.context.clear(0, 0, 0, 0);
 			this.antialias = 8;
-			super.render(camera1);
+			super.render(camera);
 			this.context.drawToBitmapData(bmp);
 		}
 		
@@ -315,6 +304,6 @@ package ide.plugins {
 			}
 			super.render();
 		}
-			
+		
 	}
 }

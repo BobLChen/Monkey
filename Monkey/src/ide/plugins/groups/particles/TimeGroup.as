@@ -3,6 +3,7 @@ package ide.plugins.groups.particles {
 	import flash.events.Event;
 	
 	import ide.App;
+	import ide.events.FrameEvent;
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.entities.particles.ParticleSystem;
@@ -21,7 +22,7 @@ package ide.plugins.groups.particles {
 			super();
 			this.play = new Button("Play");
 			this.stop = new Button("Stop");
-			this.time = new Spinner();
+			this.time = new Spinner(0, 0, 0, 2, 1);
 			this.orientation = HORIZONTAL;
 			this.minHeight = 18;
 			this.maxHeight = 18;
@@ -38,24 +39,26 @@ package ide.plugins.groups.particles {
 		
 		private function onChangeTime(event:Event) : void {
 			this.play.text = "Play";
-			this.particle.animator.gotoAndStop(this.time.value);
+			this.particle.gotoAndStop(this.time.value);
+			this.app.dispatchEvent(new FrameEvent(FrameEvent.STOP));
 		}
 		
 		private function onClickStop(event:Event) : void {
-			this.particle.animator.gotoAndStop(0);
+			this.particle.gotoAndStop(0);
 			this.time.value = 0;
 			this.play.text = "Play";
+			this.app.dispatchEvent(new FrameEvent(FrameEvent.STOP));
 		}
-		
+				
 		private function onClickPlay(event:Event) : void {
 			if (this.play.text == "Play") {
 				this.play.text = "Pause";
-				this.particle.animator.play();
+				this.particle.play();
 			} else {
 				this.play.text = "Play";
-				this.particle.animator.stop();
+				this.particle.stop();
 			}
-		}		
+		}
 		
 		override public function updateGroup(app:App, particle:ParticleSystem):void {
 			super.updateGroup(app, particle);

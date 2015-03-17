@@ -75,6 +75,50 @@ package monkey.core.base {
 			this.addComponent(_transform);
 		}
 		
+		public function gotoAndStop(frame : Object, includeChildren : Boolean = true) : void {
+			if (animator) {
+				animator.gotoAndStop(frame);
+			}
+			if (includeChildren) {
+				for each (var child : Object3D in children) {
+					child.gotoAndStop(frame, includeChildren);
+				}
+			}
+		}
+		
+		public function gotoAndPlay(frame : Object, animationMode : int = Animator.ANIMATION_LOOP_MODE, includeChildren : Boolean = true) : void {
+			if (animator) {
+				animator.gotoAndPlay(frame, animationMode);
+			}
+			if (includeChildren) {
+				for each (var child : Object3D in children) {
+					child.gotoAndPlay(frame, animationMode, includeChildren);
+				}
+			}
+		}
+		
+		public function play(animationMode : int = Animator.ANIMATION_STOP_MODE, includeChildren : Boolean = true) : void {
+			if (animator) {
+				animator.play(animationMode);
+			}
+			if (includeChildren) {
+				for each (var child : Object3D in children) {
+					child.play(animationMode, includeChildren);
+				}
+			}
+		}
+		
+		public function stop(includeChildren : Boolean = true) : void {
+			if (animator) {
+				animator.stop();
+			}
+			if (includeChildren) {
+				for each (var child : Object3D in children) {
+					child.stop(includeChildren);
+				}
+			}
+		}
+		
 		public function get renderer() : MeshRenderer {
 			return this.getComponent(MeshRenderer) as MeshRenderer;
 		}

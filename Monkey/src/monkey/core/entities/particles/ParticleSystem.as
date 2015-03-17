@@ -779,7 +779,7 @@ package monkey.core.entities.particles {
 			Device3D.mvp.append(scene.camera.viewProjection);
 			Device3D.drawOBJNum++;
 			// 设置时间
-			this.material.time = this.animator.currentFrame - this.startDelay;
+			this.material.time = this.animator.currentFrame * this.animator.hz - this.startDelay;
 			// 绘制组件
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {

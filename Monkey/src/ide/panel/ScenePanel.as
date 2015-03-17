@@ -150,7 +150,7 @@ package ide.panel {
 			this._playButton.addEventListener(ControlEvent.CLICK, playOrStop);
 			this._headButton.addEventListener(ControlEvent.CLICK, gotoHead);
 			this._rule.addEventListener(ControlEvent.CHANGE, changeFrame);
-			
+						
 			this.margins  = 0;
 			this.space 	  = 0;
 			this.minWidth = -1;
@@ -168,7 +168,7 @@ package ide.panel {
 			this._play = true;
 			this._playButton.source = new StopIcon();
 		}
-				
+		
 		public function stopMovie() : void {
 			this._play = false;
 			this._playButton.source = new PlayIcon();
@@ -228,6 +228,11 @@ package ide.panel {
 		
 		public function set play(value : Boolean) : void {
 			_play = value;
+			if (value) {
+				playMovie();
+			} else {
+				stopMovie();
+			}
 		}
 		
 		private function ruleHead(event : Event) : void {

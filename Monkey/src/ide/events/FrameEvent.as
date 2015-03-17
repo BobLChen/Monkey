@@ -6,6 +6,7 @@ package ide.events {
 
 		public static const CHANGE   : String = "frame:change";
 		public static const CHANGING : String = "frame:changing";
+		public static const STOP	 : String = "frame:stop";
 
 		public function FrameEvent(type : String) {
 			super(type);

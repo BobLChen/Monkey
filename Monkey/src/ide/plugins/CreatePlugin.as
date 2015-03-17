@@ -104,8 +104,8 @@ package ide.plugins {
 		
 		private function createParticles(e : Event) : void {
 			var particle : ParticleSystem = new ParticleSystem();
-			particle.animator.play();
 			particle.build();
+			particle.play();
 			
 			var data : LifetimeData = new LifetimeData();
 			data.init();

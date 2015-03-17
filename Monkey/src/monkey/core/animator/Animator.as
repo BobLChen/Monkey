@@ -3,7 +3,6 @@ package monkey.core.animator {
 	import flash.events.Event;
 	import flash.utils.Dictionary;
 	
-	import monkey.core.base.Object3D;
 	import monkey.core.components.Component3D;
 	import monkey.core.interfaces.IComponent;
 	import monkey.core.utils.Time3D;
@@ -28,9 +27,8 @@ package monkey.core.animator {
 		
 		/** 动画标签 */
 		public var labels 			: Dictionary;
-		/** 总帧数 */
-		public var totalFrames 		: Number = 0;
 		
+		protected var _totalFrames 	: Number = 0;
 		protected var _fps 			: Number;			// 帧频
 		protected var _hz  	 		: Number;			// 播放速度
 		protected var _from	 		: Number;			// 起始帧
@@ -46,6 +44,18 @@ package monkey.core.animator {
 			this.fps = 60;
 			this.labels = new Dictionary();
 			this.frameSpeed = 1.0;
+		}
+		
+		public function get hz():Number {
+			return _hz;
+		}
+
+		public function get totalFrames():Number {
+			return _totalFrames;
+		}
+
+		public function set totalFrames(value:Number):void {
+			_totalFrames = value;
 		}
 		
 		/**
@@ -116,14 +126,14 @@ package monkey.core.animator {
 		public function get from():Number {
 			return _from;
 		}
-
+		
 		/**
 		 * goto and stop 
 		 * @param frame
 		 * @param includeChildren
 		 * 
 		 */		
-		public function gotoAndStop(frame : Object, includeChildren : Boolean = true) : void {
+		public function gotoAndStop(frame : Object) : void {
 			// 动画标签
 			if (frame is Label3D) {
 				this.addLabel(frame as Label3D);
@@ -136,22 +146,12 @@ package monkey.core.animator {
 				this._to   = (labels[frame] as Label3D).to;
 				this.currentFrame = from;
 			// 动画帧位置
-			} else if (frame as Number) {
+			} else {
 				this._from = 0;
 				this._to   = totalFrames - 1;
 				this.currentFrame = frame as Number;
-			} else {
-				return;
 			}
 			this._playing = false;
-			
-			if (includeChildren && object3D) {
-				for each (var child : Object3D in object3D.children) {
-					if (child.animator) {
-						child.animator.gotoAndStop(frame, includeChildren);
-					}
-				}
-			}
 		}
 		
 		/**
@@ -161,7 +161,7 @@ package monkey.core.animator {
 		 * @param includeChildren	是否一起播放子节点动画
 		 * 
 		 */		
-		public function gotoAndPlay(frame : Object, animationMode : int = ANIMATION_LOOP_MODE, includeChildren : Boolean = true) : void {
+		public function gotoAndPlay(frame : Object, animationMode : int = ANIMATION_LOOP_MODE) : void {
 			// 动画标签
 			if (frame is Label3D) {
 				this._currentLabel = frame as Label3D;
@@ -175,24 +175,14 @@ package monkey.core.animator {
 				this._to   = currentLabel.to;
 				this._frameSpeed  = currentLabel.speed;
 				this.currentFrame = from;
-			} else if (frame as Number) {
+			} else {
 				this._currentLabel = null;
 				this._from = frame as Number;
 				this._to   = totalFrames - 1;
 				this.currentFrame = frame as Number;
-			} else {
-				return;
 			}
 			this._playing = true;
 			this._animationMode = animationMode;
-			
-			if (includeChildren && object3D) {
-				for each (var child : Object3D in object3D) {
-					if (child.animator) {
-						child.animator.gotoAndPlay(frame, animationMode, includeChildren);
-					}
-				}
-			}
 		}
 		
 		/**
@@ -200,38 +190,23 @@ package monkey.core.animator {
 		 * @param includeChildren	是否暂停子节点动画
 		 * 
 		 */		
-		public function stop(includeChildren : Boolean = true) : void {
+		public function stop() : void {
 			this._playing = false;
-			if (includeChildren && object3D) {
-				for each (var child : Object3D in object3D) {
-					if (child.animator) {
-						child.animator.play(animationMode, includeChildren);
-					}
-				}
-			}
 		}
-				
+		
 		/**
 		 * play 
 		 * @param animationMode		动画模式
 		 * @param includeChildren	是否播放子节点动画
 		 * 
 		 */		
-		public function play(animationMode : int = ANIMATION_LOOP_MODE, includeChildren : Boolean = true) : void {
+		public function play(animationMode : int = ANIMATION_STOP_MODE) : void {
 			this._from = 0;
 			this._to   = totalFrames - 1;
 			this._playing = true;
 			this._animationMode = animationMode;
-			
-			if (includeChildren && object3D) {
-				for each (var child : Object3D in object3D) {
-					if (child.animator) {
-						child.animator.play(animationMode, includeChildren);
-					}
-				}
-			}
 		}
-		
+				
 		/**
 		 * 更新 
 		 * 
@@ -242,7 +217,7 @@ package monkey.core.animator {
 			}
 			this.nextFrame();
 		}
-						
+		
 		/**
 		 * 下一帧 
 		 */		
