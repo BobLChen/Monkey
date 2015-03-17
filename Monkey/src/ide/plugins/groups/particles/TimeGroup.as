@@ -22,7 +22,7 @@ package ide.plugins.groups.particles {
 			super();
 			this.play = new Button("Play");
 			this.stop = new Button("Stop");
-			this.time = new Spinner(0, 0, 0, 2, 1);
+			this.time = new Spinner(0, 0, Number.MAX_VALUE, 2, 1);
 			this.orientation = HORIZONTAL;
 			this.minHeight = 18;
 			this.maxHeight = 18;

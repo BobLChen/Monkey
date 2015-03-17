@@ -110,7 +110,7 @@ package ide.plugins.groups.particles.start {
 			super.updateGroup(app, particle);
 			this.removeAllControls();
 			this.addControl(this.header);
-			this.particle.addEventListener(ParticleSystem.BUILD, onParticleBuild);
+			this.particle.addEventListener(ParticleSystem.BUILD_EVENT, onParticleBuild);
 			if (particle.startSpeed is DataConst) {
 				this.orientation = HORIZONTAL;
 				this.addControl(this.oneConst);

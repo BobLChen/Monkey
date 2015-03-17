@@ -38,10 +38,10 @@ package monkey.core.entities.particles {
 		[Embed(source="ParticleSystem.png")]
 		private static const DEFAULT_IMG	: Class;										// 粒子默认贴图
 		/** 粒子系统build事件 */
-		public  static const BUILD		   	: String = "ParticleSystem:BUILD";
+		public  static const BUILD_EVENT		   	: String = "ParticleSystem:BUILD";
 		/** lifetime最大关键帧数量 */
 		public  static const MAX_KEY_NUM 	: int = 6;
-		private static const buildEvent	   	: Event = new Event(BUILD);						// 粒子系统创建完成事件
+		private static const buildEvent	   	: Event = new Event(BUILD_EVENT);						// 粒子系统创建完成事件
 		private static const DELAY_BIAS		: Number = 0.001;								// 延时时间偏移参数
 		private static const matrix3d 		: Matrix3D = new Matrix3D();					// matrix缓存
 		private static const vector3d 		: Vector3D = new Vector3D();					// vector缓存
@@ -157,8 +157,7 @@ package monkey.core.entities.particles {
 			this.createParticleMesh();			// 生成粒子对应的网格
 			this.shape.generate(this);			// 生成shape对应的数据，包括粒子的位置、方向、uv、索引
 			this.createParticleAttribute();		// 更新粒子属性
-			
-			if (hasEventListener(BUILD)) {
+			if (this.hasEventListener(BUILD_EVENT)) {
 				this.dispatchEvent(buildEvent); 	// 完成事件
 			}
 		}

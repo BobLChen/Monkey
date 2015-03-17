@@ -117,7 +117,7 @@ package ide.plugins.groups.particles.start {
 			this.addControl(this.header);
 			this.minHeight = 20;
 			this.maxHeight = 20;
-			this.particle.addEventListener(ParticleSystem.BUILD, onParticleBuild);
+			this.particle.addEventListener(ParticleSystem.BUILD_EVENT, onParticleBuild);
 			if (particle.startLifeTime is DataConst) {
 				this.orientation = HORIZONTAL;
 				this.addControl(this.oneConst);

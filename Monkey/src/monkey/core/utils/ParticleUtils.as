@@ -138,7 +138,7 @@ package monkey.core.utils {
 			ret.renderer.material.sourceFactor  = config.sourceFactor;
 			ret.renderer.material.destFactor	= config.destFactor;
 			
-			ret.animator.totalFrames	= config.totalFrames;
+			ret.animator.totalFrames	= config.totalFrames == -1 ? Number.MAX_VALUE : config.totalFrames;
 			ret.userData.imageName 		= config.imageName;
 			ret.userData.uuid 			= config.uuid;
 			ret.userData.optimize   	= config.optimize;

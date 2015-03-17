@@ -28,7 +28,7 @@ package ide.plugins.groups.particles.base {
 		override public function updateGroup(app:App, particle:ParticleSystem):void {
 			super.updateGroup(app, particle);
 			this.nums.text = "" + particle.maxParticles;
-			this.particle.addEventListener(ParticleSystem.BUILD, onBuild);
+			this.particle.addEventListener(ParticleSystem.BUILD_EVENT, onBuild);
 		}
 		
 		private function onBuild(event:Event) : void {
