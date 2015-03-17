@@ -58,13 +58,13 @@ package monkey.core.base {
 		public var name 	: String = "";
 		public var userData : Object;
 		
-		private var _components 	: Vector.<IComponent>;			// 所有组件
-		private var _transform  	: Transform3D;					// transform
-		private var _children   	: Vector.<Object3D>;			// 子节点
-		private var _parent			: Object3D;						// 父级
-		private var _visible		: Boolean;						// 是否显示
-		private var _disposed		: Boolean;						// 是否已经被销毁
-		private var componentDict   : Dictionary;					// 组件字典，懒汉模式
+		protected var _components 	: Vector.<IComponent>;			// 所有组件
+		protected var _transform  	: Transform3D;					// transform
+		protected var _children   	: Vector.<Object3D>;			// 子节点
+		protected var _parent		: Object3D;						// 父级
+		protected var _visible		: Boolean;						// 是否显示
+		protected var _disposed		: Boolean;						// 是否已经被销毁
+		protected var componentDict : Dictionary;					// 组件字典，懒汉模式
 						
 		public function Object3D() {
 			super();
