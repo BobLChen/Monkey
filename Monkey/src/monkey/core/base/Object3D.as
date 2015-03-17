@@ -13,6 +13,8 @@ package monkey.core.base {
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Device3D;
+	import monkey.core.utils.Matrix3DUtils;
+	import monkey.core.utils.Vector3DUtils;
 	
 	/**
 	 * object3D 
@@ -475,6 +477,16 @@ package monkey.core.base {
 			if (hasEventListener(DISPOSE_EVENT)) {
 				this.dispatchEvent(disposedEvent);
 			}
+		}
+		
+		public function inView() : Boolean {
+			var vec : Vector3D = Vector3DUtils.vec0;
+			this.transform.getPosition(false, vec);
+			Matrix3DUtils.transformVector(Device3D.camera.view, vec, vec);
+			if (vec.z < Device3D.camera.near || vec.z > Device3D.camera.far) {
+				return false;
+			}
+			return true;
 		}
 		
 		/**
