@@ -22,7 +22,7 @@ package ide.plugins {
 			this._app = app;
 			this._app.addMenu("File/Open File",  openFile);
 			this._app.addMenu("File/Open Files", openFiles);
-			this._app.addMenu("File/Open Fbx",	   openFbx);
+			this._app.addMenu("File/Open Fbx",	 openFbx);
 			this._app.addMenu("File/Open Scene", openScene);
 			
 			FilePluginUtils.init(app);

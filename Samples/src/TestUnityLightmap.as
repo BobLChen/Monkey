@@ -10,15 +10,13 @@ package {
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
-	import monkey.core.entities.primitives.Cube;
-	import monkey.core.materials.ColorMaterial;
 	import monkey.core.materials.Material3D;
 	import monkey.core.renderer.MeshRenderer;
+	import monkey.core.scene.Scene3D;
 	import monkey.core.scene.Viewer3D;
 	import monkey.core.shader.Shader3D;
 	import monkey.core.shader.filters.TextureMapFilter;
 	import monkey.core.textures.Bitmap2DTexture;
-	import monkey.core.utils.Color;
 	import monkey.core.utils.FPSStats;
 
 	public class TestUnityLightmap extends Sprite {
@@ -38,16 +36,11 @@ package {
 			this.stage.align 	 = StageAlign.TOP_LEFT;
 			this.stage.frameRate = 60;
 			this.scene = new Viewer3D(this);
+			this.scene.addEventListener(Scene3D.CREATE_EVENT, onCreate);
 			this.scene.autoResize = true;  
 			this.scene.camera.transform.z = -3;
 			this.scene.camera.transform.lookAt(0, 0, 0);
 			this.addChild(new FPSStats());
-			
-			var obj : Object3D = new Object3D();
-			obj.addComponent(new MeshRenderer(new Cube(), new ColorMaterial(Color.GRAY)));
-//			this.scene.addChild(obj);
-			
-//			this.addChild(new IMAGE());  
 			
 			var bytes : ByteArray = new DATA();
 			bytes.endian = Endian.LITTLE_ENDIAN;
@@ -98,6 +91,10 @@ package {
 			});
 			
 			this.scene.addChild(uobj);
+		}
+		
+		protected function onCreate(event:Event) : void {
+			this.scene.context.enableErrorChecking = true;			
 		}
 	}
 }
