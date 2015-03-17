@@ -55,19 +55,19 @@ package monkey.core.renderer {
 			return c;
 		}
 		
-		override public function dispose():void {
-			if (disposed) {
+		override public function dispose(force : Boolean = false):void {
+			if (this.disposed) {
 				return;
 			}
-			super.dispose();
-			if (mesh) {
-				mesh.dispose();
+			super.dispose(force);
+			if (this.mesh) {
+				this.mesh.dispose(force);
 			}
-			if (material) {
-				material.dispose();
+			if (this.material) {
+				this.material.dispose(force);
 			}
-			mesh = null;
-			material = null;
+			this.mesh = null;
+			this.material = null;
 		}
 		
 		public function get inView() : Boolean {

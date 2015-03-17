@@ -460,8 +460,8 @@ package monkey.core.base {
 		/**
 		 * 释放 
 		 */		
-		public function dispose() : void {
-			if (disposed) {
+		public function dispose(force : Boolean = false) : void {
+			if (this.disposed) {
 				return;
 			}
 			if (this.parent) {
@@ -469,10 +469,10 @@ package monkey.core.base {
 			}
 			this._disposed = true;
 			for each (var icom : IComponent in components) {
-				icom.dispose();
+				icom.dispose(force);
 			}
 			while (children.length > 0) {
-				children[0].dispose();
+				children[0].dispose(force);
 			}
 			if (hasEventListener(DISPOSE_EVENT)) {
 				this.dispatchEvent(disposedEvent);

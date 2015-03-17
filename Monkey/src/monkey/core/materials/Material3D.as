@@ -101,7 +101,7 @@ package monkey.core.materials {
 		 * 销毁材质 
 		 * 
 		 */		
-		public function dispose():void {
+		public function dispose(force : Boolean = false):void {
 			this._shader = null;
 		}
 		

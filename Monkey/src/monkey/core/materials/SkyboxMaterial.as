@@ -33,10 +33,10 @@ package monkey.core.materials {
 			return c;
 		}
 		
-		override public function dispose():void {
-			super.dispose();
+		override public function dispose(force : Boolean = false):void {
+			super.dispose(force);
 			for each (var texture : Texture3D in textures) {
-				texture.dispose();
+				texture.dispose(force);
 			}
 		}
 		

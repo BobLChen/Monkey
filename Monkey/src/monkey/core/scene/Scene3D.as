@@ -454,7 +454,7 @@ package monkey.core.scene {
 			}
 		}
 		
-		override public function dispose():void {
+		override public function dispose(force : Boolean = true):void {
 			while (this.textures.length > 0) {
 				this.textures[0].dispose(true);
 			}

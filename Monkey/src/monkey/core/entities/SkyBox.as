@@ -40,8 +40,8 @@ package monkey.core.entities {
 			this.initSkybox();
 		}
 		
-		override public function dispose():void {
-			super.dispose();
+		override public function dispose(force : Boolean = false):void {
+			super.dispose(force);
 			if (this.bitmapData) {
 				this.bitmapData.dispose();
 			}

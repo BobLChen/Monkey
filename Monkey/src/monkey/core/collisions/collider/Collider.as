@@ -28,13 +28,13 @@ package monkey.core.collisions.collider {
 			return c;
 		}
 		
-		override public function dispose():void {
+		override public function dispose(force : Boolean = false):void {
 			if (this.disposed) {
 				return;
 			}
-			super.dispose();
+			super.dispose(force);
 			if (this.mesh) {
-				this.mesh.dispose();
+				this.mesh.dispose(force);
 				this.mesh = null;
 			}
 		}

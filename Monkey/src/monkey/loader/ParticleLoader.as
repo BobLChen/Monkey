@@ -121,14 +121,13 @@ package monkey.loader {
 					pivot.renderer.mesh.surfaces.push(surf.clone());
 				}
 				pivot.manualBuild();
-				pivot.animator.play();
 			}
 			this._loaded = true;
 			this.freeAssets();
 			this.addChild(particles);
 			this.dispatchEvent(new Event(Event.COMPLETE));
 		}
-		
+				
 		/**
 		 * 释放内存
 		 */		

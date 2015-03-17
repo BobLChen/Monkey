@@ -43,10 +43,10 @@ package monkey.core.materials {
 			return c;
 		}
 		
-		override public function dispose():void {
-			super.dispose();
-			this.cubeTexture.dispose();
-			this.normalTexture.dispose();
+		override public function dispose(force : Boolean = false):void {
+			super.dispose(force);
+			this.cubeTexture.dispose(force);
+			this.normalTexture.dispose(force);
 		}
 		
 		override protected function setShaderDatas(scene:Scene3D):void {

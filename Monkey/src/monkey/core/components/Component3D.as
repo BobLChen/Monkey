@@ -132,7 +132,7 @@ package monkey.core.components {
 		 * 销毁 
 		 * 
 		 */		
-		public function dispose() : void {
+		public function dispose(force : Boolean = false) : void {
 			this._disposed = true;
 		}
 		

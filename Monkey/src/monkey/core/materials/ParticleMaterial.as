@@ -45,10 +45,10 @@ package monkey.core.materials {
 			return c;
 		}
 		
-		override public function dispose():void {
-			super.dispose();
-			this.texture.dispose();
-			this.blendTexture.dispose();
+		override public function dispose(force : Boolean = false):void {
+			super.dispose(force);
+			this.texture.dispose(force);
+			this.blendTexture.dispose(force);
 			this.keyframes.clear();
 		}
 		

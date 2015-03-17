@@ -66,7 +66,7 @@ package monkey.core.interfaces {
 		/**
 		 * 销毁 
 		 */		
-		function dispose() : void;
+		function dispose(force : Boolean = false) : void;
 		
 		/**
 		 * 是否已经被销毁 
