@@ -46,6 +46,7 @@ package monkey.core.utils {
 				bytes.writeFloat(size.getY(i * step));
 				bytes.writeFloat(size.getY(i * step));
 			}
+			ret.setTo(0, 0, 0);
 			// 位移
 			for (var i:int = 0; i < ParticleSystem.MAX_KEY_NUM; i++) {
 				var x : Number = uniformly(speedX.getY(step * i), speedX.getY(step * i + step), t);

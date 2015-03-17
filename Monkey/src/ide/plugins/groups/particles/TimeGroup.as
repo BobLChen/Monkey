@@ -61,6 +61,9 @@ package ide.plugins.groups.particles {
 		}
 		
 		override public function updateGroup(app:App, particle:ParticleSystem):void {
+			if (this.particle) {
+				this.particle.removeEventListener(Object3D.ENTER_DRAW_EVENT, onUpdate);
+			}
 			super.updateGroup(app, particle);
 			this.play.text  = particle.animator.playing ? "Pause" : "Play";
 			this.time.value = particle.animator.currentFrame;

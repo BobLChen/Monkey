@@ -382,7 +382,7 @@ package monkey.core.entities.particles {
 					bytes.writeFloat(0);
 					bytes.writeFloat(0);
 					bytes.writeFloat(0);
-					bytes.writeFloat(1);
+					bytes.writeFloat(0);
 				}
 				_defKeyframe = bytes;
 			}
@@ -764,13 +764,12 @@ package monkey.core.entities.particles {
 			if (this._needBuild) {
 				this.build();
 			}
-			// 非循环模式
-			if (!loops && !animator.playing) {
-				return;
-			}
 			// 延时未到
 			if (this.animator.currentFrame < this.startDelay) {
 				return;
+			}
+			if (!loops && this.animator.currentFrame >= this.animator.totalFrames) {
+				return;				
 			}
 			// 模型数据
 			Device3D.world.copyFrom(transform.world);
