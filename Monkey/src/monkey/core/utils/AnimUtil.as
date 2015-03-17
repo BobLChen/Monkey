@@ -54,12 +54,11 @@ package monkey.core.utils {
 			var num  : int = bytes.readInt();
 			
 			for (var i:int = 0; i < num; i++) {
-				render.skinData[i] = [];
 				var frameCount : int = bytes.readInt();
 				var boneNum    : int = bytes.readInt();
 				render.totalFrames = frameCount;
 				render.quat = type == 2;
-				render.skinBoneNum[i] = Math.ceil(render.quat ? boneNum : boneNum * 1.5);
+				render.boneNum[i] = Math.ceil(render.quat ? boneNum : boneNum * 1.5);
 				for (var j:int = 0; j < frameCount; j++) {
 					var data : ByteArray = new ByteArray();
 					data.endian = Endian.LITTLE_ENDIAN;
@@ -68,7 +67,7 @@ package monkey.core.utils {
 					} else {
 						bytes.readBytes(data, 0, boneNum * 48);
 					}
-					render.skinData[i][j] = data;
+					render.addBoneBytes(i, j, data);
 				}
 			}
 			

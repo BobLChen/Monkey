@@ -9,6 +9,7 @@ package monkey.core.utils {
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
 	import monkey.core.renderer.MeshRenderer;
+	import monkey.core.renderer.SkeletonRenderer;
 
 	/**
 	 * 模型工具 
@@ -33,7 +34,8 @@ package monkey.core.utils {
 			bytes.uncompress();
 			
 			var obj3d: Object3D = new Object3D();
-			var mesh : Mesh3D = new Mesh3D([]);
+			var mesh : Mesh3D   = new Mesh3D([]);
+			var anim : Boolean  = false;
 			// 读取Mesh名称
 			var size : int = bytes.readInt();
 			obj3d.name = bytes.readUTFBytes(size);
@@ -97,6 +99,7 @@ package monkey.core.utils {
 				// 权重数据
 				len = bytes.readInt();
 				if (len > 0) {
+					anim = true;
 					var weightBytes : ByteArray = new ByteArray();
 					weightBytes.endian = Endian.LITTLE_ENDIAN;
 					bytes.readBytes(weightBytes, 0, len * 16);
@@ -105,6 +108,7 @@ package monkey.core.utils {
 				// 骨骼索引
 				len = bytes.readInt();
 				if (len > 0) {
+					anim = true;
 					var indicesBytes : ByteArray = new ByteArray();
 					indicesBytes.endian = Endian.LITTLE_ENDIAN;
 					bytes.readBytes(indicesBytes, 0, len * 16);
@@ -133,8 +137,12 @@ package monkey.core.utils {
 			}
 			mesh.bounds = bounds;
 			
-			obj3d.addComponent(new MeshRenderer(mesh, null));
-			
+			if (anim) {
+				obj3d.addComponent(new SkeletonRenderer(mesh, null));
+			} else {
+				obj3d.addComponent(new MeshRenderer(mesh, null));
+			}
+						
 			return obj3d;
 		}
 		

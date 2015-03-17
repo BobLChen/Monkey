@@ -14,10 +14,12 @@ package monkey.core.animator {
 		public var rootBone		: Bone3D;
 		/** 是否为四元数骨骼 */
 		public var quat 		: Boolean;
-		/** 骨骼数据 */
-		public var skinData 	: Vector.<Array>;
+		
 		/** 骨骼数目 */
-		public var skinBoneNum 	: Vector.<int>;
+		public var boneNum 	: Vector.<int>;
+		
+		/** 骨骼数据 */
+		private var _skinData 	: Array;
 		/** 挂节点 */
 		private var mounts 		: Dictionary;
 		
@@ -25,58 +27,46 @@ package monkey.core.animator {
 		
 		public function SkeletonAnimator() {
 			super();
-			this._ref 		= new Ref();
-			this.rootBone	= new Bone3D();
-			this.skinBoneNum= new Vector.<int>();
-			this.skinData	= new Vector.<Array>();
-			this.mounts		= new Dictionary();
-			this.rootBone.name = "RootBone";
+			this._ref 			= new Ref();
+			this._skinData		= new Array();
+			this.rootBone		= new Bone3D();
+			this.boneNum	= new Vector.<int>();
+			this.mounts			= new Dictionary();
+			this.rootBone.name 	= "RootBone";
 		}
 		
 		override public function clone():IComponent {
 			var c : SkeletonAnimator = new SkeletonAnimator();
 			c.copyFrom(this);
-			c._ref = this._ref;
+			c.mounts 	= mounts;
+			c.boneNum 	= boneNum;
+			c.quat 		= quat;
+			c.rootBone 	= rootBone;
+			c._skinData = this._skinData;
+			c._ref 		= this._ref;
 			this._ref.ref++;
 			return c;
 		}
 		
-		override public function dispose():void {
+		override public function dispose(force : Boolean = false):void {
 			this._disposed = true;
 			if (this._disposed) {
 				return;
 			}
-			if (this._ref.ref > 0) {
+			if (this._ref.ref > 0 && !force) {
 				this._ref.ref--;
 				this._disposed = true;
 				return;
 			}
 			this._disposed = true;
 			// 释放骨骼数据
-			for each (var datas : Array in skinData) {
+			for each (var datas : Array in this._skinData) {
 				for each (var bytes : ByteArray in datas) {
 					bytes.clear();
 				}
 			}
 		}
 				
-		/**
-		 * 浅复制
-		 * @param animator
-		 * 
-		 */		
-		override public function copyFrom(animator:Animator):void {
-			super.copyFrom(animator);
-			if (animator is SkeletonAnimator) {
-				var ske : SkeletonAnimator = animator as SkeletonAnimator;
-				this.quat 			= ske.quat;
-				this.skinData 		= this.skinData;
-				this.skinBoneNum 	= this.skinBoneNum;
-				this.mounts			= this.mounts;
-				
-			}
-		}
-		
 		/**
 		 * 添加挂节点
 		 * @param name 		骨骼名称
@@ -115,6 +105,20 @@ package monkey.core.animator {
 		}
 		
 		/**
+		 * 添加骨骼数据 
+		 * @param i			surf索引
+		 * @param frame		帧索引
+		 * @param bytes		骨骼数据
+		 * 
+		 */		
+		public function addBoneBytes(i : int, frame : int, bytes : ByteArray) : void {
+			if (!_skinData[i]) {
+				_skinData[i] = [];
+			}
+			_skinData[i][frame] = bytes;
+		}
+		
+		/**
 		 * 获取骨骼数据 
 		 * @param i			surface索引
 		 * @param frame		帧数
@@ -122,7 +126,7 @@ package monkey.core.animator {
 		 * 
 		 */		
 		public function getBoneBytes(i : int, frame : int) : ByteArray {
-			return skinData[i][frame];
+			return _skinData[i][frame];
 		}
 		
 	}

@@ -4,7 +4,6 @@ package monkey.core.materials {
 	import flash.display3D.Context3DTriangleFace;
 	
 	import monkey.core.base.Surface3D;
-	import monkey.core.entities.Mesh3D;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.shader.Shader3D;
 	import monkey.core.utils.Device3D;
@@ -66,18 +65,14 @@ package monkey.core.materials {
 		 * @param scene
 		 * 
 		 */		
-		public function draw(scene : Scene3D, mesh : Mesh3D) : void {
-			// 设置shader当前数据
-			setShaderDatas(scene);
+		public function draw(scene : Scene3D, surf : Surface3D) : void {
 			// 修改混合、深度测试、裁减
 			if (_stateDirty) {
 				scene.context.setBlendFactors(sourceFactor, destFactor);
 				scene.context.setDepthTest(depthWrite, depthCompare);
 				scene.context.setCulling(cullFace);
 			}
-			for each (var surf : Surface3D in mesh.surfaces) {
-				shader.draw(scene, surf, 0, surf.numTriangles);
-			}
+			shader.draw(scene, surf, 0, surf.numTriangles);
 			// 重置回默认状态
 			if (_stateDirty) {
 				scene.context.setBlendFactors(Device3D.defaultSourceFactor, Device3D.defaultDestFactor);
@@ -109,7 +104,7 @@ package monkey.core.materials {
 		 * 更新材质 
 		 * 
 		 */		
-		protected function setShaderDatas(scene : Scene3D) : void {
+		public function updateMaterial(scene : Scene3D) : void {
 			
 		}
 		

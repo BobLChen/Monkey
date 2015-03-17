@@ -9,8 +9,10 @@ package ide.utils {
 	import flash.utils.ByteArray;
 	
 	import monkey.core.base.Object3D;
+	import monkey.core.entities.Mesh3D;
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.materials.DiffuseMaterial;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.textures.Bitmap2DTexture;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Mesh3DUtils;
@@ -52,16 +54,18 @@ package ide.utils {
 			fs.open(new File(this.file.parent.url + "/" + cfg.name), FileMode.READ);
 			fs.readBytes(meshBytes, 0, fs.bytesAvailable);
 			fs.close();
-			var mesh : Object3D = Mesh3DUtils.readMesh(meshBytes);
-			mesh.transform.local.copyRawDataFrom(Vector.<Number>(cfg.transform));
-			mesh.transform.updateTransforms(true);
-			mesh.renderer.material = new ColorMaterial(Color.WHITE);
-			this.addChild(mesh);
+			var obj : Object3D = Mesh3DUtils.readMesh(meshBytes);
+			obj.transform.local.copyRawDataFrom(Vector.<Number>(cfg.transform));
+			obj.transform.updateTransforms(true);
+			var mesh : Mesh3D = obj.renderer.mesh;
+			obj.removeComponent(obj.renderer);
+			obj.addComponent(new MeshRenderer(mesh, new ColorMaterial(Color.WHITE)));
+			this.addChild(obj);
 			// 读取贴图
 			if (cfg.textures.DiffuseColor.length >= 1) {
 				var loader : Loader = loadBitmapdata(new File(this.file.parent.url + "/" + cfg.textures.DiffuseColor[0]));
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
-					mesh.renderer.material = new DiffuseMaterial(new Bitmap2DTexture((loader.content as Bitmap).bitmapData));
+					obj.renderer.material = new DiffuseMaterial(new Bitmap2DTexture((loader.content as Bitmap).bitmapData));
 				});
 			}
 		}

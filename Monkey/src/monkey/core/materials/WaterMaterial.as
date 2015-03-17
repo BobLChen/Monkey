@@ -49,7 +49,7 @@ package monkey.core.materials {
 			this.normalTexture.dispose(force);
 		}
 		
-		override protected function setShaderDatas(scene:Scene3D):void {
+		override public function updateMaterial(scene:Scene3D):void {
 			this.cubeTexture.upload(scene);
 			this.normalTexture.upload(scene);
 			WaterShader(shader).cubeTexture 	= cubeTexture;

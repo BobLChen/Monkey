@@ -143,7 +143,7 @@ package monkey.core.materials {
 			_texture = value;
 		}
 				
-		override protected function setShaderDatas(scene:Scene3D):void {
+		override public function updateMaterial(scene:Scene3D):void {
 			texture.upload(scene);
 			blendTexture.upload(scene);
 			ParticleShader(shader).time 		= time;

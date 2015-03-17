@@ -118,9 +118,12 @@ package monkey.core.renderer {
 			if (!inView) {
 				return;
 			}
-			material.draw(scene, mesh);
+			material.updateMaterial(scene);
+			for (var i:int = 0; i < mesh.surfaces.length; i++) {
+				material.draw(scene, mesh.surfaces[i]);
+			}
 		}
-		
+				
 		public function get material():Material3D {
 			return _mat;
 		}

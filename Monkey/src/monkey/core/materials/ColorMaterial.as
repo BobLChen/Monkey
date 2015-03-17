@@ -38,7 +38,7 @@ package monkey.core.materials {
 			return c;
 		}
 		
-		override protected function setShaderDatas(scene : Scene3D) : void {
+		override public function updateMaterial(scene : Scene3D) : void {
 			ColorShader(shader).color = _color;
 		}
 		

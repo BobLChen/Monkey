@@ -14,7 +14,10 @@ package monkey.core.renderer {
 			if (!material || !mesh) {
 				return;
 			}
-			material.draw(scene, mesh);
+			material.updateMaterial(scene);
+			for (var i:int = 0; i < mesh.surfaces.length; i++) {
+				material.draw(scene, mesh.surfaces[i]);
+			}
 		}
 		
 	}

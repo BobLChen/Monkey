@@ -6,6 +6,7 @@ package monkey.core.utils {
 	import flash.display3D.Context3DTriangleFace;
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
+	import flash.utils.ByteArray;
 	
 	import monkey.core.camera.Camera3D;
 	import monkey.core.light.DirectionalLight;
@@ -37,6 +38,8 @@ package monkey.core.utils {
 		public static const MAX_MATRIX34_BONE   : int = 36;
 		/** 最大四元数骨骼数 */
 		public static const MAX_QUAT_BONE		: int = 56;
+		/** 骨骼数据 */
+		public static var 	BoneMatrixs			: ByteArray;
 		
 		/** 默认灯光 */
 		public static const defaultDirectLight  : DirectionalLight = new DirectionalLight();
@@ -68,7 +71,7 @@ package monkey.core.utils {
 		
 		/** 最大贴图尺寸 */
 		public static const MAX_TEXTURE_SIZE    : int = 2048;
-					
+							
 		public function Device3D() {
 			
 		}
