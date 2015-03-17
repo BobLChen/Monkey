@@ -12,7 +12,6 @@ package ide.plugins {
 	
 	import monkey.core.entities.SkyBox;
 	import monkey.core.entities.Water3D;
-	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.utils.AssetsType;
 	import monkey.navmesh.NavigationMesh;
 	

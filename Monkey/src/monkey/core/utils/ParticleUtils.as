@@ -131,6 +131,13 @@ package monkey.core.utils {
 		 */		
 		private static function createParticle(config : Object) : ParticleSystem {
 			var ret : ParticleSystem	= new ParticleSystem();
+			
+			ret.renderer.material.depthWrite 	= config.depthWrite;
+			ret.renderer.material.depthCompare 	= config.depthCompare;
+			ret.renderer.material.cullFace		= config.cullFace;
+			ret.renderer.material.sourceFactor  = config.sourceFactor;
+			ret.renderer.material.destFactor	= config.destFactor;
+			
 			ret.animator.totalFrames	= config.totalFrames;
 			ret.userData.imageName 		= config.imageName;
 			ret.userData.uuid 			= config.uuid;

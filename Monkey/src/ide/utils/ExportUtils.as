@@ -119,6 +119,12 @@ package ide.utils {
 			
 			var config : ParticleConfig = new ParticleConfig();
 			
+			config.depthWrite	= particle.renderer.material.depthWrite;
+			config.depthCompare	= particle.renderer.material.depthCompare;
+			config.cullFace		= particle.renderer.material.cullFace;
+			config.sourceFactor	= particle.renderer.material.sourceFactor;
+			config.destFactor	= particle.renderer.material.destFactor;
+						
 			config.totalFrames 	= particle.animator.totalFrames;
 			config.imageName	= particle.userData.imageName;
 			config.uuid			= particle.userData.uuid;
