@@ -10,11 +10,11 @@ package ide.plugins {
 	import monkey.core.base.Object3D;
 	import monkey.core.camera.Camera3D;
 	import monkey.core.camera.lens.PerspectiveLens;
-	import monkey.core.entities.Cone;
 	import monkey.core.entities.SkyBox;
 	import monkey.core.entities.Water3D;
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.entities.primitives.Capsule;
+	import monkey.core.entities.primitives.Cone;
 	import monkey.core.entities.primitives.Cube;
 	import monkey.core.entities.primitives.Cylinder;
 	import monkey.core.entities.primitives.Plane;
