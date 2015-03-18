@@ -22,7 +22,7 @@ package ide.plugins.groups.particles {
 			super();
 			this.play = new Button("Play");
 			this.stop = new Button("Stop");
-			this.time = new Spinner(0, 0, Number.MAX_VALUE, 2, 1);
+			this.time = new Spinner(0, 0, Number.MAX_VALUE, 2, 0);
 			this.orientation = HORIZONTAL;
 			this.minHeight = 18;
 			this.maxHeight = 18;
@@ -39,10 +39,10 @@ package ide.plugins.groups.particles {
 		
 		private function onChangeTime(event:Event) : void {
 			this.play.text = "Play";
-			this.particle.gotoAndStop(this.time.value);
+			this.particle.gotoAndStop(this.time.value * 60);
 			this.app.dispatchEvent(new FrameEvent(FrameEvent.STOP));
 		}
-		
+				
 		private function onClickStop(event:Event) : void {
 			this.particle.gotoAndStop(0);
 			this.time.value = 0;

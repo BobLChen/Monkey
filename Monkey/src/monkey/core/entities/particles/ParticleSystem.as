@@ -768,7 +768,7 @@ package monkey.core.entities.particles {
 			if (this.animator.currentFrame < this.startDelay) {
 				return;
 			}
-			if (!loops && this.animator.currentFrame >= this.animator.totalFrames) {
+			if (!loops && this.animator.currentFrame > this.animator.totalFrames) {
 				return;				
 			}
 			// 模型数据
@@ -777,7 +777,7 @@ package monkey.core.entities.particles {
 			Device3D.mvp.append(scene.camera.viewProjection);
 			Device3D.drawOBJNum++;
 			// 设置时间
-			this.material.time = this.animator.currentFrame * this.animator.hz - this.startDelay;
+			this.material.time = this.animator.currentFrame - this.startDelay;
 			// 绘制组件
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {

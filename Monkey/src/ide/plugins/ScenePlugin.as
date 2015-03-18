@@ -155,7 +155,7 @@ package ide.plugins {
 				this._app.selection.main.gotoAndStop(this._lastFrame);
 			}
 		}
-		
+				
 		private function onEnterFrame(event:Event) : void {
 			this._app.dispatchEvent(new SceneEvent(SceneEvent.UPDATE_EVENT));
 			var inScene : Boolean = this.viewPort.contains(Input3D.mouseX, Input3D.mouseY);
