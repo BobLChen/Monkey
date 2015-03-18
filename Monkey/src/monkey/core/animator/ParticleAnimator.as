@@ -20,7 +20,7 @@ package monkey.core.animator {
 		}
 		
 		override public function set totalFrames(value:Number):void {
-			_totalFrames = value / _hz;
+			_totalFrames =value / _hz + 1;
 		}
 		
 	}
