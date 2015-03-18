@@ -94,22 +94,11 @@ package monkey.core.utils {
 		private var _imageName		: Object  = {};					// 图片
 		private var _keyFrames		: Object  = {};					// 关键帧数据
 		private var _lifetimeData	: Object  = {};					// 运行期关键帧。
-		private var _blendColor		: Object  = {};					// 调色
 		
 		public function ParticleConfig() {
 			super();
 		}
 		
-		public function get blendColor():Object {
-			return _blendColor;
-		}
-
-		public function set blendColor(value:Object):void {
-			_blendColor = {};
-			_blendColor.color = value.color;
-			_blendColor.alpha = value.alpha;
-		}
-
 		public function get lifetimeData():Object {
 			return _lifetimeData;
 		}
