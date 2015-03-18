@@ -42,8 +42,8 @@ package monkey.core.animator {
 			}
 			this._currentFrame += Time3D.deltaTime;
 			if (this._currentFrame > this._totalFrames) {
+				this._playing = false;
 				if (this.hasEventListener(ANIMATION_COMPLETE_EVENT)) {
-					this._playing = false;
 					this.dispatchEvent(animCompleteEvent);
 				}
 			}
