@@ -116,6 +116,7 @@ package monkey.core.utils {
 				ret = new Object3D();
 			}
 			ret.name = config.name;
+			ret.setLayer(config.layer);
 			ret.transform.local.copyRawDataFrom(Vector.<Number>(config.transform));
 			for each (var child : Object in config.children) {
 				ret.addChild(readParticles(child));

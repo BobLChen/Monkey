@@ -96,9 +96,10 @@ package ide.utils {
 		 */		
 		private static function exportParticleConfig(obj : Object3D, optimize : Boolean) : Object {
 			var cfg : Object = {};
-			cfg.name = obj.name;
-			cfg.children = [];
-			cfg.transform = obj.transform.local.rawData;
+			cfg.name 		 = obj.name;
+			cfg.layer		 = obj.layer;
+			cfg.children 	 = [];
+			cfg.transform 	 = obj.transform.local.rawData;
 			if (obj is ParticleSystem) {
 				cfg.particle = getParticleConfig(obj as ParticleSystem, optimize);
 			}

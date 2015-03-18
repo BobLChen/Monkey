@@ -64,6 +64,7 @@ package monkey.core.scene {
 		/** 跳过本次渲染 */
 		public var skipCurrentRender	: Boolean;
 		
+		private var renderList			: Vector.<Object3D>;	// 渲染列表
 		private var _container 			: DisplayObject;		// 2d容器
 		private var _backgroundColor 	: Color;				// 背景色
 		private var _clearColor			: Vector3D;				// 后台缓冲区颜色
@@ -80,6 +81,7 @@ package monkey.core.scene {
 		 */		
 		public function Scene3D(dispObject : DisplayObject) {
 			super();
+			this.renderList = new Vector.<Object3D>();
 			this.surfaces	= new Vector.<Surface3D>();
 			this.textures   = new Vector.<Texture3D>();
 			this.shaders	= new Vector.<Shader3D>();
@@ -316,15 +318,15 @@ package monkey.core.scene {
 		 * 
 		 */		
 		public function render() : void {
-			for each (var child : Object3D in children) {
-				child.draw(this, true);
+			for each (var pivot  : Object3D in renderList) {
+				pivot.draw(this, false);
 			}
 		}
 		
 		override public function update(includeChildren : Boolean) : void {
 			this.dispatchEvent(enterFrameEvent);
-			for each (var child : Object3D in children) {
-				child.update(includeChildren);
+			for each (var pivot  : Object3D in renderList) {
+				pivot.update(false);
 			}
 			this.dispatchEvent(exitFrameEvent);
 		}
@@ -483,5 +485,31 @@ package monkey.core.scene {
 			this.children.length = 0;
 		}
 		
+		public function removeFromScene(pivot:Object3D) : void {
+			var idx : int = renderList.indexOf(pivot);
+			if (idx != -1) {
+				renderList.splice(idx, 1);
+			}
+		}
+		
+		public function addToScene(pivot:Object3D) : void {
+			var left  : int = 0;
+			var right : int = renderList.length;
+			var value : int = pivot.layer;
+			var middle: int = 0;
+			while (left < right) {
+				middle = (left + right) >>> 1;
+				if (renderList[middle].layer == value) {
+					break;
+				}
+				if (value > renderList[middle].layer) {
+					middle++;
+					left = middle;
+				} else {
+					right = middle;
+				}
+			}
+			renderList.splice(middle, 0, pivot);
+		}
 	}
 }

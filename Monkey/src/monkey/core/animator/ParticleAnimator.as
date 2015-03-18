@@ -24,6 +24,10 @@ package monkey.core.animator {
 			return c;
 		}
 		
+		override public function set currentFrame(value:Number):void {
+			this._currentFrame = value;
+		}
+		
 		override public function gotoAndPlay(frame:Object, animationMode:int=ANIMATION_LOOP_MODE):void {
 			this._currentFrame  = frame as Number;
 			this._currentFrame *= _hz;

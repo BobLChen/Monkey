@@ -1,9 +1,9 @@
 ﻿package ide.plugins.groups.properties {
 
-	import ide.App;
-	import ide.events.SceneEvent;
+	import flash.events.Event;
 	
-	import monkey.core.base.Object3D;
+	import ide.App;
+	
 	import monkey.core.scene.Scene3D;
 	
 	import ui.core.controls.CheckBox;
@@ -23,28 +23,25 @@
 			this.layout.labelWidth = 55;
 			this.layout.addHorizontalGroup();
 			this.visible = layout.addControl(new CheckBox("", true, Align.LEFT), "Visible:") as CheckBox;
+			this.layer   = layout.addControl(new Spinner(0, 0, 0, 2, 1), "Layer:") as Spinner;
 			this.layout.endGroup();
-			this.layout.addEventListener(ControlEvent.CHANGE, this.changeControlEvent);
-			this.layout.addEventListener(ControlEvent.CLICK, this.changeControlEvent);
 			this.accordion.contentHeight = 30;
+			this.layer.addEventListener(ControlEvent.CHANGE, changeLayer);
 		}
 		
-		private function changeControlEvent(e : ControlEvent) : void {
-			for each (var pivot : Object3D in this._app.selection.objects) {
-				if (pivot is Scene3D) {
-					continue;
-				}
-				pivot.visible = this.visible.value;
+		protected function changeLayer(event:Event) : void {
+			if (this._app.selection.main) {
+				this._app.selection.main.setLayer(layer.value);
 			}
-			this._app.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));
 		}
-
+		
 		override public function update(app : App) : Boolean {
 			this._app = app;
 			if (!app.selection.main || app.selection.main is Scene3D) {
 				return false;
 			}
 			this.visible.value = app.selection.main.visible;
+			this.layer.value   = app.selection.main.layer;
 			return true;
 		}
 		

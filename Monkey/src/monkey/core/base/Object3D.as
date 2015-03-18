@@ -25,23 +25,27 @@ package monkey.core.base {
 		
 		// -------------------------------- 事件定义 --------------------------------
 		/** 开始绘制 */
-		public static const ENTER_FRAME_EVENT 		: String = "Object3D:ENTER_FRAME";
+		public static const ENTER_FRAME_EVENT 		: String = "Object3D:ENTER_FRAME_EVENT";
 		/** 结束绘制 */
-		public static const EXIT_FRAME_EVENT 		: String = "Object3D:EXIT_FRAME";
+		public static const EXIT_FRAME_EVENT 		: String = "Object3D:EXIT_FRAME_EVENT";
 		/** 进入帧循环 */
-		public static const ENTER_DRAW_EVENT		: String = "Object3D:ENTER_DRAW";
+		public static const ENTER_DRAW_EVENT		: String = "Object3D:ENTER_DRAW_EVENT";
 		/** 退出帧循环 */
-		public static const EXIT_DRAW_EVENT			: String = "Object3D:EXIT_DRAW";
+		public static const EXIT_DRAW_EVENT			: String = "Object3D:EXIT_DRAW_EVENT";
 		/** 添加一个子节点 */
-		public static const ADD_CHILD_EVENT			: String = "Object3D:ADD_CHILD";
+		public static const ADD_CHILD_EVENT			: String = "Object3D:ADD_CHILD_EVENT";
 		/** 移除一个子节点 */
-		public static const REMOVE_CHILD_EVENT		: String = "Object3D:REMOVE_CHILD";
+		public static const REMOVE_CHILD_EVENT		: String = "Object3D:REMOVE_CHILD_EVENT";
 		/** 被添加 */
-		public static const ADDED_EVENT				: String = "Object3D:ADDED";
+		public static const ADDED_EVENT				: String = "Object3D:ADDED_EVENT";
+		/** 添加到场景 */
+		public static const ADDED_TO_SCENE_EVENT	: String = "Object3D:ADDED_INTO_SCENE_EVENT";
 		/** 被移除 */
-		public static const REMOVED_EVENT			: String = "Object3D:REMOVED";
+		public static const REMOVED_EVENT			: String = "Object3D:REMOVED_EVENT";
+		/** 被移除 */
+		public static const REMOVED_FROM_SCENE_EVENN: String = "Object3D:REMOVED_FROM_SCENE_EVENN";
 		/** 被销毁 */
-		public static const DISPOSE_EVENT			: String = "Object3D:DISPOSED";
+		public static const DISPOSE_EVENT			: String = "Object3D:DISPOSE_EVENT";
 		
 		// -------------------------------- 所有事件 --------------------------------
 		protected static const enterDrawEvent 	: Event = new Event(ENTER_DRAW_EVENT);
@@ -51,13 +55,17 @@ package monkey.core.base {
 		protected static const addChildEvent	: Event = new Event(ADD_CHILD_EVENT);
 		protected static const removeChildEvent	: Event = new Event(REMOVE_CHILD_EVENT);
 		protected static const addedEvent		: Event = new Event(ADDED_EVENT);
+		protected static const addedToSceneEvent: Event = new Event(ADDED_TO_SCENE_EVENT);
 		protected static const removedEvent		: Event = new Event(REMOVED_EVENT);
 		protected static const disposedEvent	: Event = new Event(DISPOSE_EVENT);
-				
+		protected static const removedFromSceneEvent : Event = new Event(REMOVED_FROM_SCENE_EVENN);
+		
 		/** 名称 */
 		public var name 	: String = "";
 		public var userData : Object;
 		
+		protected var _layer		: int;							// 层级
+		protected var _scene		: Scene3D;						// 所在场景
 		protected var _components 	: Vector.<IComponent>;			// 所有组件
 		protected var _children   	: Vector.<Object3D>;			// 子节点
 		protected var _parent		: Object3D;						// 父级
@@ -127,6 +135,31 @@ package monkey.core.base {
 			return this.getComponent(Animator) as Animator;
 		}
 		
+		public function get layer():int {
+			return _layer;
+		}
+		
+		/**
+		 * 设置层级 
+		 * @param value
+		 * @param includeChildren
+		 * 
+		 */		
+		public function setLayer(value:int, includeChildren : Boolean = true):void {
+			if (this._scene && value != _layer) {
+				this._scene.removeFromScene(this);
+				this._layer = value;
+				this._scene.addToScene(this);
+			} else {
+				this._layer = value;
+			}
+			if (includeChildren) {
+				for each (var child : Object3D in children) {
+					child.setLayer(value, includeChildren);
+				}
+			}
+		}
+				
 		public function get visible():Boolean {
 			return _visible;
 		}
@@ -147,21 +180,7 @@ package monkey.core.base {
 		 * 
 		 */		
 		public function addChild(child : Object3D) : void {
-			if (children.indexOf(child) != -1) {
-				return;
-			}
-			if (!child) {
-				return;
-			}
-			child._parent = this;
-			child.visible = visible;
-			children.push(child);
-			if (child.hasEventListener(ADDED_EVENT)) {
-				child.dispatchEvent(addedEvent);
-			}
-			if (hasEventListener(ADD_CHILD_EVENT)) {
-				this.dispatchEvent(addChildEvent);
-			}
+			child.parent = this;
 		}
 		
 		/**
@@ -170,18 +189,7 @@ package monkey.core.base {
 		 * 
 		 */		
 		public function removeChild(child : Object3D) : void {
-			var idx : int = children.indexOf(child);
-			if (idx == -1) {
-				return;
-			}
-			children.splice(idx, 1);
-			child._parent = null;
-			if (child.hasEventListener(REMOVED_EVENT)) {
-				child.dispatchEvent(removedEvent);
-			}
-			if (hasEventListener(REMOVE_CHILD_EVENT)) {
-				this.dispatchEvent(removeChildEvent);
-			}
+			child.parent = null;
 		}
 		
 		/**
@@ -193,16 +201,76 @@ package monkey.core.base {
 			return _parent;
 		}
 		
-		public function set parent(value : Object3D) : void {
-			if (this._parent == value) {
+		public function set parent(pivot : Object3D) : void {
+			if (pivot == this._parent) {
 				return;
 			}
+			// 有父节点
 			if (this._parent) {
-				this._parent.removeChild(this);
+				var idx : int = this._parent.children.indexOf(this);
+				if (idx != -1) {
+					this._parent.children.splice(idx, 1);
+					this._parent.dispatchEvent(removeChildEvent);
+					this.dispatchEvent(removedEvent);
+				}
 			}
-			if (value) {
-				value.addChild(this);
+			this._parent = pivot;
+			// 父节点存在
+			if (this._parent) {
+				this._parent.children.push(this);
+				this._parent.dispatchEvent(addChildEvent);
+				this.transform.updateTransforms(true);
+				this.dispatchEvent(addedEvent);
 			}
+			// 未处于场景中
+			if (!this._scene) {
+				if (pivot) {
+					if (pivot is Scene3D) {			// 父节点为场景
+						this.addedToScene(pivot as Scene3D);
+					} else if (pivot.scene) {		// 父节点在场景中
+						this.addedToScene(pivot.scene);
+					}
+				}
+			} else {
+				// 已经处于场景中
+				if (!pivot) {												// 父节点为null, 从场景中移除
+					this.removedFromScene();	
+				} else if (!(pivot is Scene3D) && !pivot.scene) {			// 父节点未处于场景中, 从场景中移除
+					this.removedFromScene();
+				}
+			}
+			
+		}
+		
+		/**
+		 * 从场景中移除 
+		 * 
+		 */		
+		private function removedFromScene() : void {
+			this._scene.removeFromScene(this);
+			this._scene = null;
+			this.dispatchEvent(removedFromSceneEvent);
+			for each (var child : Object3D in children) {
+				child.removedFromScene();
+			}
+		}
+		
+		/**
+		 * 添加到场景 
+		 * @param scene
+		 * 
+		 */		
+		private function addedToScene(scene : Scene3D) : void {
+			this._scene = scene;
+			this._scene.addToScene(this);
+			this.dispatchEvent(addedToSceneEvent);
+			for each (var child : Object3D in children) {
+				child.addedToScene(scene);
+			}
+		}
+		
+		public function get scene() : Scene3D {
+			return _scene;
 		}
 		
 		/**
