@@ -59,7 +59,6 @@ package monkey.core.base {
 		public var userData : Object;
 		
 		protected var _components 	: Vector.<IComponent>;			// 所有组件
-		protected var _transform  	: Transform3D;					// transform
 		protected var _children   	: Vector.<Object3D>;			// 子节点
 		protected var _parent		: Object3D;						// 父级
 		protected var _visible		: Boolean;						// 是否显示
@@ -72,9 +71,8 @@ package monkey.core.base {
 			this.visible	   = true;
 			this.componentDict = new Dictionary();
 			this._components   = new Vector.<IComponent>();
-			this._transform    = new Transform3D();
 			this._children	   = new Vector.<Object3D>();
-			this.addComponent(_transform);
+			this.addComponent(new Transform3D());
 		}
 		
 		public function gotoAndStop(frame : Object, includeChildren : Boolean = true) : void {
@@ -222,7 +220,7 @@ package monkey.core.base {
 		 * 
 		 */		
 		public function get transform() : Transform3D {
-			return _transform;
+			return getComponent(Transform3D) as Transform3D;
 		}
 		
 		/**
@@ -277,11 +275,9 @@ package monkey.core.base {
 		 * 移除除Transform3D组件以外所有组件 
 		 */		
 		public function removeAllComponents() : void {
-			var temp : IComponent = this.transform;
 			while (components.length) {
 				this.removeComponent(components[0]);
 			}
-			this.addComponent(temp);
 		}
 		
 		/**

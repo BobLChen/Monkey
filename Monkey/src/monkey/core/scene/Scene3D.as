@@ -462,7 +462,7 @@ package monkey.core.scene {
 				this.surfaces[0].dispose(true);
 			}
 			while (this.shaders.length > 0) {
-				this.shaders[0].dispose(true);
+				this.shaders[0].dispose();
 			}
 			this.children.length = 0;
 			if (this.context) {
