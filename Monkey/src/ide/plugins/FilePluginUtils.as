@@ -253,7 +253,7 @@ package ide.plugins {
 					if (particle.userData.optimize) {
 						return;
 					}
-					particle.userData.imageData = PNGEncoder.encode(particle.image);
+					particle.userData.imageData = PNGEncoder.encode(particle.texture.bitmapData);
 					var value : Object = particle.userData.lifetimeData;
 					var data  : LifetimeData = new LifetimeData();
 					data.speedX   = convert2Linears(value.speedX);
