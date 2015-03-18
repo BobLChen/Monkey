@@ -268,6 +268,9 @@ package ide.plugins {
 					particle.userData.lifetime = data;
 					
 				}, ParticleSystem);
+				loader.parent = null;
+				App.core.scene.addChild(loader.particles);
+				App.core.selection.objects = [loader.particles];
 				App.core.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));
 			});
 			return loader;
