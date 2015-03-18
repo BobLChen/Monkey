@@ -6,6 +6,7 @@ package monkey.core.materials.shader {
 	import monkey.core.shader.Shader3D;
 	import monkey.core.shader.filters.ParticleSystemFilter;
 	import monkey.core.textures.Texture3D;
+	import monkey.core.utils.Color;
 
 	/**
 	 * 单例模式 
@@ -33,6 +34,10 @@ package monkey.core.materials.shader {
 				_instance = new ParticleShader();
 			}
 			return _instance;
+		}
+		
+		public function set blendColor(color : Color) : void {
+			this.filter.blendColor = color;
 		}
 		
 		public function set frame(value : Point) : void {

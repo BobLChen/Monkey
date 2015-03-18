@@ -6,6 +6,7 @@ package monkey.core.materials {
 	import monkey.core.materials.shader.ParticleShader;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.textures.Texture3D;
+	import monkey.core.utils.Color;
 
 	/**
 	 * 粒子系统材质 
@@ -21,6 +22,7 @@ package monkey.core.materials {
 		private var _totalLife : Number;
 		private var _billboard : Boolean;
 		private var _frame	   : Point;
+		private var _blendColor: Color;
 		
 		public function ParticleMaterial() {
 			super();
@@ -40,6 +42,7 @@ package monkey.core.materials {
 			c.totalLife 	= totalLife;
 			c.billboard 	= billboard;
 			c.frame			= new Point(frame.x, frame.y);
+			c.blendColor	= blendColor.clone();
 			this.keyframes.position  = 0;
 			this.keyframes.readBytes(c.keyframes, 0, keyframes.length);
 			return c;
@@ -50,6 +53,14 @@ package monkey.core.materials {
 			this.texture.dispose(force);
 			this.blendTexture.dispose(force);
 			this.keyframes.clear();
+		}
+		
+		public function get blendColor():Color {
+			return _blendColor;
+		}
+		
+		public function set blendColor(value:Color):void {
+			_blendColor = value;
 		}
 		
 		public function get frame():Point {
@@ -149,6 +160,7 @@ package monkey.core.materials {
 			ParticleShader(shader).time 		= time;
 			ParticleShader(shader).frame 		= frame;
 			ParticleShader(shader).texture 		= texture;
+			ParticleShader(shader).blendColor 	= blendColor;
 			ParticleShader(shader).keyframe 	= keyframes;
 			ParticleShader(shader).billboard	= billboard;
 			ParticleShader(shader).totalLife 	= totalLife;

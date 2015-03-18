@@ -8,11 +8,13 @@ package monkey.core.shader.filters {
 	
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.particles.ParticleSystem;
+	import monkey.core.shader.utils.FcRegisterLabel;
 	import monkey.core.shader.utils.FsRegisterLabel;
 	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.shader.utils.ShaderRegisterElement;
 	import monkey.core.shader.utils.VcRegisterLabel;
 	import monkey.core.textures.Texture3D;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Device3D;
 	
 	/**
@@ -25,6 +27,8 @@ package monkey.core.shader.filters {
 		public static const RADIANS_TO_DEGREES : Number = 180 / Math.PI;
 				
 		public var billboard 		: Boolean = false;			// 广告牌
+		
+		private var blendColorData	: Vector.<Number>;			// blend color
 		private var timeData  		: Vector.<Number>;			// 时间数据
 		private var frameData		: Vector.<Number>;			// uv动画数据
 		private var textureLabel    : FsRegisterLabel;			// 粒子贴图
@@ -45,6 +49,7 @@ package monkey.core.shader.filters {
 			this.priority 		 = 14;
 			this.timeData	  	 = Vector.<Number>([0, 0, 1, 5]);
 			this.frameData		 = Vector.<Number>([1, 1, 1, 1]);
+			this.blendColorData  = Vector.<Number>([1, 1, 1, 1]);
 			this.blendedLabel 	 = new FsRegisterLabel(null);
 			this.textureLabel 	 = new FsRegisterLabel(null);
 			this.keyframeLabel	 = new VcRegisterLabel(null);
@@ -125,7 +130,14 @@ package monkey.core.shader.filters {
 		public function get time() : Number {
 			return timeData[0];
 		}
-						
+		
+		public function set blendColor(color : Color) : void {
+			this.blendColorData[0] = color.r;
+			this.blendColorData[1] = color.g;
+			this.blendColorData[2] = color.b;
+			this.blendColorData[3] = color.alpha;
+		}
+								
 		/**
 		 * 片段着色器 
 		 * @param regCache
@@ -137,6 +149,7 @@ package monkey.core.shader.filters {
 			var fs0 : ShaderRegisterElement = regCache.getFs(textureLabel);
 			var fs1 : ShaderRegisterElement = regCache.getFs(blendedLabel);
 			var ft0 : ShaderRegisterElement = regCache.getFt();
+			var fc0 : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(blendColorData));
 			var code : String = "";
 			if (agal) {
 				// 粒子贴图
@@ -148,6 +161,7 @@ package monkey.core.shader.filters {
 				code += "mov " + ft0 + ".xyzw, " + regCache.fc0123 + ".xxxx \n";
 				code += "mov " + ft0 + ".x, " + timeVary + ".y \n";
 				code += "tex " + ft0 + ", " + ft0 + ".xy, " + fs1 + "<2d, linear, miplinear, clamp> \n";
+				code += "mul " + ft0 + ", " + ft0 + ", " + fc0 + " \n";
 				// 混合
 				code += "mul " + regCache.oc + ", " + regCache.oc + ", " + ft0 + " \n";				
 			}

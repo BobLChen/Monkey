@@ -125,6 +125,7 @@ package ide.utils {
 			config.sourceFactor	= particle.renderer.material.sourceFactor;
 			config.destFactor	= particle.renderer.material.destFactor;
 						
+			config.blendColor	= particle.blendColor;
 			config.totalFrames 	= particle.loops ? -1 : particle.animator.totalFrames;
 			config.imageName	= particle.userData.imageName;
 			config.uuid			= particle.userData.uuid;

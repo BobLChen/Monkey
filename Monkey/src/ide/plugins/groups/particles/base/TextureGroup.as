@@ -78,7 +78,7 @@ package ide.plugins.groups.particles.base {
 			}
 			this.rows.value    = particle.frame.x;
 			this.columns.value = particle.frame.y;
-			this.image.source  = particle.image;
+			this.image.source  = particle.texture.bitmapData;
 		}
 		
 	}

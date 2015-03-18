@@ -24,6 +24,7 @@ package monkey.core.entities.particles {
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.textures.Bitmap2DTexture;
+	import monkey.core.utils.Color;
 	import monkey.core.utils.Device3D;
 	import monkey.core.utils.GradientColor;
 	import monkey.core.utils.Matrix3DUtils;
@@ -38,7 +39,7 @@ package monkey.core.entities.particles {
 		[Embed(source="ParticleSystem.png")]
 		private static const DEFAULT_IMG	: Class;										// 粒子默认贴图
 		/** 粒子系统build事件 */
-		public  static const BUILD_EVENT		   	: String = "ParticleSystem:BUILD";
+		public  static const BUILD_EVENT	: String = "ParticleSystem:BUILD";
 		/** lifetime最大关键帧数量 */
 		public  static const MAX_KEY_NUM 	: int = 6;
 		private static const buildEvent	   	: Event = new Event(BUILD_EVENT);						// 粒子系统创建完成事件
@@ -69,6 +70,7 @@ package monkey.core.entities.particles {
 		private var _image					: BitmapData;					// image
 		private var _totalLife				: Number;						// 周期
 		private var _texture				: Bitmap2DTexture;				// 粒子贴图
+		private var _blendColor				: Color;						// 调色
 		private var blendTexture   			: Bitmap2DTexture;				// color over lifetime贴图
 		
 		/**
@@ -98,6 +100,7 @@ package monkey.core.entities.particles {
 			c._startSize		= this._startSize;
 			c._startRotation	= this._startRotation;
 			c._startColor		= this._startColor;
+			c._blendColor		= this._blendColor.clone();
 			c._shape			= this._shape;
 			c._rate				= this._rate;
 			c._bursts			= this._bursts;
@@ -126,7 +129,8 @@ package monkey.core.entities.particles {
 			this.name			 = "Particle";
 			this.shape 			 = new SphereShape();
 			this.shape.mode 	 = mode;				
-			this.rate 			 = 10;											
+			this.rate 			 = 10;								
+			this.blendColor		 = new Color();
 			this.bursts 		 = new Vector.<Point>();		
 			this.billboard		 = true;
 			this.duration 		 = 5;											
@@ -752,7 +756,16 @@ package monkey.core.entities.particles {
 			this._duration = value;
 			this._needBuild = true;
 		}
-				
+		
+		public function get blendColor():Color {
+			return _blendColor;
+		}
+		
+		public function set blendColor(value:Color):void {
+			_blendColor = value;
+			this.material.blendColor = value;
+		}
+		
 		override public function draw(scene:Scene3D, includeChildren:Boolean=true):void {
 			if (!visible) {
 				return;

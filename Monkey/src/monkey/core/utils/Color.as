@@ -52,5 +52,8 @@ package monkey.core.utils {
 			return new Color(0x777777);
 		}
 
+		public function clone() : Color {
+			return new Color(color, alpha);
+		}
 	}
 }

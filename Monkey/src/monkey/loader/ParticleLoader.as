@@ -117,6 +117,7 @@ package monkey.loader {
 			// 设置粒子的贴图以及数据
 			for each (var pivot : ParticleSystem in this.list) {
 				pivot.texture = texMap[pivot.userData.imageName].clone();
+				pivot.userData.imageData = pivot.texture.bitmapData;
 				for each (var surf : Surface3D in sufMap[pivot.userData.uuid]) {
 					pivot.renderer.mesh.surfaces.push(surf.clone());
 				}
