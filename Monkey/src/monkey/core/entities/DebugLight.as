@@ -23,6 +23,7 @@ package monkey.core.entities {
 			this._color = color;
 			this.initDirectionLine();
 			this.initPointLine();
+			this.setLayer(1000);
 		}
 		
 		public function get light():Light3D {

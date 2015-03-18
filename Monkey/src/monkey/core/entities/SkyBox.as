@@ -31,9 +31,10 @@ package monkey.core.entities {
 		 */		
 		public function SkyBox(bitmapData : BitmapData, size : Number = 3000, scaleRatio : Number = 0.8) {
 			super();
-			this.name = "SkyBox";
-			this._material = new SkyboxMaterial([]);
-			this.size = size;
+			this._material 	= new SkyboxMaterial([]);
+			this._layer 	= -10;
+			this.name 		= "SkyBox";
+			this.size 		= size;
 			this.scaleRatio = scaleRatio;
 			this.bitmapData = bitmapData;
 			this.addComponent(new SkyboxRenderer(null, this._material));

@@ -13,8 +13,9 @@ package monkey.core.entities {
 			super();
 			this.linesMesh = new LinesMesh();
 			this.addComponent(new MeshRenderer(linesMesh, new LineMaterial()));
+			this.setLayer(1000);
 		}
-								
+		
 		public function clear() : void {
 			this.linesMesh.clear();
 		}

@@ -1,8 +1,10 @@
-package monkey.core.entities {
+package monkey.core.entities.primitives {
+	
 	import flash.geom.Vector3D;
 	
 	import monkey.core.base.Bounds3D;
 	import monkey.core.base.Surface3D;
+	import monkey.core.entities.Mesh3D;
 
 	public class Cone extends Mesh3D {
 		

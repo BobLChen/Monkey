@@ -9,8 +9,7 @@ package monkey.core.utils {
 	import monkey.core.entities.particles.ParticleSystem;
 
 	public class ParticleUtils {
-		
-		
+				
 		/**
 		 * 粒子系统运行期关键帧数据生成器 
 		 * @param maxLifetime	最大生命周期时间

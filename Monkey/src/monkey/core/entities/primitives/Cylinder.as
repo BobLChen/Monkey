@@ -1,5 +1,4 @@
 package monkey.core.entities.primitives {
-	import monkey.core.entities.Cone;
 
 	public class Cylinder extends Cone {
 		

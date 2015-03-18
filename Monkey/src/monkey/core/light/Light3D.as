@@ -42,6 +42,7 @@ package monkey.core.light {
 			var c : Light3D = new Light3D();
 			c.color = color;
 			c.ambient = ambient;
+			c._layer  = layer;
 			for each (var icom : IComponent in components) {
 				c.addComponent(icom.clone());
 			}

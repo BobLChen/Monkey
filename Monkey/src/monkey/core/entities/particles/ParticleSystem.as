@@ -90,7 +90,7 @@ package monkey.core.entities.particles {
 			for each (var child : Object3D in children) {
 				c.addChild(child.clone());
 			}
-			c.blendTexture		= this.blendTexture;
+			c._layer 			= this._layer;
 			c._duration 		= this._duration;
 			c._loops			= this._loops;
 			c._startDelay		= this._startDelay;
@@ -113,9 +113,10 @@ package monkey.core.entities.particles {
 			c._keyfsOverLifetime= this._keyfsOverLifetime;
 			c._colorOverLifetime= this._colorOverLifetime;
 			c._simulationSpace	= this._simulationSpace;
+			c.blendTexture		= this.blendTexture;
 			return c;
 		}
-				
+		
 		/**
 		 *  初始化粒子系统参数
 		 */		

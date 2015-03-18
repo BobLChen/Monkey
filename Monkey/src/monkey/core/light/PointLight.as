@@ -15,10 +15,11 @@ package monkey.core.light {
 		
 		override public function clone():Object3D {
 			var c : PointLight = new PointLight();
-			c.color = color;
-			c.ambient = ambient;
-			c.radius = radius;
+			c.color 	= color;
+			c.ambient 	= ambient;
+			c.radius 	= radius;
 			c.intensity = intensity;
+			c._layer	= layer;
 			for each (var icom : IComponent in components) {
 				c.addComponent(icom.clone());
 			}

@@ -1,7 +1,5 @@
 package monkey.core.entities {
 	
-	import flash.geom.Vector3D;
-	
 	import monkey.core.base.Bounds3D;
 	import monkey.core.base.Object3D;
 

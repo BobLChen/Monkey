@@ -566,6 +566,7 @@ package monkey.core.base {
 			for each (var child : Object3D in children) {
 				c.addChild(child.clone());
 			}
+			c._layer = this._layer;
 			return c;
 		}
 	}

@@ -24,6 +24,7 @@ package monkey.core.light {
 			c.specular 	= specular;
 			c.power 	= power;
 			c.intensity = intensity;
+			c._layer	= layer;
 			for each (var icom : IComponent in components) {
 				c.addComponent(icom.clone());
 			}

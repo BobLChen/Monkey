@@ -11,6 +11,7 @@ package monkey.core.entities {
 			this.rows 	= rows;
 			this.colums = colums;
 			this.size 	= size;
+			this.setLayer(-1);
 			this.config();
 		}
 		
