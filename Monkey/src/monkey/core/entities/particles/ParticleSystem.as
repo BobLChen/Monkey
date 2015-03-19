@@ -788,7 +788,7 @@ package monkey.core.entities.particles {
 			// 模型数据
 			Device3D.world.copyFrom(transform.world);
 			Device3D.mvp.copyFrom(Device3D.world);
-			Device3D.mvp.append(scene.camera.viewProjection);
+			Device3D.mvp.append(Device3D.viewProjection);
 			Device3D.drawOBJNum++;
 			// 设置时间
 			this.material.time = this.animator.currentFrame - this.startDelay;

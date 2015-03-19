@@ -560,7 +560,7 @@ package monkey.core.components {
 		 * @param includeChildren
 		 * 
 		 */		
-		public function updateTransforms(includeChildren : Boolean) : void {
+		public function updateTransforms(includeChildren : Boolean = true) : void {
 			this._dirty = true;
 			this._dirtyInv = true;
 			if (includeChildren && object3D) {
