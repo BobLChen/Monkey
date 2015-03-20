@@ -22,17 +22,18 @@ package monkey.loader {
 	 */	
 	public class SkyboxLoader extends Object3D implements IQueLoader {
 
-		public var skybox 		: SkyBox;
+		public var skybox 	: SkyBox;
 		
-		private var zip 		: Zip;
-		private var cfg 		: Object;
-		private var loader 		: Loader;
-		private var url			: String;
-		private var _urlLoader	: URLLoader;
-		private var _loaded 	: Boolean;
-		private var _closed		: Boolean;
-		private var _bytesTotal : uint;
-		private var _bytesLoaded: uint;
+		private var zip 	: Zip;
+		private var cfg 	: Object;
+		private var loader 	: Loader;
+		private var url		: String;
+		
+		private var _urlLoader	 : URLLoader;
+		private var _loaded 	 : Boolean;
+		private var _closed		 : Boolean;
+		private var _bytesTotal  : uint;
+		private var _bytesLoaded : uint;
 
 		public function SkyboxLoader(url : String) {
 			super();
@@ -99,7 +100,6 @@ package monkey.loader {
 			var bmp : BitmapData = (this.loader.content as Bitmap).bitmapData;
 			this.loader.unloadAndStop(true);
 			this.skybox = new SkyBox(bmp, this.cfg.size, this.cfg.scaleRatio);
-			this.skybox.setLayer(this.cfg.layer);
 			this.zip.dispose();
 			this.addChild(skybox);
 			this.dispatchEvent(event);

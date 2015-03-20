@@ -107,7 +107,6 @@ package monkey.core.collisions {
 			object.addEventListener(Object3D.ADDED_EVENT,   reloadEvent, false, 0, true);
 			if (includeChildren) {
 				object.addEventListener(Object3D.ADD_CHILD_EVENT,    reloadChildEvent, false, 0, true);
-				object.addEventListener(Object3D.REMOVE_CHILD_EVENT, unloadChildEvent, false, 0, true);
 				for each (var child : Object3D in object.children) {
 					this.addCollisionWith(child, true);
 				}
@@ -128,19 +127,15 @@ package monkey.core.collisions {
 					this.list.splice(idx, 1);
 				}
 			}
-			object.removeEventListener(Object3D.REMOVED_EVENT, unloadEvent);
-			object.removeEventListener(Object3D.ADDED_EVENT,	 reloadEvent);
-			object.removeEventListener(Object3D.ADD_CHILD_EVENT, 	  reloadChildEvent);
-			object.removeEventListener(Object3D.REMOVE_CHILD_EVENT, unloadChildEvent);
+			object.removeEventListener(Object3D.REMOVED_EVENT,	 	unloadEvent);
+			object.removeEventListener(Object3D.ADDED_EVENT,	 	reloadEvent);
+			object.removeEventListener(Object3D.ADD_CHILD_EVENT, 	reloadChildEvent);
 			if (includeChildren) {
 				for each (var child : Object3D in object.children) {
 					this.removeCollisionWith(child, true);
 				}
 			}
-		}
-		
-		private function unloadChildEvent(event:Event) : void {
-			this.removeCollisionWith(event.target as Object3D, true);
+			trace("remove......", object);
 		}
 		
 		private function reloadChildEvent(event:Event) : void {

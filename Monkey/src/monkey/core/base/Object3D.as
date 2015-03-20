@@ -173,7 +173,7 @@ package monkey.core.base {
 				child.visible = value;
 			}
 		}
-				
+		
 		/**
 		 * 添加一个child 
 		 * @param child
