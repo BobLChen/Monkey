@@ -27,6 +27,13 @@
 			this.layout.endGroup();
 			this.accordion.contentHeight = 30;
 			this.layer.addEventListener(ControlEvent.CHANGE, changeLayer);
+			this.visible.addEventListener(ControlEvent.CHANGE, chaneVisible);
+		}
+		
+		protected function chaneVisible(event:Event) : void {
+			if (this._app.selection.main) {
+				this._app.selection.main.visible = !this._app.selection.main.visible;
+			}
 		}
 		
 		protected function changeLayer(event:Event) : void {

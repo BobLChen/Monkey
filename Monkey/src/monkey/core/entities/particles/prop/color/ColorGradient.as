@@ -16,8 +16,6 @@ package monkey.core.entities.particles.prop.color {
 		public function ColorGradient() {
 			super();
 			this.color = new GradientColor();
-			this.color.setColors([0xFFFFFF], [1]);
-			this.color.setAlphas([1], [1]);
 		}
 		
 		override public function getRGBA(x : Number) : Vector3D {

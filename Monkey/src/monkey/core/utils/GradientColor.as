@@ -11,7 +11,7 @@ package monkey.core.utils {
 	import flash.geom.Vector3D;
 
 	public class GradientColor {
-		
+				
 		private static const shape  : Shape = new Shape();
 		private static const matrix : Matrix = new Matrix();
 		
@@ -30,8 +30,8 @@ package monkey.core.utils {
 			this._colors = [];
 			this._alphaRatios = [];
 			this._colorRatios = [];
-			this.setColors([0xFFFFFF], [0]);
-			this.setAlphas([1, 0], [0, 0xFF]);
+			this.setColors([0xFFFFFF], [1]);
+			this.setAlphas([1], [1]);
 		}
 		
 		public function getRGBA(idx : Number) : Vector3D {

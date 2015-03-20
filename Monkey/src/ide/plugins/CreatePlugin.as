@@ -24,6 +24,7 @@ package ide.plugins {
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.utils.Color;
+	import monkey.core.utils.GradientColor;
 	import monkey.core.utils.Texture3DUtils;
 	import monkey.core.utils.UUID;
 	
@@ -45,7 +46,7 @@ package ide.plugins {
 		public function start():void {
 			
 		}
-				
+		
 		public function init(app : App) : void {
 			this._app = app;
 			this._app.addMenu("Create/Object3D", 	createObject3D);
@@ -104,9 +105,10 @@ package ide.plugins {
 		
 		private function createParticles(e : Event) : void {
 			var particle : ParticleSystem = new ParticleSystem();
+			particle.colorLifetime = new GradientColor();
 			particle.build();
 			particle.play();
-			
+						
 			var data : LifetimeData = new LifetimeData();
 			data.init();
 			particle.userData.lifetime  = data;

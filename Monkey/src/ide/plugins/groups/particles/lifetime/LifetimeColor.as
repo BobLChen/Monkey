@@ -16,11 +16,11 @@ package ide.plugins.groups.particles.lifetime {
 
 	public class LifetimeColor extends ParticleLifetimeGroup {
 
-		private var _colors : GradientColorBar;
-		private var _alphas : GradientColorBar;
+		private var _colors  : GradientColorBar;
+		private var _alphas  : GradientColorBar;
 		private var _texture : Image;
-		private var layout : Layout;
-
+		private var layout   : Layout;
+		
 		public function LifetimeColor() {
 			super("LifetimeColor");
 			this.removeAllControls();
@@ -41,7 +41,7 @@ package ide.plugins.groups.particles.lifetime {
 			grad.setAlphas(_alphas.alphas, _alphas.ratios);
 			this.particle.colorLifetime = grad;
 		}
-
+		
 		override public function updateGroup(app : App, particle : ParticleSystem) : void {
 			super.updateGroup(app, particle);
 			this._colors.removeAllKeys();

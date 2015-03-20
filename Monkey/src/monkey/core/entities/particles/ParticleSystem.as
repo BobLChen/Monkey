@@ -12,7 +12,7 @@ package monkey.core.entities.particles {
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
-	import monkey.core.entities.particles.prop.color.ColorGradient;
+	import monkey.core.entities.particles.prop.color.ColorConst;
 	import monkey.core.entities.particles.prop.color.PropColor;
 	import monkey.core.entities.particles.prop.value.DataConst;
 	import monkey.core.entities.particles.prop.value.PropData;
@@ -48,7 +48,8 @@ package monkey.core.entities.particles {
 		private static const vector3d 		: Vector3D = new Vector3D();					// vector缓存
 		/** 默认关键帧 */
 		private static var _defKeyframe 	: ByteArray;
-		
+		/** 默认lifetime color */
+				
 		private var _duration 				: Number; 						// 持续发射时间
 		private var _loops 					: Boolean; 						// 循环发射模式
 		private var _startDelay 			: Number; 						// 开始延迟时间
@@ -74,7 +75,11 @@ package monkey.core.entities.particles {
 		private var blendTexture   			: Bitmap2DTexture;				// color over lifetime贴图
 		
 		/**
-		 *  粒子系统
+		 * var particle : ParticleSystem = new ParticleSystem();
+	     * particle.colorLifetime = new GradientColor();	// 代码创建的粒子系统，这一句必须
+		 * particle.build();
+		 * particle.play(); 
+		 * 
 		 */		
 		public function ParticleSystem() {
 			super();
@@ -140,12 +145,11 @@ package monkey.core.entities.particles {
 			this.frame			 = new Point(1, 1);
 			this.startSpeed 	 = new DataConst(5);							
 			this.startSize 		 = new DataConst(1);
-			this.startColor 	 = new ColorGradient();						
+			this.startColor 	 = new ColorConst(0xFFFFFF);				
 			this.startLifeTime   = new DataConst(5);							
 			this.startRotation   = Vector.<PropData>([new DataConst(0), new DataConst(0), new DataConst(0)])
 			this.startOffset 	 = Vector.<PropData>([new DataConst(0), new DataConst(0), new DataConst(0)]);;
-			this.worldspace 	 = false;										
-			this.colorLifetime 	 = new GradientColor();
+			this.worldspace 	 = false;							
 			this.image			 = new DEFAULT_IMG().bitmapData;
 			this.keyFrames		 = keyframeDatas;
 		}
