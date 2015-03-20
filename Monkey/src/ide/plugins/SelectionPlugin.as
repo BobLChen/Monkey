@@ -1,34 +1,31 @@
 package ide.plugins {
-
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
+	
 	import flash.geom.Vector3D;
-	import flash.utils.Dictionary;
-	
-	import ide.App;
+	import monkey.core.entities.particles.ParticleSystem;
+	import monkey.core.light.Light3D;
 	import ide.events.SceneEvent;
-	import ide.panel.Gizmo;
-	import ide.utils.MathUtils;
-	
-	import monkey.core.base.Bounds3D;
-	import monkey.core.base.Object3D;
+	import flash.events.Event;
 	import monkey.core.camera.Camera3D;
+	import monkey.core.entities.DebugLight;
+	import monkey.core.utils.Device3D;
+	import ui.core.interfaces.IPlugin;
+	import flash.events.MouseEvent;
+	import flash.display.Sprite;
 	import monkey.core.entities.Axis3D;
 	import monkey.core.entities.DebugBounds;
-	import monkey.core.entities.DebugCamera;
-	import monkey.core.entities.DebugLight;
-	import monkey.core.entities.DebugWireframe;
-	import monkey.core.entities.particles.ParticleSystem;
-	import monkey.core.entities.primitives.Cube;
-	import monkey.core.light.Light3D;
-	import monkey.core.renderer.MeshRenderer;
-	import monkey.core.scene.Scene3D;
-	import monkey.core.utils.Device3D;
-	import monkey.core.utils.Input3D;
+	import ide.App;
+	import monkey.core.base.Object3D;
 	import monkey.core.utils.Vector3DUtils;
+	import monkey.core.base.Bounds3D;
+	import monkey.core.entities.DebugCamera;
+	import monkey.core.utils.Input3D;
+	import ide.utils.MathUtils;
+	import monkey.core.scene.Scene3D;
+	import monkey.core.entities.DebugWireframe;
+	import ide.panel.Gizmo;
+	import flash.utils.Dictionary;
+
 	
-	import ui.core.interfaces.IPlugin;
 
 	public class SelectionPlugin implements IPlugin {
 
@@ -57,9 +54,7 @@ package ide.plugins {
 		private var cameraGizmos		: Dictionary;			// debug cameras
 		
 		public function SelectionPlugin() {
-			var cube : Object3D = new Object3D();
-			cube.addComponent(new MeshRenderer(new Cube(1, 1, 1), null));
-			this._boundings   = new DebugBounds(cube);
+			this._boundings   = new DebugBounds();
 			this._light 	  = new DebugLight(null, 0xFFCB00, 0.75);
 			this._selection   = [];
 			this._sprite 	  = new Sprite();

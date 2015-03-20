@@ -135,7 +135,6 @@ package monkey.core.collisions {
 					this.removeCollisionWith(child, true);
 				}
 			}
-			trace("remove......", object);
 		}
 		
 		private function reloadChildEvent(event:Event) : void {

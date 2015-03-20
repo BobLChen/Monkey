@@ -1,26 +1,19 @@
 package monkey.core.entities {
-	
 	import monkey.core.base.Bounds3D;
-	import monkey.core.base.Object3D;
-
+		
 	public class DebugBounds extends Lines3D {
 		
-		private var aabb : Bounds3D;
-		
-		public function DebugBounds(obj : Object3D) {
+		public function DebugBounds() {
 			super();
-			if (!obj.renderer || !obj.renderer.mesh) {
-				return;
-			}
-			this.aabb = obj.renderer.mesh.bounds;
-			this.renderer.material.depthWrite = false;
 			this.init();
 		}
-		
+				
 		private function init() : void {
-			if (!aabb) {
-				return;
-			}
+			
+			var aabb : Bounds3D = new Bounds3D();
+			aabb.min.setTo(-0.5, -0.5, -0.5);
+			aabb.max.setTo(0.5, 0.5, 0.5);
+			
 			this.lineStyle(1, 0xFFCB00);
 			this.moveTo(aabb.min.x, aabb.min.y, aabb.min.z);
 			this.lineTo(aabb.max.x, aabb.min.y, aabb.min.z);
