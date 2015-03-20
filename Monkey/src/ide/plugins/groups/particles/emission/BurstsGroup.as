@@ -46,13 +46,15 @@ package ide.plugins.groups.particles.emission {
 			this.minHeight = 60;
 			this.button.addEventListener(ControlEvent.CLICK, onAddBursts);
 		}
-				
+		
 		private function createItem(data : Point) : void {
 			
 			var btn  : ImageButton = new ImageButton(new SUB());
 			var time : Spinner = new Spinner(data.x);
 			var num  : Spinner = new Spinner(data.y);
 			var item : Box = new Box();
+			item.minHeight = 20;
+			item.maxHeight = 20;
 			
 			item.orientation = HORIZONTAL;
 			item.addControl(time);
@@ -64,8 +66,8 @@ package ide.plugins.groups.particles.emission {
 			this.dict[num] = data;		// 数量->数据
 			this.dict[btn] = item;		// 按钮->item
 			this.dict[item]= data;		// item->data
-			this.maxHeight += 20;
-			this.minHeight += 20;
+			this.maxHeight += 25;
+			this.minHeight += 25;
 			
 			time.addEventListener(ControlEvent.CHANGE, changeTime);
 			num.addEventListener(ControlEvent.CHANGE, changeNum);
@@ -93,13 +95,13 @@ package ide.plugins.groups.particles.emission {
 			this.particle.build();
 			this.app.dispatchEvent(new SelectionEvent(SelectionEvent.CHANGE));
 		}
-				
+		
 		private function onDeleteBursts(event:Event) : void {
 			var btn  : ImageButton = event.target as ImageButton;
 			var data : Point = this.dict[dict[btn]];
 			this.removeControl(this.dict[btn]);
-			this.maxHeight -= 20;
-			this.minHeight -= 20;
+			this.maxHeight -= 25;
+			this.minHeight -= 25;
 			delete this.dict[btn];
 			var idx : int = this.particle.bursts.indexOf(data);
 			this.particle.bursts.splice(idx, 1);
@@ -112,6 +114,8 @@ package ide.plugins.groups.particles.emission {
 			this.removeAllControls();
 			this.addControl(title);
 			this.addControl(header);
+			this.maxHeight = 60;
+			this.minHeight = 60;
 			for each (var point : Point in particle.bursts) {
 				this.createItem(point);
 			}
