@@ -167,6 +167,7 @@ package ide.utils {
 		public static function exportWater(water : Water3D) : ByteArray {
 			
 			var obj : Object = {};
+			obj.layer		= water.layer;
 			obj.width 		= water.width;
 			obj.height		= water.height;
 			obj.segment		= water.segment;
@@ -209,6 +210,7 @@ package ide.utils {
 		 */		
 		public static function exportSkybox(skybox: SkyBox) : ByteArray {
 			var config : Object = {};
+			config.layer = skybox.layer;
 			config.size  = skybox.size;
 			config.scaleRatio = skybox.scaleRatio;
 			var bytes : ByteArray = null;

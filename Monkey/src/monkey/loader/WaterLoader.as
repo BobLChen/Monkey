@@ -85,6 +85,7 @@ package monkey.loader {
 			this.loader.unloadAndStop(true);
 			// 初始化water
 			this.water = new Water3D(tex, nrm, cfg.width, cfg.height, cfg.segment);
+			this.water.setLayer(cfg.layer);
 			this.water.waterSpeed = cfg.waterSpeed;
 			this.water.waterWave  = cfg.waterWave;
 			this.water.waterHeight= cfg.waterHeight;
