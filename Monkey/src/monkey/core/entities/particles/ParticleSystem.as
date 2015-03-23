@@ -28,6 +28,7 @@ package monkey.core.entities.particles {
 	import monkey.core.utils.Device3D;
 	import monkey.core.utils.GradientColor;
 	import monkey.core.utils.Matrix3DUtils;
+	import monkey.core.utils.Time3D;
 	
 	/**
 	 * 粒子
@@ -72,6 +73,8 @@ package monkey.core.entities.particles {
 		private var _totalLife				: Number;						// 周期
 		private var _texture				: Bitmap2DTexture;				// 粒子贴图
 		private var _blendColor				: Color;						// 调色
+		private var _posBytes 				: ByteArray;					// world属性时使用的bytes
+		private var _lastIdx  				: int = 0;						// world属性粒子的最后索引
 		private var blendTexture   			: Bitmap2DTexture;				// color over lifetime贴图
 		
 		/**
@@ -126,12 +129,15 @@ package monkey.core.entities.particles {
 		 *  初始化粒子系统参数
 		 */		
 		private function init() : void {
-			var material : ParticleMaterial = new ParticleMaterial();
 			var mode : Surface3D = new Plane(1, 1, 1).surfaces[0];
 			var mesh : Mesh3D = new Mesh3D([]);
 			mesh.bounds	= mode.bounds;
+			
 			this.addComponent(new ParticleAnimator());
-			this.addComponent(new MeshRenderer(mesh, material));
+			this.addComponent(new MeshRenderer(mesh, new ParticleMaterial()));
+			this._posBytes		 = new ByteArray();
+			this._posBytes.endian= Endian.LITTLE_ENDIAN;
+			this._lastIdx		 = 0;
 			this.name			 = "Particle";
 			this.shape 			 = new SphereShape();
 			this.shape.mode 	 = mode;				
@@ -217,14 +223,15 @@ package monkey.core.entities.particles {
 					}
 				}
 			}
+			
 			if (loops) {
 				this._totalTime = fillSize * duration + duration;
-				this.totalLife  = fillSize * duration + duration;
-			} else {
-				this.totalLife  = this._totalTime * 2; // * 2防止粒子在结束时又重新出现
 			}
+			
+			this.totalLife  = this._totalTime;
+			trace("生命周期:", this.totalLife);
 		}
-				
+		
 		private function createParticleMesh() : void {
 			// 根据粒子数量以及shape顶点数量计算出需要多少个surface
 			var size : int = Math.ceil(maxParticles * shape.vertNum / 65535);
@@ -267,6 +274,7 @@ package monkey.core.entities.particles {
 				lifetime = startLifeTime.getValue(delay);
 				this._totalTime = Math.max(this._totalTime, delay + lifetime);
 			}		
+			this._totalTime += DELAY_BIAS;
 			this.animator.totalFrames = this._totalTime + this._startDelay;
 			if (this.loops) {
 				this.animator.totalFrames = Number.MAX_VALUE;
@@ -343,26 +351,6 @@ package monkey.core.entities.particles {
 			}
 		}
 		
-		public function get surfaces() : Vector.<Surface3D> {
-			return this.mesh.surfaces;
-		}
-		
-		public function get billboard():Boolean {
-			return this.material.billboard;
-		}
-		
-		public function set billboard(value:Boolean):void {
-			this.material.billboard = value;
-		}
-		
-		private function get mesh() : Mesh3D {
-			return this.renderer.mesh;
-		}
-		
-		private function get material() : ParticleMaterial {
-			return this.renderer.material as ParticleMaterial;
-		}
-		
 		/**
 		 * 默认的关键帧数据，强制使用5个关键帧
 		 * @return 
@@ -403,6 +391,27 @@ package monkey.core.entities.particles {
 			_defKeyframe.readBytes(data, 0, _defKeyframe.length);
 			
 			return data;
+		}
+		
+		
+		public function get surfaces() : Vector.<Surface3D> {
+			return this.mesh.surfaces;
+		}
+		
+		public function get billboard():Boolean {
+			return this.material.billboard;
+		}
+		
+		public function set billboard(value:Boolean):void {
+			this.material.billboard = value;
+		}
+		
+		private function get mesh() : Mesh3D {
+			return this.renderer.mesh;
+		}
+		
+		private function get material() : ParticleMaterial {
+			return this.renderer.material as ParticleMaterial;
 		}
 		
 		/**
@@ -525,6 +534,7 @@ package monkey.core.entities.particles {
 				result = result * fillNum;
 			}
 			this._particleNum = result;
+			trace("粒子数量:", this._particleNum, "粒子时间:", this._totalTime);
 		}
 		
 		/**
@@ -771,11 +781,46 @@ package monkey.core.entities.particles {
 			this.material.blendColor = value;
 		}
 		
+		/**
+		 * 更新buffer 
+		 * 
+		 */		
+		private function updateBuffers() : void {
+			this._posBytes.position = 0;
+			
+			var curIdx : int = int((this.animator.currentFrame % this._totalTime) * rate) % maxParticles;	// 计算当前粒子索引
+			var count  : int = Math.ceil(Time3D.deltaTime * rate) + curIdx - this._lastIdx;					// 计算出需要更新的数量,需要算上最后一次更新位置
+			var surf   : Surface3D = this.surfaces[0];														// 考虑到计算量world属性仅仅只对顶点数量<=65535有用
+			var bytes  : ByteArray = surf.getVertexBytes(Surface3D.CUSTOM4);								// 获取偏移量
+			bytes.position = shape.vertNum * 12 * _lastIdx;													// bytes偏移到上一次更新位置
+			var num	   : int = 0;																			// 实际更新数量
+			
+			while (bytes.bytesAvailable && count > 0) {
+				count--;
+				for (var i:int = 0; i < shape.vertNum; i++) {
+					vector3d.x = bytes.readFloat();
+					vector3d.y = bytes.readFloat();
+					vector3d.z = bytes.readFloat();
+					this.transform.localToGlobal(vector3d, vector3d);
+					_posBytes.writeFloat(vector3d.x);
+					_posBytes.writeFloat(vector3d.y);
+					_posBytes.writeFloat(vector3d.z);
+				}
+				num++;
+			}
+			// 更新粒子数据
+			if (surf.vertexBuffers[Surface3D.CUSTOM4]) {
+				surf.vertexBuffers[Surface3D.CUSTOM4].uploadFromByteArray(this._posBytes, 0, this._lastIdx * shape.vertNum, num * shape.vertNum);
+			}
+			
+			this._lastIdx = curIdx;
+		}
+		
 		override public function draw(scene:Scene3D, includeChildren:Boolean=true):void {
-			if (!visible) {
+			if (!this.visible) {
 				return;
 			}
-			if (hasEventListener(ENTER_DRAW_EVENT)) {
+			if (this.hasEventListener(ENTER_DRAW_EVENT)) {
 				this.dispatchEvent(enterDrawEvent);
 			}
 			// build
@@ -786,7 +831,8 @@ package monkey.core.entities.particles {
 			if (this.animator.currentFrame < this.startDelay) {
 				return;
 			}
-			if (!loops && this.animator.currentFrame > this.animator.totalFrames) {
+			// 非循环模式并且播放完成
+			if (!this.loops && this.animator.currentFrame > this.animator.totalFrames) {
 				return;				
 			}
 			// 模型数据
@@ -794,6 +840,11 @@ package monkey.core.entities.particles {
 			Device3D.mvp.copyFrom(Device3D.world);
 			Device3D.mvp.append(Device3D.viewProjection);
 			Device3D.drawOBJNum++;
+			// world属性，更新粒子属性
+			if (this.worldspace) {
+				this.updateBuffers();		
+				Device3D.mvp.copyFrom(Device3D.viewProjection);
+			}
 			// 设置时间
 			this.material.time = this.animator.currentFrame - this.startDelay;
 			// 绘制组件
@@ -812,6 +863,5 @@ package monkey.core.entities.particles {
 				this.dispatchEvent(exitDrawEvent);
 			}
 		}
-				
 	}
 }

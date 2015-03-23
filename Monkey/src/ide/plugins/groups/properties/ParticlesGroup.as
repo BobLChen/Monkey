@@ -5,6 +5,7 @@ package ide.plugins.groups.properties {
 	import ide.plugins.groups.particles.base.BillboardGroup;
 	import ide.plugins.groups.particles.base.MaxParticleGroup;
 	import ide.plugins.groups.particles.base.TextureGroup;
+	import ide.plugins.groups.particles.base.WorldSpaceGroup;
 	import ide.plugins.groups.particles.emission.BurstsGroup;
 	import ide.plugins.groups.particles.emission.DurationGroup;
 	import ide.plugins.groups.particles.emission.LoopsGroup;
@@ -55,6 +56,8 @@ package ide.plugins.groups.properties {
 			this.groups.push(time);
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new MaxParticleGroup()));
+			this.layout.addControl(new Separator());
+			this.groups.push(this.layout.addControl(new WorldSpaceGroup()));
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new BillboardGroup()));
 			this.layout.addControl(new Separator());

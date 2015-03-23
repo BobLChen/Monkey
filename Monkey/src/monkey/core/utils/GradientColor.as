@@ -31,7 +31,7 @@ package monkey.core.utils {
 			this._alphaRatios = [];
 			this._colorRatios = [];
 			this.setColors([0xFFFFFF], [1]);
-			this.setAlphas([1], [1]);
+			this.setAlphas([1, 0], [1, 255]);
 		}
 		
 		public function getRGBA(idx : Number) : Vector3D {

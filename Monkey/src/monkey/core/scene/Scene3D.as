@@ -151,7 +151,7 @@ package monkey.core.scene {
 		public function get viewPort():Rectangle {
 			return _viewPort;
 		}
-
+		
 		/**
 		 * 设置3D视口 
 		 * @param x
