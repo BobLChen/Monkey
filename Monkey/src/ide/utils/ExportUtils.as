@@ -138,14 +138,17 @@ package ide.utils {
 			config.startDelay	= particle.startDelay;
 			config.colorLifetime= particle.colorLifetime;
 			config.keyFrames	= particle.keyFrames;
+			config.totalTime	= particle.totalTime;
+			config.maxParticles	= particle.maxParticles;
+			config.vertNum		= particle.shape.vertNum;
+			config.rate			= particle.rate;
+			config.bursts	 	= particle.bursts;
+			config.duration		= particle.duration;
 			
 			if (optimize) {
 				return config;
 			}
-			
-			config.bursts	 	= particle.bursts;
-			config.duration		= particle.duration;
-			config.rate			= particle.rate;
+						
 			config.lifetimeData = particle.userData.lifetime;
 			config.shape		= particle.shape;
 			config.startColor	= particle.startColor;

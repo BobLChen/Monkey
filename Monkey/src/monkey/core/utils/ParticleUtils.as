@@ -132,44 +132,7 @@ package monkey.core.utils {
 		 */		
 		private static function createParticle(config : Object) : ParticleSystem {
 			var ret : ParticleSystem	= new ParticleSystem();
-			
-			ret.renderer.material.depthWrite 	= config.depthWrite;
-			ret.renderer.material.depthCompare 	= config.depthCompare;
-			ret.renderer.material.cullFace		= config.cullFace;
-			ret.renderer.material.sourceFactor  = config.sourceFactor;
-			ret.renderer.material.destFactor	= config.destFactor;
-			
-			ret.animator.totalFrames	= config.totalFrames == -1 ? Number.MAX_VALUE : config.totalFrames;
-			ret.userData.imageName 		= config.imageName;
-			ret.userData.uuid 			= config.uuid;
-			ret.userData.optimize   	= config.optimize;
-			ret.worldspace 				= config.world;
-			ret.loops 	  				= config.loops;
-			ret.billboard 				= config.billboard;
-			ret.frame.x  				= config.frame[0];
-			ret.frame.y  				= config.frame[1];
-			ret.totalLife				= config.totalLife;
-			ret.startDelay		    	= config.startDelay;
-			ret.colorLifetime 	   	 	= ParticleConfig.getGradientColor(config.colorLifetime);
-			ret.keyFrames 		    	= ParticleConfig.getKeyFrames(config.keyFrames);
-			if (config.optimize) {
-				return ret;
-			}
-			ret.duration 				= config.duration;
-			ret.rate	  		    	= config.rate;
-			ret.bursts					= ParticleConfig.getBursts(config.bursts);
-			ret.shape	  		  		= ParticleConfig.getShape(config.shape);
-			ret.startColor		  		= ParticleConfig.getColor(config.startColor);
-			ret.startLifeTime	  		= ParticleConfig.getData(config.startLifeTime);
-			ret.startOffset[0]	  		= ParticleConfig.getData(config.startOffset.x);
-			ret.startOffset[1]	  		= ParticleConfig.getData(config.startOffset.y);
-			ret.startOffset[2]	  		= ParticleConfig.getData(config.startOffset.z);
-			ret.startRotation[0]  		= ParticleConfig.getData(config.startRotation.x);
-			ret.startRotation[1]  		= ParticleConfig.getData(config.startRotation.y);
-			ret.startRotation[2]  		= ParticleConfig.getData(config.startRotation.z);
-			ret.startSize		  		= ParticleConfig.getData(config.startSize);
-			ret.startSpeed		  		= ParticleConfig.getData(config.startSpeed);
-			ret.userData.lifetimeData 	= config.lifetimeData;	// lifetimeData由IDE自己去组装
+			ret.initWithConfig(config);
 			return ret;
 		}
 		

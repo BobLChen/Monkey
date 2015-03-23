@@ -28,6 +28,7 @@ package monkey.core.entities.particles {
 	import monkey.core.utils.Device3D;
 	import monkey.core.utils.GradientColor;
 	import monkey.core.utils.Matrix3DUtils;
+	import monkey.core.utils.ParticleConfig;
 	import monkey.core.utils.Time3D;
 	
 	/**
@@ -86,7 +87,106 @@ package monkey.core.entities.particles {
 		 */		
 		public function ParticleSystem() {
 			super();
-			this.init();
+		}
+		
+		/**
+		 * 通过配置文件初始化 
+		 * @param config
+		 * 
+		 */		
+		public function initWithConfig(config : Object) : void {
+			
+			this.addComponent(new MeshRenderer(new Mesh3D([]), new ParticleMaterial()));
+			this.addComponent(new ParticleAnimator());
+			
+			this.renderer.material.depthWrite 	= config.depthWrite;
+			this.renderer.material.depthCompare = config.depthCompare;
+			this.renderer.material.cullFace		= config.cullFace;
+			this.renderer.material.sourceFactor = config.sourceFactor;
+			this.renderer.material.destFactor	= config.destFactor;		
+			
+			this.animator.totalFrames	= config.totalFrames == -1 ? Number.MAX_VALUE : config.totalFrames;
+			this.userData.imageName 	= config.imageName;
+			this.userData.uuid 			= config.uuid;
+			this.userData.optimize   	= config.optimize;
+			
+			this._posBytes		 		= new ByteArray();
+			this._posBytes.endian		= Endian.LITTLE_ENDIAN;
+			this._lastIdx		 		= 0;
+			this._simulationSpace		= config.world;
+			this._totalTime				= config.totalTime;
+			this._particleNum			= config.maxParticles;
+			this._loops					= config.loops;
+			this._startDelay			= config.startDelay;
+			this._shape					= new ParticleShape();
+			this._shape.vertNum			= config.vertNum;
+			
+			this.blendColor				= new Color();
+			this.frame					= new Point(config.frame[0], config.frame[1]);
+			this.billboard				= config.billboard;
+			this.totalLife				= config.totalLife;
+			this.colorLifetime			= ParticleConfig.getGradientColor(config.colorLifetime);
+			this.keyFrames				= ParticleConfig.getKeyFrames(config.keyFrames);
+			this.duration 				= config.duration;
+			this.rate	  		    	= config.rate;
+			this.bursts					= ParticleConfig.getBursts(config.bursts);
+			this._needBuild				= false;
+			
+			if (config.optimize) {
+				return;
+			}
+			
+			this.shape	  		  		= ParticleConfig.getShape(config.shape);
+			this.startColor		  		= ParticleConfig.getColor(config.startColor);
+			this.startLifeTime	  		= ParticleConfig.getData(config.startLifeTime);
+			this.startOffset			= new Vector.<PropData>();
+			this.startOffset[0]	  		= ParticleConfig.getData(config.startOffset.x);
+			this.startOffset[1]	  		= ParticleConfig.getData(config.startOffset.y);
+			this.startOffset[2]	  		= ParticleConfig.getData(config.startOffset.z);
+			this.startRotation			= new Vector.<PropData>();
+			this.startRotation[0]  		= ParticleConfig.getData(config.startRotation.x);
+			this.startRotation[1]  		= ParticleConfig.getData(config.startRotation.y);
+			this.startRotation[2]  		= ParticleConfig.getData(config.startRotation.z);
+			this.startSize		  		= ParticleConfig.getData(config.startSize);
+			this.startSpeed		  		= ParticleConfig.getData(config.startSpeed);
+			this.userData.lifetimeData 	= config.lifetimeData;	// lifetimeData由IDE自己去组装
+			this._needBuild				= false;
+		}
+		
+		/**
+		 *  初始化粒子
+		 */		
+		public function init() : void {
+			var mode : Surface3D = new Plane(1, 1, 1).surfaces[0];
+			var mesh : Mesh3D = new Mesh3D([]);
+			mesh.bounds	= mode.bounds;
+			
+			this.addComponent(new ParticleAnimator());
+			this.addComponent(new MeshRenderer(mesh, new ParticleMaterial()));
+			this._posBytes		 = new ByteArray();
+			this._posBytes.endian= Endian.LITTLE_ENDIAN;
+			this._lastIdx		 = 0;
+			this.name			 = "Particle";
+			this.shape 			 = new SphereShape();
+			this.shape.mode 	 = mode;				
+			this.rate 			 = 10;								
+			this.blendColor		 = new Color();
+			this.bursts 		 = new Vector.<Point>();		
+			this.billboard		 = true;
+			this.duration 		 = 5;											
+			this.loops 		 	 = true;											
+			this.startDelay 	 = 0;				
+			this.frame			 = new Point(1, 1);
+			this.startSpeed 	 = new DataConst(5);							
+			this.startSize 		 = new DataConst(1);
+			this.startColor 	 = new ColorConst(0xFFFFFF);				
+			this.startLifeTime   = new DataConst(5);	
+			this.colorLifetime	 = new GradientColor();
+			this.startRotation   = Vector.<PropData>([new DataConst(0), new DataConst(0), new DataConst(0)])
+			this.startOffset 	 = Vector.<PropData>([new DataConst(0), new DataConst(0), new DataConst(0)]);;
+			this.worldspace 	 = false;							
+			this.image			 = new DEFAULT_IMG().bitmapData;
+			this.keyFrames		 = keyframeDatas;
 		}
 		
 		override public function clone():Object3D {
@@ -126,41 +226,6 @@ package monkey.core.entities.particles {
 		}
 		
 		/**
-		 *  初始化粒子系统参数
-		 */		
-		private function init() : void {
-			var mode : Surface3D = new Plane(1, 1, 1).surfaces[0];
-			var mesh : Mesh3D = new Mesh3D([]);
-			mesh.bounds	= mode.bounds;
-			
-			this.addComponent(new ParticleAnimator());
-			this.addComponent(new MeshRenderer(mesh, new ParticleMaterial()));
-			this._posBytes		 = new ByteArray();
-			this._posBytes.endian= Endian.LITTLE_ENDIAN;
-			this._lastIdx		 = 0;
-			this.name			 = "Particle";
-			this.shape 			 = new SphereShape();
-			this.shape.mode 	 = mode;				
-			this.rate 			 = 10;								
-			this.blendColor		 = new Color();
-			this.bursts 		 = new Vector.<Point>();		
-			this.billboard		 = true;
-			this.duration 		 = 5;											
-			this.loops 		 	 = true;											
-			this.startDelay 	 = 0;				
-			this.frame			 = new Point(1, 1);
-			this.startSpeed 	 = new DataConst(5);							
-			this.startSize 		 = new DataConst(1);
-			this.startColor 	 = new ColorConst(0xFFFFFF);				
-			this.startLifeTime   = new DataConst(5);							
-			this.startRotation   = Vector.<PropData>([new DataConst(0), new DataConst(0), new DataConst(0)])
-			this.startOffset 	 = Vector.<PropData>([new DataConst(0), new DataConst(0), new DataConst(0)]);;
-			this.worldspace 	 = false;							
-			this.image			 = new DEFAULT_IMG().bitmapData;
-			this.keyFrames		 = keyframeDatas;
-		}
-		
-		/**
 		 * 构建粒子系统 
 		 * 
 		 */		
@@ -176,15 +241,7 @@ package monkey.core.entities.particles {
 				this.dispatchEvent(buildEvent); 	// 完成事件
 			}
 		}
-		
-		/**
-		 * 手动构建粒子系统 
-		 * 
-		 */		
-		public function manualBuild() : void {
-			this._needBuild = false;
-		}
-		
+				
 		/**
 		 *  更新粒子的属性
 		 */		
@@ -229,7 +286,6 @@ package monkey.core.entities.particles {
 			}
 			
 			this.totalLife  = this._totalTime;
-			trace("生命周期:", this.totalLife);
 		}
 		
 		private function createParticleMesh() : void {
@@ -393,7 +449,10 @@ package monkey.core.entities.particles {
 			return data;
 		}
 		
-		
+		public function get totalTime():Number {
+			return _totalTime;
+		}
+				
 		public function get surfaces() : Vector.<Surface3D> {
 			return this.mesh.surfaces;
 		}
@@ -517,7 +576,7 @@ package monkey.core.entities.particles {
 		public function get maxParticles():int {
 			return _particleNum;
 		}
-		
+				
 		/**
 		 * 计算粒子系统的粒子数量
 		 */		
@@ -534,7 +593,6 @@ package monkey.core.entities.particles {
 				result = result * fillNum;
 			}
 			this._particleNum = result;
-			trace("粒子数量:", this._particleNum, "粒子时间:", this._totalTime);
 		}
 		
 		/**

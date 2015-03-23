@@ -105,7 +105,7 @@ package ide.plugins {
 		
 		private function createParticles(e : Event) : void {
 			var particle : ParticleSystem = new ParticleSystem();
-			particle.colorLifetime = new GradientColor();
+			particle.init();
 			particle.build();
 			particle.play();
 						

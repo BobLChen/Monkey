@@ -121,14 +121,14 @@ package monkey.loader {
 				for each (var surf : Surface3D in sufMap[pivot.userData.uuid]) {
 					pivot.renderer.mesh.surfaces.push(surf.clone());
 				}
-				pivot.manualBuild();
 			}
 			this._loaded = true;
 			this.freeAssets();
 			this.addChild(particles);
+			this.particles.play();
 			this.dispatchEvent(new Event(Event.COMPLETE));
 		}
-				
+		
 		/**
 		 * 释放内存
 		 */		
