@@ -23,7 +23,7 @@ package {
 			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
 			this.stage.align = StageAlign.TOP_LEFT;
-			this.stage.frameRate = 60;
+			this.stage.frameRate = 60;  
 			this.stage.addChild(new FPSStats());
 			
 			this.scene = new Viewer3D(this);
@@ -36,8 +36,8 @@ package {
 			this.scene.addChild(loader);
 			
 			this.scene.addEventListener(Scene3D.PRE_RENDER_EVENT, function(e:Event):void{
-				loader.transform.x = Math.sin(getTimer() / 10000) * 100;
-				loader.transform.y = Math.cos(getTimer() / 10000) * 100;
+				loader.transform.x = Math.sin(getTimer() / 5000) * 100;
+				loader.transform.y = Math.cos(getTimer() / 5000) * 100;
 			});
 			
 		}

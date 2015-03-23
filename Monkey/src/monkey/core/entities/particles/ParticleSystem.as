@@ -866,12 +866,12 @@ package monkey.core.entities.particles {
 				}
 				num++;
 			}
+			
 			// 更新粒子数据
 			if (surf.vertexBuffers[Surface3D.CUSTOM4]) {
 				surf.vertexBuffers[Surface3D.CUSTOM4].uploadFromByteArray(this._posBytes, 0, this._lastIdx * shape.vertNum, num * shape.vertNum);
+				this._lastIdx = curIdx;
 			}
-			
-			this._lastIdx = curIdx;
 		}
 		
 		override public function draw(scene:Scene3D, includeChildren:Boolean=true):void {
