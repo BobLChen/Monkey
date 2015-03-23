@@ -846,12 +846,12 @@ package monkey.core.entities.particles {
 		private function updateBuffers() : void {
 			this._posBytes.position = 0;
 			
-			var curIdx : int = int((this.animator.currentFrame % this._totalTime) * rate) % maxParticles;	// 计算当前粒子索引
-			var count  : int = Math.ceil(Time3D.deltaTime * rate) + curIdx - this._lastIdx;					// 计算出需要更新的数量,需要算上最后一次更新位置
-			var surf   : Surface3D = this.surfaces[0];														// 考虑到计算量world属性仅仅只对顶点数量<=65535有用
-			var bytes  : ByteArray = surf.getVertexBytes(Surface3D.CUSTOM4);								// 获取偏移量
-			bytes.position = shape.vertNum * 12 * _lastIdx;													// bytes偏移到上一次更新位置
-			var num	   : int = 0;																			// 实际更新数量
+			var curIdx : int = int((this.animator.currentFrame % this._totalTime) * rate) % (maxParticles + 1);	// 计算当前粒子索引
+			var count  : int =Math.abs(Math.ceil(Time3D.deltaTime * rate) + curIdx - this._lastIdx);						// 计算出需要更新的数量,需要算上最后一次更新位置
+			var surf   : Surface3D = this.surfaces[0];															// 考虑到计算量world属性仅仅只对顶点数量<=65535有用
+			var bytes  : ByteArray = surf.getVertexBytes(Surface3D.CUSTOM4);									// 获取偏移量
+			bytes.position = shape.vertNum * 12 * _lastIdx;														// bytes偏移到上一次更新位置
+			var num	   : int = 0;																				// 实际更新数量
 			
 			while (bytes.bytesAvailable && count > 0) {
 				count--;
@@ -868,7 +868,7 @@ package monkey.core.entities.particles {
 			}
 			
 			// 更新粒子数据
-			if (surf.vertexBuffers[Surface3D.CUSTOM4]) {
+			if (surf.vertexBuffers[Surface3D.CUSTOM4] && num >= 1) {
 				surf.vertexBuffers[Surface3D.CUSTOM4].uploadFromByteArray(this._posBytes, 0, this._lastIdx * shape.vertNum, num * shape.vertNum);
 				this._lastIdx = curIdx;
 			}

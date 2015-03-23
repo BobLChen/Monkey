@@ -19,7 +19,7 @@ package {
 		private var scene : Scene3D;
 		
 		public function Test_06() {
-			super();
+			super();  
 			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
 			this.stage.align = StageAlign.TOP_LEFT;
