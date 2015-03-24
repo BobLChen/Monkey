@@ -225,7 +225,6 @@ package monkey.core.shader.filters {
 				// 计算比率
 				code += "div " + vtTime + ".y, " + vtTime + ".x, " + timeVa + ".y \n";
 				
-				
 				// 计算当前关键帧
 				code += "mul " + vtKey + ".x, " + vtTime + ".y, " + stepVc + ".x \n";
 				// 取分数: 1.7 => 0.7
@@ -273,7 +272,6 @@ package monkey.core.shader.filters {
 				code += "add " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
 				code += "mul " + vt2 + ".xyz, " + vt2 + ".xyz, " + timeVa + ".y \n";
 				code += "div " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt2 + ".w \n";
-				
 				// 速度 * 时间
 				code += "mul " + vt3 + ".xyz, " + speedVa + ".xyz, " + vtTime + ".x \n";
 				// lifetime位移 + 速度 * 时间 + offset
@@ -283,7 +281,6 @@ package monkey.core.shader.filters {
 				code += "m33 " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + billVc + " \n";
 				// 顶点 + 最终位移
 				code += "add " + regCache.op + ".xyz, " + regCache.op + ".xyz, " + vtKey + ".xyz \n";
-				
 				// =============uv动画=============
 				code += "mul " + vt2 + ".xy, " + regCache.getVa(Surface3D.UV0) + ".xy, " + frameVc + ".yz \n";
 				// 计算总量

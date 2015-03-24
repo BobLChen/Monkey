@@ -24,9 +24,9 @@ FBX:
 from FbxCommon import *
 from platform import system
 from string import count
-import logging
 import argparse
 import json
+import logging
 import os
 import re
 import struct
@@ -57,8 +57,6 @@ config = LObject()
 # 解析命令行参数
 def parseArgument():
     
-    logging.info("parse arguments...")
-    
     parser = argparse.ArgumentParser()
     # 解析法线
     parser.add_argument("-normal",  help = "parse normal",              action = "store_true",      default = False)
@@ -71,7 +69,7 @@ def parseArgument():
     # 解析动画
     parser.add_argument("-anim",    help = "parse animation",           action = "store_true",      default = False)
     # 使用geometry坐标
-    parser.add_argument("-geometry", help = "geometry transform",        action = "store_true",      default = False)
+    parser.add_argument("-geometry", help = "geometry transform",       action = "store_true",      default = False)
     # 使用全局坐标
     parser.add_argument("-world",   help = "world Transofrm",           action = "store_true",      default = False)
     # 指定Fbx文件路径
@@ -87,6 +85,10 @@ def parseArgument():
     
     option = parser.parse_args()
     option.mount = option.mount.split(",")
+    option.max_quat = int(option.max_quat)
+    option.max_m34  = int(option.max_m34)
+    
+    logging.info(("parse arguments...", option))
     
     return option
     pass
@@ -1169,6 +1171,7 @@ class Mesh(object):
         for subMesh in subMeshes:
             self.geometries += subMesh.splitBones()
             pass
+        logging.info("splitMesh:%d" % (len(self.geometries)))
         pass # end func
     
     # 拆分顶点数据:vertex,uv0,uv1,normal,weightsAndIndices

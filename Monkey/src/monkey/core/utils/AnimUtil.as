@@ -56,6 +56,7 @@ package monkey.core.utils {
 			for (var i:int = 0; i < num; i++) {
 				var frameCount : int = bytes.readInt();
 				var boneNum    : int = bytes.readInt();
+				trace(boneNum);
 				render.totalFrames = frameCount;
 				render.quat = type == 2;
 				render.boneNum[i] = Math.ceil(render.quat ? boneNum : boneNum * 1.5);

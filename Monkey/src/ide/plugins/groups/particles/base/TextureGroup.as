@@ -64,7 +64,7 @@ package ide.plugins.groups.particles.base {
 				particle.userData.imageName = file.file.nativePath;
 			});
 		}
-				
+		
 		private function changeFrame(event:Event) : void {
 			this.particle.frame = new Point(this.rows.value, this.columns.value);
 		}

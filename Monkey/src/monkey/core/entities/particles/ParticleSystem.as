@@ -75,16 +75,20 @@ package monkey.core.entities.particles {
 		private var _totalLife				: Number;						// 周期
 		private var _texture				: Bitmap2DTexture;				// 粒子贴图
 		private var _blendColor				: Color;						// 调色
-		private var _offsetBytes 			: ByteArray;					// world属性时使用的bytes
-		private var _lastIdx  				: int = 0;						// world属性粒子的最后索引
-		private var _offsetBuffer			: VertexBuffer3D;				// world属性粒子的buffer
-		
 		private var blendTexture   			: Bitmap2DTexture;				// color over lifetime贴图
-					
+		
+		private var _posBytes 				: ByteArray;					// world属性时使用的bytes
+		private var _velBytes				: ByteArray;					// world属性时使用的bytes
+		private var _lastIdx  				: int = 0;						// world属性粒子的最后索引
+		private var _posBuffer				: VertexBuffer3D;				// world属性粒子的位移 buffer
+		private var _velBuffer				: VertexBuffer3D;				// world属性粒子的速度 buffer
+							
 		public function ParticleSystem() {
 			super();
-			this._offsetBytes		 	= new ByteArray();
-			this._offsetBytes.endian	= Endian.LITTLE_ENDIAN;
+			this._posBytes		 	= new ByteArray();
+			this._posBytes.endian	= Endian.LITTLE_ENDIAN;
+			this._velBytes 			= new ByteArray();
+			this._velBytes.endian	= Endian.LITTLE_ENDIAN;
 		}
 		
 		/**
@@ -226,11 +230,21 @@ package monkey.core.entities.particles {
 		
 		override public function dispose(force:Boolean=false):void {
 			super.dispose(force);
-			if (this._offsetBuffer) {
-				this._offsetBuffer.dispose();
+			if (this._posBuffer) {
+				this._posBuffer.dispose();
+				this._posBuffer = null;
 			}
-			if (this._offsetBytes) {
-				this._offsetBytes.clear();
+			if (this._posBytes) {
+				this._posBytes.clear();
+				this._posBytes = null;
+			}
+			if (this._velBuffer) {
+				this._velBuffer.dispose();
+				this._velBuffer = null;
+			}
+			if (this._velBytes) {
+				this._velBytes.clear();
+				this._velBytes = null;
 			}
 		}
 		
@@ -257,15 +271,24 @@ package monkey.core.entities.particles {
 		 * 
 		 */		
 		private function rebuildWorldBuffer() : void {
-			if (this._offsetBuffer) {
-				this._offsetBuffer.dispose();
-				this._offsetBuffer = null;
+			if (this._posBuffer) {
+				this._posBuffer.dispose();
+				this._posBuffer = null;
+			}
+			if (this._velBuffer) {
+				this._velBuffer.dispose();
+				this._velBuffer = null;
 			}
 			// 创建buffer
 			if (this.scene && this._simulationSpace) {
+				// 位移
 				var bytes : ByteArray = this.surfaces[0].getVertexBytes(Surface3D.CUSTOM4);
-				this._offsetBuffer = this.scene.context.createVertexBuffer(bytes.length / 12, 3);
-				this._offsetBuffer.uploadFromByteArray(bytes, 0, 0, bytes.length / 12);
+				this._posBuffer = this.scene.context.createVertexBuffer(bytes.length / 12, 3);
+				this._posBuffer.uploadFromByteArray(bytes, 0, 0, bytes.length / 12);
+				// 速度
+				bytes = this.surfaces[0].getVertexBytes(Surface3D.CUSTOM1);
+				this._velBuffer = this.scene.context.createVertexBuffer(bytes.length / 12, 3);
+				this._velBuffer.uploadFromByteArray(bytes, 0, 0, bytes.length / 12);
 			}
 		}
 		
@@ -540,7 +563,7 @@ package monkey.core.entities.particles {
 			this._texture = value;
 			this.material.texture = value;
 		}
-				
+		
 		public function get frame():Point {
 			return this.material.frame;
 		}
@@ -888,10 +911,11 @@ package monkey.core.entities.particles {
 		 * 
 		 */		
 		private function updateBuffers() : void {
-			if (!this._offsetBuffer) {
+			if (!this._posBuffer) {
 				this.rebuildWorldBuffer();
 			}
-			this._offsetBytes.clear();
+			this._posBytes.clear();
+			this._velBytes.clear();
 			// 计算当前粒子索引
 			var curIdx : int = int((this.animator.currentFrame % this._totalTime) * rate) % maxParticles;	
 			// 计算出需要更新的数量,需要算上最后一次更新位置
@@ -905,27 +929,40 @@ package monkey.core.entities.particles {
 			// 考虑到计算量world属性仅仅只对顶点数量<=65535有用
 			var surf   : Surface3D = this.surfaces[0];		
 			// 获取偏移数据
-			var bytes  : ByteArray = surf.getVertexBytes(Surface3D.CUSTOM4);	
-			// bytes偏移到上一次更新位置
-			bytes.position = shape.vertNum * 12 * _lastIdx;
+			var offsetBytes: ByteArray = surf.getVertexBytes(Surface3D.CUSTOM4);	
+			offsetBytes.position = shape.vertNum * 12 * _lastIdx;
+			// 速度数据
+			var speedBytes : ByteArray = surf.getVertexBytes(Surface3D.CUSTOM1);
+			speedBytes.position = shape.vertNum * 12 * _lastIdx;
+			
 			// 统计数量
 			var num	   : int = 0;																				
-			while (bytes.bytesAvailable && count > 0) {
+			while (offsetBytes.bytesAvailable && count > 0) {
 				count--;
 				for (var i:int = 0; i < shape.vertNum; i++) {
-					vector3d.x = bytes.readFloat();
-					vector3d.y = bytes.readFloat();
-					vector3d.z = bytes.readFloat();
+					// 位移
+					vector3d.x = offsetBytes.readFloat();
+					vector3d.y = offsetBytes.readFloat();
+					vector3d.z = offsetBytes.readFloat();
 					this.transform.localToGlobal(vector3d, vector3d);
-					_offsetBytes.writeFloat(vector3d.x);
-					_offsetBytes.writeFloat(vector3d.y);
-					_offsetBytes.writeFloat(vector3d.z);
+					this._posBytes.writeFloat(vector3d.x);
+					this._posBytes.writeFloat(vector3d.y);
+					this._posBytes.writeFloat(vector3d.z);
+					// 速度
+					vector3d.x = speedBytes.readFloat();
+					vector3d.y = speedBytes.readFloat();
+					vector3d.z = speedBytes.readFloat();
+					this.transform.localToGlobalVector(vector3d, vector3d);
+					this._velBytes.writeFloat(vector3d.x);
+					this._velBytes.writeFloat(vector3d.y);
+					this._velBytes.writeFloat(vector3d.z);
 				}
 				num++;
 			}
 			// 更新粒子数据
-			if (this._offsetBuffer && num >= 1) {
-				this._offsetBuffer.uploadFromByteArray(this._offsetBytes, 0, this._lastIdx * shape.vertNum, num * shape.vertNum);
+			if (this._posBuffer && num >= 1) {
+				this._posBuffer.uploadFromByteArray(this._posBytes, 0, this._lastIdx * shape.vertNum, num * shape.vertNum);
+				this._velBuffer.uploadFromByteArray(this._velBytes, 0, this._lastIdx * shape.vertNum, num * shape.vertNum);
 				if (this._lastIdx > curIdx) {
 					this._lastIdx = 0;
 				} else {
@@ -956,9 +993,8 @@ package monkey.core.entities.particles {
 			Device3D.mvp.append(Device3D.viewProjection);
 			Device3D.drawOBJNum++;
 			if (this._simulationSpace) {
-				Device3D.mvp.copyFrom(Device3D.world);										// world属性的粒子需要重设world位置
-				Matrix3DUtils.setPosition(Device3D.mvp, 0, 0, 0);
-				Device3D.mvp.append(Device3D.viewProjection);
+				Device3D.world.identity();
+				Device3D.mvp.copyFrom(Device3D.viewProjection);
 			}
 		}
 		
@@ -973,14 +1009,19 @@ package monkey.core.entities.particles {
 				this.dispatchEvent(enterDrawEvent);
 			}
 			this.updateDeviceData();
-			var buffer : VertexBuffer3D = null;
+			
+			var posBuffer : VertexBuffer3D = null;
+			var velBuffer : VertexBuffer3D = null;
 			if (this._simulationSpace) {
 				this.updateBuffers();
-				buffer = this.surfaces[0].vertexBuffers[Surface3D.CUSTOM4];					// 替换surface里面vertexbuffer
-				if (buffer) {
-					this.surfaces[0].vertexBuffers[Surface3D.CUSTOM4] = this._offsetBuffer;
+				posBuffer = this.surfaces[0].vertexBuffers[Surface3D.CUSTOM4];						// 替换surface里面vertexbuffer
+				velBuffer = this.surfaces[0].vertexBuffers[Surface3D.CUSTOM1];						// 替换surface里面vertexbuffer
+				if (posBuffer && velBuffer) {
+					this.surfaces[0].vertexBuffers[Surface3D.CUSTOM4] = this._posBuffer;
+					this.surfaces[0].vertexBuffers[Surface3D.CUSTOM1] = this._velBuffer;
 				}
 			}
+			
 			// 设置时间
 			this.material.time = this.animator.currentFrame - this.startDelay;
 			// 绘制组件
@@ -989,16 +1030,20 @@ package monkey.core.entities.particles {
 					icom.onDraw(scene);
 				}
 			}
+			
 			// world属性，替换回vertexbuffer
-			if (this._simulationSpace && buffer) {
-				this.surfaces[0].vertexBuffers[Surface3D.CUSTOM4] = buffer;
+			if (this._simulationSpace && posBuffer && velBuffer) {
+				this.surfaces[0].vertexBuffers[Surface3D.CUSTOM4] = posBuffer;
+				this.surfaces[0].vertexBuffers[Surface3D.CUSTOM1] = velBuffer;
 			}
+			
 			// 绘制children
 			if (includeChildren) {
 				for each (var child : Object3D in children) {
 					child.draw(scene, includeChildren);
 				}
 			}
+			
 			if (this.hasEventListener(EXIT_DRAW_EVENT)) {
 				this.dispatchEvent(exitDrawEvent);
 			}

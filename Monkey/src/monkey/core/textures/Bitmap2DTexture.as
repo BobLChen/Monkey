@@ -27,6 +27,11 @@ package monkey.core.textures {
 			this.mipMode		= MIP_LINEAR;
 		}
 		
+		override public function clone():Texture3D {
+			ref++;
+			return this;
+		}
+		
 		/**
 		 * 上传 
 		 * @param e

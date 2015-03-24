@@ -16,7 +16,7 @@ package monkey.core.animator {
 		public var quat 		: Boolean;
 		
 		/** 骨骼数目 */
-		public var boneNum 	: Vector.<int>;
+		public var boneNum 		: Vector.<int>;
 		
 		/** 骨骼数据 */
 		private var _skinData 	: Array;
