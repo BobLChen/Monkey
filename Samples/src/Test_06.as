@@ -6,6 +6,7 @@ package {
 	import flash.events.Event;
 	import flash.utils.getTimer;
 	
+	import monkey.core.base.Object3D;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.scene.Viewer3D;
 	import monkey.core.utils.FPSStats;
@@ -32,6 +33,7 @@ package {
 			
 			var loader : ParticleLoader = new ParticleLoader();
 			loader.loadBytes(new DATA());
+			loader.addEventListener(Event.COMPLETE, loadComplete);	
 			
 			this.scene.addChild(loader);
 			
@@ -41,5 +43,30 @@ package {
 			});
 			
 		}
+		
+		protected function loadComplete(event:Event) : void {
+			var p : Object3D = event.target as ParticleLoader;
+			
+			var num : int = 10;
+			for (var i:int = 0; i < num; i++) {
+				for (var j:int = 0; j < num; j++) {
+					var tx: Number = (i - num/2) * 25;
+					var ty: Number = (j - num/2) * 25;
+					var c : Object3D = p.clone();
+					c.transform.x = tx;
+					c.transform.y = ty;
+					scene.addChild(c);
+					onClone(c, tx, ty);
+				}
+			}
+		}
+		
+		private function onClone(c : Object3D, tx : Number, ty : Number) : void {
+			c.addEventListener(Object3D.ENTER_DRAW_EVENT, function(e : Event):void{
+				c.transform.x = Math.sin(getTimer() / 5000) * 50 + tx;
+				c.transform.y = Math.cos(getTimer() / 5000) * 50 + ty;
+			});	
+		}
+		
 	}
 }

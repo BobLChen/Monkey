@@ -106,6 +106,7 @@ package ide.plugins {
 		
 		private function contextCreateEvent(event : Event) : void {
 			Input3D.rightClickEnabled = true;
+			this.context.enableErrorChecking = true;
 			this._scenePanel.update();
 			this._scenePanel.draw();
 			this.addEventListener(ENTER_FRAME_EVENT, onEnterFrame);

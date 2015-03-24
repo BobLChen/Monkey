@@ -3,19 +3,16 @@ package blog.samples {
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
-	import flash.events.Event;
 	
-	import monkey.core.animator.SkeletonAnimator;
+	import monkey.core.animator.Animator;
 	import monkey.core.base.Object3D;
-	import monkey.core.materials.Material3D;
+	import monkey.core.materials.SkeDifMatMaterial;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.scene.Viewer3D;
-	import monkey.core.shader.Shader3D;
-	import monkey.core.shader.filters.ColorFilter;
-	import monkey.core.shader.filters.SkeletonFilter34;
+	import monkey.core.textures.Bitmap2DTexture;
 	import monkey.core.utils.AnimUtil;
-	import monkey.core.utils.Color;
 	import monkey.core.utils.Mesh3DUtils;
+	import monkey.core.utils.Texture3DUtils;
 
 	public class Stage3d16 extends Sprite {
 		
@@ -35,25 +32,10 @@ package blog.samples {
 			this.scene.autoResize = true;
 			this.scene.camera.transform.z = -150;
 			
-			var skeleton : SkeletonFilter34 = new SkeletonFilter34();
-			var shader : Shader3D = new Shader3D([]);
-			shader.addFilter(skeleton);
-			shader.addFilter(new ColorFilter(Color.GRAY));
-			var material : Material3D = new Material3D(shader);
-			
-			var obj  : Object3D = Mesh3DUtils.readMesh(new MESH());
-			obj.renderer.material = material;
-			var anim : SkeletonAnimator = AnimUtil.readAnim(new ANIM()) as SkeletonAnimator; 
-			obj.addComponent(anim);
-			anim.fps = 15;
-			anim.play();
-			
-			obj.addEventListener(Object3D.ENTER_FRAME_EVENT, function(e:Event):void{
-				trace(anim.currentFrame);
-//				skeleton.data = anim.getBoneBytes(0, int(anim.currentFrame));
-			});
-			
-			trace(anim.totalFrames);
+			var obj : Object3D = Mesh3DUtils.readMesh(new MESH());
+			obj.renderer.material = new SkeDifMatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData));
+			obj.addComponent(AnimUtil.readAnim(new ANIM()));
+			obj.play(Animator.ANIMATION_LOOP_MODE);
 			
 			this.scene.addChild(obj);
 		}
