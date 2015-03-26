@@ -3,8 +3,11 @@ package blog.samples {
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 	
 	import monkey.core.animator.Animator;
+	import monkey.core.animator.Label3D;
 	import monkey.core.base.Object3D;
 	import monkey.core.materials.SkeDifQuatMaterial;
 	import monkey.core.scene.Scene3D;
@@ -22,6 +25,8 @@ package blog.samples {
 		private var MESH : Class;
 		[Embed(source="irelia_transformIrelia.anim", mimeType="application/octet-stream")]
 		private var ANIM : Class; 
+		
+		private var obj	: Object3D;
 		  
 		public function Stage3d16() {  
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -32,12 +37,28 @@ package blog.samples {
 			this.scene.autoResize = true;
 			this.scene.camera.transform.z = -1000;
 			
-			var obj : Object3D = Mesh3DUtils.readMesh(new MESH());
-			obj.renderer.material = new SkeDifQuatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData));
-			obj.addComponent(AnimUtil.readAnim(new ANIM()));
-			obj.play(Animator.ANIMATION_LOOP_MODE);
+			this.obj = Mesh3DUtils.readMesh(new MESH());
+			this.obj.renderer.material = new SkeDifQuatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData));
+			this.obj.addComponent(AnimUtil.readAnim(new ANIM()));
+			this.obj.play(Animator.ANIMATION_LOOP_MODE);
 			
 			this.scene.addChild(obj);
+			
+			this.obj.animator.addLabel(new Label3D("1", 0, 60, 1));
+			this.obj.animator.addLabel(new Label3D("2", 60, 120, 1));
+			this.obj.animator.addLabel(new Label3D("3", 120, 180, 1));
+			
+			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		}
+		
+		private function onKeyDown(event:KeyboardEvent) : void {
+			if (event.keyCode == Keyboard.NUMBER_1) {
+				this.obj.animator.gotoAndPlay("1");
+			} else if (event.keyCode == Keyboard.NUMBER_2) {
+				this.obj.animator.gotoAndPlay("2");
+			} else if (event.keyCode == Keyboard.NUMBER_3) {
+				this.obj.animator.gotoAndPlay("3");
+			}
 		}
 	}
 }

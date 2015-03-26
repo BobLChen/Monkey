@@ -10,6 +10,7 @@ package monkey.core.entities.particles {
 	import flash.utils.Endian;
 	
 	import monkey.core.animator.ParticleAnimator;
+	import monkey.core.base.Bounds3D;
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
@@ -111,6 +112,7 @@ package monkey.core.entities.particles {
 			this.userData.imageName 	= config.imageName;
 			this.userData.uuid 			= config.uuid;
 			this.userData.optimize   	= config.optimize;
+			this.mesh.bounds			= new Bounds3D();
 			
 			this._lastIdx		 		= 0;
 			this._simulationSpace		= config.world;
@@ -159,7 +161,7 @@ package monkey.core.entities.particles {
 		public function init() : void {
 			var mode : Surface3D = new Plane(1, 1, 1).surfaces[0];
 			var mesh : Mesh3D = new Mesh3D([]);
-			mesh.bounds	= mode.bounds;
+			mesh.bounds	= new Bounds3D();
 			
 			this.addComponent(new ParticleAnimator());
 			this.addComponent(new MeshRenderer(mesh, new ParticleMaterial()));

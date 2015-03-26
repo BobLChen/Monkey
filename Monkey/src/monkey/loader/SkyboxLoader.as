@@ -100,6 +100,7 @@ package monkey.loader {
 			var bmp : BitmapData = (this.loader.content as Bitmap).bitmapData;
 			this.loader.unloadAndStop(true);
 			this.skybox = new SkyBox(bmp, this.cfg.size, this.cfg.scaleRatio);
+			this.skybox.setLayer(this.cfg.layer);
 			this.zip.dispose();
 			this.addChild(skybox);
 			this.dispatchEvent(event);

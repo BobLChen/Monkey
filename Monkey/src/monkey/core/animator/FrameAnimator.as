@@ -6,11 +6,23 @@ package monkey.core.animator {
 	
 	public class FrameAnimator extends Animator {
 		
-		public var frames : Vector.<Matrix3D>;
+		private var _frames : Vector.<Matrix3D>;
 		
 		public function FrameAnimator() {
 			super();
-			this.frames = new Vector.<Matrix3D>();
+			this._frames = new Vector.<Matrix3D>();
+		}
+		
+		public function get frames():Vector.<Matrix3D> {
+			return _frames;
+		}
+
+		override public function append(anim:Animator):void {
+			super.append(anim);
+			var list : Vector.<Matrix3D> = (anim as FrameAnimator).frames;
+			for each (var frame : Matrix3D in list) {
+				this.frames.push(frame);
+			}
 		}
 		
 		override public function clone():IComponent {
@@ -22,7 +34,7 @@ package monkey.core.animator {
 		override public function copyFrom(animator:Animator):void {
 			super.copyFrom(animator);
 			if (animator is FrameAnimator) {
-				this.frames = (animator as FrameAnimator).frames.concat();
+				this._frames = (animator as FrameAnimator).frames.concat();
 			}
 		}
 		

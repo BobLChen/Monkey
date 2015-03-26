@@ -46,6 +46,14 @@ package monkey.core.animator {
 			this.frameSpeed = 1.0;
 		}
 		
+		public function append(anim : Animator) : void {
+			this._totalFrames += anim.totalFrames;
+			for (var name : String in anim.labels) {
+				var label : Label3D = anim.labels[name];
+				this.labels[name] = new Label3D(name, label.from + totalFrames, label.to + totalFrames, label.speed);
+			}
+		}
+		
 		public function get hz():Number {
 			return _hz;
 		}

@@ -8,9 +8,20 @@ package monkey.core.utils {
 	import monkey.core.animator.Animator;
 	import monkey.core.animator.FrameAnimator;
 	import monkey.core.animator.SkeletonAnimator;
-
+	
+	/**
+	 * 动画工具 
+	 * @author Neil
+	 * 
+	 */	
 	public class AnimUtil {
 		
+		/**
+		 * 读取动画 
+		 * @param bytes
+		 * @return 
+		 * 
+		 */		
 		public static function readAnim(bytes : ByteArray) : Animator {
 			bytes.endian = Endian.LITTLE_ENDIAN;
 			bytes.uncompress();
@@ -56,7 +67,6 @@ package monkey.core.utils {
 			for (var i:int = 0; i < num; i++) {
 				var frameCount : int = bytes.readInt();
 				var boneNum    : int = bytes.readInt();
-				trace(boneNum);
 				render.totalFrames = frameCount;
 				render.quat = type == 2;
 				render.boneNum[i] = Math.ceil(render.quat ? boneNum : boneNum * 1.5);

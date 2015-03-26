@@ -18,6 +18,10 @@ package monkey.core.animator {
 			super();
 		}
 		
+		override public function append(anim:Animator):void {
+			throw new Error("can't append anim");
+		}
+		
 		override public function clone():IComponent {
 			var c : ParticleAnimator = new ParticleAnimator();
 			c.copyFrom(this);

@@ -10,27 +10,23 @@ package monkey.core.animator {
 
 	public class SkeletonAnimator extends Animator {
 		
-		/** 骨骼 */
-		public var rootBone		: Bone3D;
 		/** 是否为四元数骨骼 */
 		public var quat 		: Boolean;
-		
 		/** 骨骼数目 */
 		public var boneNum 		: Vector.<int>;
-		
 		/** 骨骼数据 */
 		private var _skinData 	: Array;
 		/** 挂节点 */
 		private var mounts 		: Dictionary;
-		
+		private var _rootBone	: Bone3D;
 		private var _ref 		: Ref;
 		
 		public function SkeletonAnimator() {
 			super();
 			this._ref 			= new Ref();
 			this._skinData		= new Array();
-			this.rootBone		= new Bone3D();
-			this.boneNum	= new Vector.<int>();
+			this._rootBone		= new Bone3D();
+			this.boneNum		= new Vector.<int>();
 			this.mounts			= new Dictionary();
 			this.rootBone.name 	= "RootBone";
 		}
@@ -41,7 +37,7 @@ package monkey.core.animator {
 			c.mounts 	= mounts;
 			c.boneNum 	= boneNum;
 			c.quat 		= quat;
-			c.rootBone 	= rootBone;
+			c._rootBone = rootBone;
 			c._skinData = this._skinData;
 			c._ref 		= this._ref;
 			this._ref.ref++;
@@ -66,7 +62,28 @@ package monkey.core.animator {
 				}
 			}
 		}
-				
+		
+		override public function append(anim:Animator):void {
+			var ske : SkeletonAnimator = anim as SkeletonAnimator;
+			for (var si : int = 0; si < ske._skinData.length; si++) {
+				for (var fi : int = 0; fi < ske._skinData[si].length; fi++) {
+					this.addBoneBytes(si, this._totalFrames + fi, ske.getBoneBytes(si, fi));
+				}
+			}
+			for (var name : String in ske.mountDatas) {
+				var datas : Array = ske.mountDatas[name];
+				for (var i:int = 0; i < datas.length; i++) {
+					this.addMount(name, i, datas[i]);
+				}
+			}
+			super.append(anim);
+		}
+		
+		/** 骨骼 */
+		public function get rootBone():Bone3D {
+			return _rootBone;
+		}
+		
 		/**
 		 * 添加挂节点
 		 * @param name 		骨骼名称
