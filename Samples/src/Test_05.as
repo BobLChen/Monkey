@@ -8,6 +8,7 @@ package {
 	import monkey.core.animator.Animator;
 	import monkey.core.base.Object3D;
 	import monkey.core.materials.SkeDifMatMaterial;
+	import monkey.core.renderer.SkeletonRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.scene.Viewer3D;
 	import monkey.core.textures.Bitmap2DTexture;
@@ -41,11 +42,11 @@ package {
 			
 			var t : int = getTimer();
 			
-			var obj : Object3D = Mesh3DUtils.readMesh(new DATA());
-			obj.renderer.material = new SkeDifMatMaterial(new Bitmap2DTexture(new IMG().bitmapData));
+			var obj : Object3D = new Object3D();
+			obj.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(new DATA()), new SkeDifMatMaterial(new Bitmap2DTexture(new IMG().bitmapData))));
 			obj.addComponent(AnimUtil.readAnim(new ANIM()));
 			obj.play(Animator.ANIMATION_LOOP_MODE);
-			
+						
 			trace(getTimer() - t);
 			
 			var num : int = 30;

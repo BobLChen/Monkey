@@ -32,7 +32,7 @@ package monkey.core.renderer {
 				return;
 			}
 			for (var i:int = 0; i < mesh.surfaces.length; i++) {
-				Device3D.BoneMatrixs = animator.getBoneBytes(i, animator.currentFrame);
+				Device3D.BoneMatrixs = animator.getBoneBytes(i, animator.currentFrame % animator.totalFrames);
 				material.updateMaterial(scene);
 				material.draw(scene, mesh.surfaces[i]);
 			}

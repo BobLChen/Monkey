@@ -1,5 +1,4 @@
 package ide.utils {
-
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.events.Event;
@@ -9,14 +8,17 @@ package ide.utils {
 	import flash.utils.ByteArray;
 	
 	import monkey.core.base.Object3D;
-	import monkey.core.entities.Mesh3D;
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.materials.DiffuseMaterial;
+	import monkey.core.materials.SkeDifQuatMaterial;
 	import monkey.core.renderer.MeshRenderer;
+	import monkey.core.renderer.SkeletonRenderer;
 	import monkey.core.textures.Bitmap2DTexture;
+	import monkey.core.utils.AnimUtil;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Mesh3DUtils;
-
+	import monkey.core.utils.Texture3DUtils;
+	
 	public class FbxSceneLoader extends Object3D {
 		
 		private var _url 	: String;
@@ -54,12 +56,24 @@ package ide.utils {
 			fs.open(new File(this.file.parent.url + "/" + cfg.name), FileMode.READ);
 			fs.readBytes(meshBytes, 0, fs.bytesAvailable);
 			fs.close();
-			var obj : Object3D = Mesh3DUtils.readMesh(meshBytes);
+			
+			var obj : Object3D = new Object3D();
+			obj.name = cfg.name;
 			obj.transform.local.copyRawDataFrom(Vector.<Number>(cfg.transform));
 			obj.transform.updateTransforms(true);
-			var mesh : Mesh3D = obj.renderer.mesh;
-			obj.removeComponent(obj.renderer);
-			obj.addComponent(new MeshRenderer(mesh, new ColorMaterial(Color.WHITE)));
+			
+			if (cfg.anim) {
+				var animBytes : ByteArray = new ByteArray();
+				fs = new FileStream();
+				fs.open(new File(this.file.parent.url + "/" + cfg.anim.name), FileMode.READ);
+				fs.readBytes(animBytes, 0, fs.bytesAvailable);
+				fs.close();
+				obj.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(meshBytes), new SkeDifQuatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData))));
+				obj.addComponent(AnimUtil.readAnim(animBytes));
+			} else {
+				obj.addComponent(new MeshRenderer(Mesh3DUtils.readMesh(meshBytes), new ColorMaterial(Color.WHITE)));
+			}
+			
 			this.addChild(obj);
 			// 读取贴图
 			if (cfg.textures.DiffuseColor.length >= 1) {
@@ -68,6 +82,7 @@ package ide.utils {
 					obj.renderer.material = new DiffuseMaterial(new Bitmap2DTexture((loader.content as Bitmap).bitmapData));
 				});
 			}
+			
 		}
 		
 		private function loadBitmapdata(file : File) : Loader {

@@ -5,11 +5,8 @@ package monkey.core.utils {
 	import flash.utils.Endian;
 	
 	import monkey.core.base.Bounds3D;
-	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
-	import monkey.core.renderer.MeshRenderer;
-	import monkey.core.renderer.SkeletonRenderer;
 
 	/**
 	 * 模型工具 
@@ -28,17 +25,16 @@ package monkey.core.utils {
 		 * @return 
 		 * 
 		 */		
-		public static function readMesh(bytes : ByteArray) : Object3D {
+		public static function readMesh(bytes : ByteArray) : Mesh3D {
 			
 			bytes.endian = Endian.LITTLE_ENDIAN;
 			bytes.uncompress();
 			
-			var obj3d: Object3D = new Object3D();
 			var mesh : Mesh3D   = new Mesh3D([]);
 			var anim : Boolean  = false;
 			// 读取Mesh名称
 			var size : int = bytes.readInt();
-			obj3d.name = bytes.readUTFBytes(size);
+			var name : String = bytes.readUTFBytes(size);
 			// 读取坐标
 			var vec : Vector3D = new Vector3D();
 			for (var j:int = 0; j < 3; j++) { 
@@ -46,7 +42,7 @@ package monkey.core.utils {
 				vec.y = bytes.readFloat();	 
 				vec.z = bytes.readFloat();	 
 				vec.w = bytes.readFloat();	 
-				obj3d.transform.local.copyRowFrom(j, vec);
+//				obj3d.transform.local.copyRowFrom(j, vec);
 			}
 			// 读取SubMesh数量
 			var subCount : int = bytes.readInt();
@@ -135,15 +131,10 @@ package monkey.core.utils {
 			for each (var surf : Surface3D in mesh.surfaces) {
 				surf.bounds = bounds;
 			}
-			mesh.bounds = bounds;
+			mesh.bounds   = bounds;
+			mesh.skeleton = anim;
 			
-			if (anim) {
-				obj3d.addComponent(new SkeletonRenderer(mesh, null));
-			} else {
-				obj3d.addComponent(new MeshRenderer(mesh, null));
-			}
-						
-			return obj3d;
+			return mesh;
 		}
 		
 	}

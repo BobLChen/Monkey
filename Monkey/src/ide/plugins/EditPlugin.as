@@ -2,12 +2,16 @@ package ide.plugins {
 
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
+	import flash.net.FileFilter;
 	import flash.ui.Keyboard;
+	import flash.utils.ByteArray;
 	
 	import ide.App;
 	
 	import monkey.core.base.Object3D;
-	import monkey.core.utils.Input3D;
 	import monkey.navmesh.NavigationMesh;
 	
 	import ui.core.interfaces.IPlugin;
@@ -29,6 +33,7 @@ package ide.plugins {
 			
 			this._app = app;
 			this._app.addMenu("Edit/Convert To Navmesh",  convertToNavMesh);
+			this._app.addMenu("Edit/AppendAnimation", appendAnimation);
 			this._app.addMenu("Edit/Delete", deleteObject);
 			this._app.addMenu("Edit/Paste", pasteObject);
 			this._app.addMenu("Edit/Cut", cutObject);
@@ -44,6 +49,28 @@ package ide.plugins {
 			} else if (event.ctrlKey && event.keyCode == Keyboard.D) {
 				this._app.selection.deleted();
 			}
+		}
+		
+		/**
+		 * 拼接动画 
+		 * @param e
+		 * 
+		 */		
+		private function appendAnimation(e : Event) : void {
+			var obj : Object3D = App.core.selection.main;
+			if (!obj || !obj.renderer || !obj.renderer.mesh) {
+				return;
+			}
+			var file : File = new File();
+			file.browseForOpen("Animation", [new FileFilter("anim", "*.anim")]);
+			file.addEventListener(Event.SELECT, function():void{
+				var bytes : ByteArray = new ByteArray();
+				var fs : FileStream = new FileStream();
+				fs.open(file, FileMode.READ);
+				fs.readBytes(bytes, 0, fs.bytesAvailable);
+				fs.close();
+				App.core.selection.objects = [FilePluginUtils.openAnim(file.name, bytes)];
+			});
 		}
 		
 		private function cutObject(e : Event) : void {

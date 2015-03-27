@@ -17,19 +17,28 @@ package ide.plugins {
 	import ide.events.SceneEvent;
 	import ide.plugins.groups.particles.lifetime.LifetimeData;
 	
+	import monkey.core.animator.Animator;
+	import monkey.core.animator.Label3D;
+	import monkey.core.animator.SkeletonAnimator;
 	import monkey.core.base.Object3D;
 	import monkey.core.base.Surface3D;
 	import monkey.core.entities.Mesh3D;
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.materials.ColorMaterial;
+	import monkey.core.materials.SkeDifMatMaterial;
+	import monkey.core.materials.SkeDifQuatMaterial;
 	import monkey.core.parser.Max3DSParser;
 	import monkey.core.parser.NavMeshParser;
 	import monkey.core.parser.OBJParser;
 	import monkey.core.renderer.MeshRenderer;
+	import monkey.core.renderer.SkeletonRenderer;
+	import monkey.core.textures.Bitmap2DTexture;
+	import monkey.core.utils.AnimUtil;
 	import monkey.core.utils.AssetsType;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Linears;
 	import monkey.core.utils.Mesh3DUtils;
+	import monkey.core.utils.Texture3DUtils;
 	import monkey.loader.ParticleLoader;
 	import monkey.loader.SkyboxLoader;
 	import monkey.loader.WaterLoader;
@@ -105,7 +114,7 @@ package ide.plugins {
 				return;
 			}
 			var func : Function = _utils[type];
-			var obj  : Object3D = func(data);
+			var obj  : Object3D = func(name, data);
 			if (obj) {
 				obj.name = name;
 				_app.scene.addChild(obj);
@@ -140,6 +149,36 @@ package ide.plugins {
 			_utils[AssetsType.SKYBOX]	= openSkybox;
 			_utils[AssetsType.NAV]		= openNavmesh;
 			_utils[AssetsType.PARTICLE] = openParticle;
+			_utils[AssetsType.ANIM]		= openAnim;
+		}
+		
+		public static function openAnim(name : String, bytes : ByteArray) : Object3D {
+			var obj : Object3D = App.core.selection.main;
+			if (!obj || !obj.renderer || !obj.renderer.mesh) {
+				return null;
+			}
+			var anim : Animator = AnimUtil.readAnim(bytes);
+			anim.addLabel(new Label3D(name, 0, anim.totalFrames));
+			// 拼接动画
+			if (obj.animator) {
+				obj.animator.append(anim);
+			} else {
+				obj.addComponent(anim);
+			}
+			obj.animator.stop();
+			// 骨骼动画，但是为非骨骼动画渲染器
+			if (anim is SkeletonAnimator && !(obj.renderer is SkeletonRenderer)) {
+				var mesh : Mesh3D = obj.renderer.mesh;
+				obj.removeComponent(obj.renderer);
+				obj.addComponent(new SkeletonRenderer(mesh, null));
+				var skea : SkeletonAnimator = anim as SkeletonAnimator;
+				if (skea.quat) {
+					obj.renderer.material = new SkeDifQuatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData));
+				} else {
+					obj.renderer.material = new SkeDifMatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData));
+				}
+			}
+			return obj;
 		}
 		
 		/**
@@ -148,9 +187,9 @@ package ide.plugins {
 		 * @return 
 		 * 
 		 */		
-		public static function openMesh(bytes : ByteArray) : Object3D {
-			var obj   : Object3D = Mesh3DUtils.readMesh(bytes);
-			obj.renderer.material = new ColorMaterial(new Color(0x888888));
+		public static function openMesh(name : String, bytes : ByteArray) : Object3D {
+			var obj : Object3D = new Object3D();
+			obj.addComponent(new MeshRenderer(Mesh3DUtils.readMesh(bytes), new ColorMaterial(new Color(0x888888))));
 			return obj;
 		}
 		
@@ -160,7 +199,7 @@ package ide.plugins {
 		 * @return 
 		 * 
 		 */		
-		public static function openOBJ(bytes : ByteArray) : Object3D {
+		public static function openOBJ(name : String, bytes : ByteArray) : Object3D {
 			bytes.position = 0;
 			var txt : String = bytes.readUTFBytes(bytes.length);
 			var parser : OBJParser = new OBJParser();
@@ -174,7 +213,7 @@ package ide.plugins {
 		 * @return 
 		 * 
 		 */		
-		public static function open3DS(bytes : ByteArray) : Object3D {
+		public static function open3DS(name : String, bytes : ByteArray) : Object3D {
 			bytes.position = 0;
 			var parser : Max3DSParser = new Max3DSParser(bytes, "");
 			parser.startParsing();
@@ -187,7 +226,7 @@ package ide.plugins {
 		 * @return 
 		 * 
 		 */		
-		public static function openNavmesh(bytes : ByteArray) : Object3D {
+		public static function openNavmesh(name : String, bytes : ByteArray) : Object3D {
 			bytes.position = 0;
 			var navmesh : NavigationMesh = NavMeshParser.parse(bytes);
 			// 根据导入的navmesh构建模型数据
@@ -215,7 +254,7 @@ package ide.plugins {
 		 * @return 
 		 * 
 		 */		
-		public static function openWater(bytes : ByteArray) : Object3D {
+		public static function openWater(name : String, bytes : ByteArray) : Object3D {
 			var loader : WaterLoader = new WaterLoader("");
 			loader.loadBytes(bytes);
 			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
@@ -230,7 +269,7 @@ package ide.plugins {
 		 * @return 
 		 * 
 		 */		
-		public static function openSkybox(bytes : ByteArray) : Object3D {
+		public static function openSkybox(name : String, bytes : ByteArray) : Object3D {
 			var loader : SkyboxLoader = new SkyboxLoader("");
 			loader.loadBytes(bytes);
 			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
@@ -245,7 +284,7 @@ package ide.plugins {
 		 * @return 
 		 * 
 		 */		
-		public static function openParticle(bytes : ByteArray) : Object3D {
+		public static function openParticle(name : String, bytes : ByteArray) : Object3D {
 			var loader : ParticleLoader = new ParticleLoader("");
 			loader.loadBytes(bytes);
 			loader.addEventListener(Event.COMPLETE, function(e : Event):void{

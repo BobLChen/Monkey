@@ -76,7 +76,11 @@ package monkey.core.animator {
 					this.addMount(name, i, datas[i]);
 				}
 			}
-			super.append(anim);
+			for (name in anim.labels) {
+				var label : Label3D = anim.labels[name];
+				this.labels[name] = new Label3D(name, label.from + totalFrames, label.to + totalFrames, label.speed);
+			}
+			this._totalFrames += anim.totalFrames;
 		}
 		
 		/** 骨骼 */

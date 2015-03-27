@@ -21,6 +21,8 @@ package monkey.core.entities {
 		
 		/** 网格数据 */
 		public var surfaces   : Vector.<Surface3D>;
+		/** 是否为骨骼动画 */
+		public var skeleton	  : Boolean;
 		private var _bounds   : Bounds3D;
 		
 		public function Mesh3D(surfaces : Array) {

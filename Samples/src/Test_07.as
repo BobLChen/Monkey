@@ -15,6 +15,7 @@ package {
 	import monkey.core.animator.Label3D;
 	import monkey.core.base.Object3D;
 	import monkey.core.materials.SkeDifQuatMaterial;
+	import monkey.core.renderer.SkeletonRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.scene.Viewer3D;
 	import monkey.core.textures.Bitmap2DTexture;
@@ -65,8 +66,8 @@ package {
 			this.scene.autoResize = true;
 			
 			this.keyMap = new Dictionary();
-			this.akali	= Mesh3DUtils.readMesh(new MESH());
-			this.akali.renderer.material = new SkeDifQuatMaterial(new Bitmap2DTexture(new IMG().bitmapData));
+			this.akali	= new Object3D();
+			this.akali.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(new MESH()), new SkeDifQuatMaterial(new Bitmap2DTexture(new IMG().bitmapData))));
 			this.akali.renderer.material.twoSided = true;	// lol使用的逆时针索引
 			
 			var datas : Array = [Attack1, Attack2, Channel, Crit, Dance, Death, Idel0, Idel1, Idel3];

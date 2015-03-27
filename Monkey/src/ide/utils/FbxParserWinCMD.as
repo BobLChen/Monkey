@@ -53,6 +53,9 @@ package ide.utils
 			process.start(info);
 			
 			var url : String = File.applicationDirectory.nativePath;
+			var dir : String = url.split(":")[0];
+			
+			process.standardInput.writeUTFBytes("" + dir + ":\n");
 			process.standardInput.writeUTFBytes("cd " + url + "\n");  
 			
 			var args : Vector.<String> = new Vector.<String>();

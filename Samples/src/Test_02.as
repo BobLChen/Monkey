@@ -7,6 +7,7 @@ package {
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.materials.ColorMaterial;
+	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.scene.Viewer3D;
 	import monkey.core.utils.Color;
@@ -25,9 +26,9 @@ package {
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
-			var obj : Object3D = Mesh3DUtils.readMesh(new DATA());
-			obj.renderer.material = new ColorMaterial(Color.GRAY);
-			
+			var obj : Object3D = new Object3D();
+			obj.addComponent(new MeshRenderer(Mesh3DUtils.readMesh(new DATA()), new ColorMaterial(Color.GRAY)));
+						
 			obj.addEventListener(Object3D.ENTER_DRAW_EVENT, function(e:Event):void{
 				obj.transform.rotateY(2);
 			});

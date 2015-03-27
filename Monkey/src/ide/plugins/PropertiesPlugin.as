@@ -1,11 +1,11 @@
 package ide.plugins {
-
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	
 	import ide.App;
 	import ide.events.SceneEvent;
 	import ide.events.SelectionEvent;
+	import ide.plugins.groups.properties.AnimatorGroup;
 	import ide.plugins.groups.properties.BoundsGroup;
 	import ide.plugins.groups.properties.DirectionLightGroup;
 	import ide.plugins.groups.properties.GeneralGroup;
@@ -31,6 +31,8 @@ package ide.plugins {
 	import ui.core.controls.Layout;
 	import ui.core.event.ControlEvent;
 	import ui.core.interfaces.IPlugin;
+
+	
 	
 	/**
 	 * 属性插件 
@@ -75,7 +77,7 @@ package ide.plugins {
 			this._groups.push(new ParticlesGroup());
 			this._groups.push(new DirectionLightGroup());
 			this._groups.push(new PointLightGroup());
-//			this._groups.push(new AnimationGroup());
+			this._groups.push(new AnimatorGroup());
 			
 			this._icon.gotoAndStop(0);
 			this._icon.x = 20;

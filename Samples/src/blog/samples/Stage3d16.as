@@ -10,13 +10,14 @@ package blog.samples {
 	import monkey.core.animator.Label3D;
 	import monkey.core.base.Object3D;
 	import monkey.core.materials.SkeDifQuatMaterial;
+	import monkey.core.renderer.SkeletonRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.scene.Viewer3D;
 	import monkey.core.textures.Bitmap2DTexture;
 	import monkey.core.utils.AnimUtil;
 	import monkey.core.utils.Mesh3DUtils;
 	import monkey.core.utils.Texture3DUtils;
-
+	
 	public class Stage3d16 extends Sprite {
 		
 		private var scene : Scene3D;
@@ -37,17 +38,15 @@ package blog.samples {
 			this.scene.autoResize = true;
 			this.scene.camera.transform.z = -1000;
 			
-			this.obj = Mesh3DUtils.readMesh(new MESH());
-			this.obj.renderer.material = new SkeDifQuatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData));
+			this.obj = new Object3D();
+			this.obj.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(new MESH()), new SkeDifQuatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData))));
 			this.obj.addComponent(AnimUtil.readAnim(new ANIM()));
 			this.obj.play(Animator.ANIMATION_LOOP_MODE);
-			
-			this.scene.addChild(obj);
-			
 			this.obj.animator.addLabel(new Label3D("1", 0, 60, 1));
 			this.obj.animator.addLabel(new Label3D("2", 60, 120, 1));
 			this.obj.animator.addLabel(new Label3D("3", 120, 180, 1));
 			
+			this.scene.addChild(obj);
 			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		}
 		
