@@ -1,4 +1,5 @@
 package ide.utils {
+	
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.events.Event;
@@ -7,9 +8,12 @@ package ide.utils {
 	import flash.filesystem.FileStream;
 	import flash.utils.ByteArray;
 	
+	import monkey.core.animator.Animator;
+	import monkey.core.animator.SkeletonAnimator;
 	import monkey.core.base.Object3D;
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.materials.DiffuseMaterial;
+	import monkey.core.materials.SkeDifMatMaterial;
 	import monkey.core.materials.SkeDifQuatMaterial;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.renderer.SkeletonRenderer;
@@ -56,20 +60,25 @@ package ide.utils {
 			fs.open(new File(this.file.parent.url + "/" + cfg.name), FileMode.READ);
 			fs.readBytes(meshBytes, 0, fs.bytesAvailable);
 			fs.close();
-			
+			// obj
 			var obj : Object3D = new Object3D();
 			obj.name = cfg.name;
 			obj.transform.local.copyRawDataFrom(Vector.<Number>(cfg.transform));
 			obj.transform.updateTransforms(true);
-			
+			// 含有动画
 			if (cfg.anim) {
 				var animBytes : ByteArray = new ByteArray();
 				fs = new FileStream();
 				fs.open(new File(this.file.parent.url + "/" + cfg.anim.name), FileMode.READ);
 				fs.readBytes(animBytes, 0, fs.bytesAvailable);
 				fs.close();
-				obj.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(meshBytes), new SkeDifQuatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData))));
-				obj.addComponent(AnimUtil.readAnim(animBytes));
+				var anim : Animator = AnimUtil.readAnim(animBytes);
+				if ((anim as SkeletonAnimator).quat) {
+					obj.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(meshBytes), new SkeDifQuatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData))));
+				} else {
+					obj.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(meshBytes), new SkeDifMatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData))));					
+				}
+				obj.addComponent(anim);
 			} else {
 				obj.addComponent(new MeshRenderer(Mesh3DUtils.readMesh(meshBytes), new ColorMaterial(Color.WHITE)));
 			}
@@ -79,12 +88,18 @@ package ide.utils {
 			if (cfg.textures.DiffuseColor.length >= 1) {
 				var loader : Loader = loadBitmapdata(new File(this.file.parent.url + "/" + cfg.textures.DiffuseColor[0]));
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
-					obj.renderer.material = new DiffuseMaterial(new Bitmap2DTexture((loader.content as Bitmap).bitmapData));
+					var texture : Bitmap2DTexture = new Bitmap2DTexture((loader.content as Bitmap).bitmapData);
+					if (obj.renderer.material is ColorMaterial) {
+						obj.renderer.material = new DiffuseMaterial(texture);
+					} else if (obj.renderer.material is SkeDifQuatMaterial) {
+						(obj.renderer.material as SkeDifQuatMaterial).texture = texture;
+					} else if (obj.renderer.material is SkeDifMatMaterial) {
+						(obj.renderer.material as SkeDifMatMaterial).texture = texture;
+					}
 				});
 			}
-			
 		}
-		
+				
 		private function loadBitmapdata(file : File) : Loader {
 			var loader : Loader = new Loader();
 			if (file.exists) {
