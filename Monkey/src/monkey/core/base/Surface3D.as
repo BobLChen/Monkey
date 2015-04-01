@@ -10,6 +10,7 @@ package monkey.core.base {
 	
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Surface3DUtils;
+	import monkey.core.utils.UUID;
 
 	/**
 	 * 网格数据 
@@ -370,6 +371,8 @@ package monkey.core.base {
 			return -1;
 		}
 		
+		private var id : String;
+		
 		/**
 		 * 销毁surface3d 
 		 */		
@@ -397,6 +400,8 @@ package monkey.core.base {
 			this.formats = null;
 			this.vertexBytes = null;
 			this.vertexVector = null;
+			
+			id = UUID.generate();
 		}
 	}
 }

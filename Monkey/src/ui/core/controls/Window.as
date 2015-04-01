@@ -21,19 +21,17 @@ package ui.core.controls {
 		
 		private static var _popWindow:Window;
 		
-		private var _layout : Layout;
-		private var _colorBar : Control;
-		private var _colorTable : Control;
-		private var _imgBtn : ImageButton;
-		private var _window : Control;
-		private var _mode : String;
-		private var _bar : Panel;
+		private var _layout 	: Layout;
+		private var _imgBtn 	: ImageButton;
+		private var _mode 		: String;
+		private var _bar 		: Panel;
 		
 		public function Window(mode : String = "none") {
 			super("window", 250, 250, false);
 			this.width = 250;
 			this.height = 250;
 			this.visible = true;
+			
 			this._mode = mode;
 			this._bar = new Panel("bar", 200, 20, false);
 			this._bar.maxHeight = 15;
@@ -42,13 +40,16 @@ package ui.core.controls {
 			this._bar.visible = true;
 			this._bar.view.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
 			this._bar.view.addEventListener(MouseEvent.MOUSE_UP, mouseUpEvent);
+			
 			this._imgBtn = new ImageButton(new CloseIcon());
 			this._imgBtn.maxHeight = 18;
 			this._imgBtn.height = 18;
 			this._imgBtn.addEventListener(MouseEvent.CLICK, onClickCloseEvent);
+			
 			this._layout = new Layout();
-			this.setLayout();
 			this.addControl(this._layout);
+			
+			this.resetLayout();
 			this.update();
 			this.draw();
 		}
@@ -93,7 +94,7 @@ package ui.core.controls {
 			}
 		}
 		
-		private function setLayout() : void {
+		private function resetLayout() : void {
 			this._layout.removeAllControls();
 			this._layout.addVerticalGroup();
 			this._layout.addHorizontalGroup();
@@ -103,14 +104,16 @@ package ui.core.controls {
 		}
 		
 		public function set window(control : Control) : void {
-			if (this._window != null) {
-				this.setLayout();
-			}
-			this.minWidth = control.width;
+			
+			this.minWidth  = control.width;
 			this.minHeight = control.height + this._imgBtn.height + MARGIN;
-			this.width = control.width;
-			this.height = control.height + this._imgBtn.height + MARGIN;
+			this.width     = control.width;
+			this.height    = control.height + this._imgBtn.height + MARGIN;
 			this._layout.height = this.height;
+			this._layout.addControl(control);
+			this._layout.endGroup();
+						
+			this.resetLayout();
 			this._layout.addControl(control);
 			this.update();
 			this.draw();
