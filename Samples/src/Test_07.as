@@ -47,7 +47,7 @@ package {
 		private var Idel1 : Class;
 		[Embed(source="../assets/test_07/idle3.anim", mimeType="application/octet-stream")]
 		private var Idel3 : Class;
-				
+		
 		private var scene 	: Scene3D;
 		private var keyMap  : Dictionary;
 		private var akali	: Object3D;
