@@ -936,7 +936,6 @@ package monkey.core.entities.particles {
 			// 速度数据
 			var speedBytes : ByteArray = surf.getVertexBytes(Surface3D.CUSTOM1);
 			speedBytes.position = shape.vertNum * 12 * _lastIdx;
-			
 			// 统计数量
 			var num	   : int = 0;																				
 			while (offsetBytes.bytesAvailable && count > 0) {
@@ -967,6 +966,8 @@ package monkey.core.entities.particles {
 				this._velBuffer.uploadFromByteArray(this._velBytes, 0, this._lastIdx * shape.vertNum, num * shape.vertNum);
 				if (this._lastIdx > curIdx) {
 					this._lastIdx = 0;
+					// 粒子只更新到末尾，并没有更新完，还需要从0开始更新一次
+					this.updateBuffers();
 				} else {
 					this._lastIdx = curIdx;
 				}

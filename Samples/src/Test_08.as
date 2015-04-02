@@ -31,7 +31,7 @@ package {
 		private var Dance : Class;
 		[Embed(source="../assets/test_08/test_08_optimize.particle", mimeType="application/octet-stream")]
 		private var DATA : Class;
-				
+		
 		private var scene 	: Scene3D;
 		private var akali	: Object3D;
 		
