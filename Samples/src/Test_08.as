@@ -20,7 +20,7 @@ package {
 	import monkey.core.utils.FPSStats;
 	import monkey.core.utils.Mesh3DUtils;
 	import monkey.loader.ParticleLoader;
-
+	
 	public class Test_08 extends Sprite {
 		
 		[Embed(source="../assets/test_07/akali.mesh", mimeType="application/octet-stream")]
@@ -45,7 +45,7 @@ package {
 			this.stage.align 	 = StageAlign.TOP_LEFT;
 			this.stage.frameRate = 60;
 			this.stage.addChild(new FPSStats());
-			 
+			
 			this.scene = new Viewer3D(this);
 			this.scene.camera.transform.z = -500;
 			this.scene.camera.transform.lookAt(0, 0, 0); 

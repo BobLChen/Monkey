@@ -24,13 +24,22 @@ package monkey.core.utils {
 		 */		
 		public static function readAnim(bytes : ByteArray) : Animator {
 			bytes.endian = Endian.LITTLE_ENDIAN;
-			bytes.uncompress();
-			var type : int = bytes.readInt();
+			// 读取压缩格式
+			var lzma : int = bytes.readInt();
+			// 读取压缩之前的长度
+			var size : int = bytes.readInt();
+			var data : ByteArray = new ByteArray();
+			data.endian = Endian.LITTLE_ENDIAN;
+			bytes.readBytes(data, 0, bytes.bytesAvailable);
+			// 解压
+			data.uncompress();
+			var type : int = data.readInt();
 			if (type == 0) {
-				return readFrameAnim(bytes, type);
+				return readFrameAnim(data, type);
 			} else {
-				return readSkeletonAnim(bytes, type);
+				return readSkeletonAnim(data, type);
 			}
+			data.clear();
 			return null;
 		}
 		

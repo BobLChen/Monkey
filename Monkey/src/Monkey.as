@@ -13,7 +13,7 @@ package {
 			this.stage.align = StageAlign.TOP_LEFT;
 			this.addChild(new Studio());
 			this.stage.nativeWindow.maximize();
-		} 
+		}  
 		
 	}
 }
