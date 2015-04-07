@@ -49,7 +49,7 @@ package {
 		}
 		
 		protected function onCreate(event:Event) : void {
-			this.scene.context.enableErrorChecking = true;		
+//			this.scene.context.enableErrorChecking = true;		
 			
 			this.res = dirName(this.loaderInfo.url) + "/../assets/Test_09/";
 			var url : String = this.res + "scene.lightmap"
@@ -126,13 +126,16 @@ package {
 						new Vector3D(config.tilingOffset[0], config.tilingOffset[1], config.tilingOffset[2], config.tilingOffset[3])
 					))
 				);
+				(obj.renderer.mesh as UMesh).addEventListener(Event.COMPLETE, function(e : Event):void{
+					obj.transform.updateTransforms(false);
+				});
 			}
 			
 			for each (var child : Object in config.children) {
 				obj.addChild(this.createObject(child));
 			}
 			
-			trace("创建GameObject", obj.name);
+			trace("创建GameObject", obj.name, config.scale);
 			return obj;
 		}
 		
@@ -243,7 +246,7 @@ class LightmapMaterial extends DiffuseMaterial {
 	
 	private var _lightmap : Texture3D;
 	private var _tilingOffset : Vector3D;
-	
+	 
 	public function LightmapMaterial(texture : Texture3D, lightmap : Texture3D, tilingOffset : Vector3D) : void {
 		super(texture);
 		this._shader = LightmapShader.instance;
@@ -290,7 +293,7 @@ class UMesh extends Mesh3D {
 	public function get loaded():Boolean {
 		return _loaded;
 	}
-
+	
 	private function load() : void {
 		var loader : URLLoader = new URLLoader();
 		loader.dataFormat = URLLoaderDataFormat.BINARY;
@@ -311,6 +314,8 @@ class UMesh extends Mesh3D {
 			this.surfaces = Vector.<Surface3D>([]);
 		}
 		this._loaded = true;
+		this.bounds = mesh.bounds;
+		this.dispatchEvent(event);
 	}
 	
 } 
@@ -340,10 +345,10 @@ class UTexture extends Bitmap2DTexture {
 		this.dispatchEvent(event);
 	}
 	
-	
 	private function onLoadComplete(event:Event) : void {
 		this.bitmapData = (this.loader.content as Bitmap).bitmapData;
 		this._loaded = true;
+		this.dispatchEvent(event);
 	}
 	
 	public function get loaded():Boolean {

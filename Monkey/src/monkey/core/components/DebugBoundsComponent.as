@@ -38,6 +38,6 @@ package monkey.core.components {
 				aabb.draw(scene);
 			}
 		}
-				
+		
 	}
 }
