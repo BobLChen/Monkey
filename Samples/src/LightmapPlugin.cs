@@ -7,8 +7,8 @@ using System.IO.Compression;
 
 public class LightmapPlugin : EditorWindow {
 
-	public static bool normal  = false;
-	public static bool tangent = false;
+	public static bool normal  = true;
+	public static bool tangent = true;
 
 	private static string folderName;
 
@@ -91,8 +91,9 @@ public class LightmapPlugin : EditorWindow {
 			bw.Write(uv1.x);
 			bw.Write(uv1.y);
 		}
+		Debug.Log("normals:" + m.normals.Length);
 		// write normal
-		if (normal && m.normals != null) {
+		if (normal) {
 			bw.Write(m.normals.Length);
 			foreach (Vector3 n in m.normals) {
 				bw.Write(n.x);
@@ -102,8 +103,9 @@ public class LightmapPlugin : EditorWindow {
 		} else {
 			bw.Write(0);
 		}
+		Debug.Log("tangent:" + m.tangents.Length);
 		// write tangent
-		if (tangent && m.tangents != null) {
+		if (tangent) {
 			bw.Write(m.tangents.Length);
 			foreach (Vector3 t in m.tangents) {
 				bw.Write(t.x);
