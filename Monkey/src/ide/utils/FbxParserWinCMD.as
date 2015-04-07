@@ -11,7 +11,7 @@ package ide.utils
 	
 	import ide.App;
 	import ide.events.LogEvent;
-
+	
 	public class FbxParserWinCMD extends EventDispatcher {
 		
 		private var fbxPath : String;
@@ -85,7 +85,7 @@ package ide.utils
 			}
 			args.push("-max_quat=" + quatBoneNum);
 			args.push("-max_m34=" + m34BoneNum);
-			args.push("-path=" + path);
+			args.push("-path=\"" + path + "\"");
 			args.push("-mount=\"" + mount + "\"");
 			
 			App.core.dispatchEvent(new LogEvent(info.executable.url + "-" + info.executable.exists));
