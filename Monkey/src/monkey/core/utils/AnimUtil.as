@@ -115,7 +115,6 @@ package monkey.core.utils {
 					}
 					render.addMount(name, j, mt);
 				}
-				trace("挂节点:", name);
 			}
 			
 			return render;
