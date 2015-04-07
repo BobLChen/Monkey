@@ -50,8 +50,6 @@ package monkey.core.materials {
 		}
 		
 		override public function updateMaterial(scene:Scene3D):void {
-			this.cubeTexture.upload(scene);
-			this.normalTexture.upload(scene);
 			WaterShader(shader).cubeTexture 	= cubeTexture;
 			WaterShader(shader).normalTexture 	= normalTexture;
 			WaterShader(shader).waveHeight 		= waveHeight;

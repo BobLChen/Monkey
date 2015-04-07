@@ -155,8 +155,6 @@ package monkey.core.materials {
 		}
 				
 		override public function updateMaterial(scene:Scene3D):void {
-			texture.upload(scene);
-			blendTexture.upload(scene);
 			ParticleShader(shader).time 		= time;
 			ParticleShader(shader).frame 		= frame;
 			ParticleShader(shader).texture 		= texture;

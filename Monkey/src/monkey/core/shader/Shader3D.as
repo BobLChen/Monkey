@@ -240,10 +240,13 @@ package monkey.core.shader {
 			}
 			// 设置fs
 			for each (var fsLabel : FsRegisterLabel in regCache.fsUsed) {
+				if (!fsLabel.texture.scene) {
+					fsLabel.texture.upload(scene);
+				}
 				context.setTextureAt(fsLabel.fs.index, fsLabel.texture.texture);
 			}
 		}
-				
+		
 		/**
 		 * 卸载 
 		 */		

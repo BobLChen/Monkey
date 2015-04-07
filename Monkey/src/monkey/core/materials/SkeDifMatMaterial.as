@@ -33,7 +33,6 @@ package monkey.core.materials {
 		}
 		
 		override public function updateMaterial(scene:Scene3D):void {
-			this._texture.upload(scene);
 			SkeDifMatShader(shader).boneData = Device3D.BoneMatrixs;
 			SkeDifMatShader(shader).texture  = _texture;
 		}

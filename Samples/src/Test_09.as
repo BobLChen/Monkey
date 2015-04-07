@@ -252,8 +252,6 @@ class LightmapMaterial extends DiffuseMaterial {
 	}
 	
 	override public function updateMaterial(scene:Scene3D):void {
-		this.texture.upload(scene);
-		this.lightmap.upload(scene);
 		LightmapShader(shader).texture = this.texture;	
 		LightmapShader(shader).tillingOffset(repeatX, repeatY, offsetX, offsetY);
 		LightmapShader(shader).tilingOffset = this.tilingOffset;

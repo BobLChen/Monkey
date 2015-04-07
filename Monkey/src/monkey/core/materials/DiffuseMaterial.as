@@ -73,7 +73,6 @@ package monkey.core.materials {
 		}
 		
 		override public function updateMaterial(scene:Scene3D):void {
-			this.texture.upload(scene);
 			DiffuseShader(shader).texture = this.texture;	
 			DiffuseShader(shader).tillingOffset(repeatX, repeatY, offsetX, offsetY);
 		}

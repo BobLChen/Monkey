@@ -47,10 +47,9 @@ package monkey.core.materials {
 			}
 			for (var i:int = 0; i < textures.length; i++) {
 				this._list.push(textures[i]);
-				this.textures[i].upload(scene);
 			}
 		}
-
+		
 		override public function draw(scene : Scene3D, surf : Surface3D) : void {
 			// 修改混合、深度测试、裁减
 			if (_stateDirty) {
