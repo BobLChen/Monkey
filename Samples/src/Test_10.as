@@ -1,5 +1,5 @@
 package {
-
+	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -11,13 +11,14 @@ package {
 	import flash.utils.Dictionary;
 	
 	import monkey.core.base.Object3D;
+	import monkey.core.materials.UnityLightmapDiffuseMaterial;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.scene.Viewer3D;
 	import monkey.core.utils.FPSStats;
-	import monkey.core.utils.Input3D; 
+	import monkey.core.utils.Input3D;
 	
-	public class Test_09 extends Sprite { 
+	public class Test_10 extends Sprite { 
 		
 		private var scene: Scene3D;
 		private var cfg : Object;
@@ -26,7 +27,7 @@ package {
 		private var meshPool : Dictionary = new Dictionary();
 		private var texturePool : Dictionary = new Dictionary();
 		
-		public function Test_09() {
+		public function Test_10() {
 			super(); 
 			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -38,7 +39,7 @@ package {
 			this.scene.camera.far = 10000;
 			this.scene.camera.transform.z = -1;
 			this.scene.autoResize = true; 
-						
+			
 			this.scene.addEventListener(Scene3D.CREATE_EVENT, onCreate);
 		}
 		
@@ -49,8 +50,6 @@ package {
 		}
 		
 		protected function onCreate(event:Event) : void {
-//			this.scene.context.enableErrorChecking = true;		
-			
 			this.res = dirName(this.loaderInfo.url) + "/../assets/Test_09/";
 			var url : String = this.res + "scene.lightmap"
 			// 加载配置文件
@@ -58,7 +57,7 @@ package {
 			loader.dataFormat = URLLoaderDataFormat.TEXT;
 			loader.addEventListener(Event.COMPLETE, onConfigLoadComplete);
 			loader.load(new URLRequest(url));
-				
+			
 			this.scene.addEventListener(Object3D.ENTER_FRAME_EVENT, onUpdate);
 		}
 		
@@ -120,12 +119,14 @@ package {
 			if (config.MainTexture && config.Mesh && config.lightmap) {
 				obj.addComponent(
 					new MeshRenderer(getMesh(config.Mesh),
-					new LightmapMaterial(
-						getTetxure(config.MainTexture),
-						getTetxure(config.lightmap + ".png"),
-						new Vector3D(config.tilingOffset[0], config.tilingOffset[1], config.tilingOffset[2], config.tilingOffset[3])
-					))
+						new UnityLightmapDiffuseMaterial(
+							getTetxure(config.MainTexture),
+							getTetxure(config.lightmap + ".png"),
+							new Vector3D(config.tilingOffset[0], config.tilingOffset[1], config.tilingOffset[2], config.tilingOffset[3])
+						))
 				);
+				// Mesh加载完成之后需要充值一下transform
+				// BUG:
 				(obj.renderer.mesh as UMesh).addEventListener(Event.COMPLETE, function(e : Event):void{
 					obj.transform.updateTransforms(false);
 				});
@@ -145,7 +146,6 @@ import flash.display.Bitmap;
 import flash.display.Loader;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
-import flash.geom.Vector3D;
 import flash.net.URLLoader;
 import flash.net.URLLoaderDataFormat;
 import flash.net.URLRequest;
@@ -153,130 +153,9 @@ import flash.utils.ByteArray;
 
 import monkey.core.base.Surface3D;
 import monkey.core.entities.Mesh3D;
-import monkey.core.materials.DiffuseMaterial;
-import monkey.core.materials.shader.DiffuseShader;
-import monkey.core.scene.Scene3D;
-import monkey.core.shader.filters.Filter3D;
-import monkey.core.shader.utils.FcRegisterLabel;
-import monkey.core.shader.utils.FsRegisterLabel;
-import monkey.core.shader.utils.ShaderRegisterCache;
-import monkey.core.shader.utils.ShaderRegisterElement;
 import monkey.core.textures.Bitmap2DTexture;
-import monkey.core.textures.Texture3D;
 import monkey.core.utils.Mesh3DUtils;
 import monkey.core.utils.Texture3DUtils;
-
-class U3DLightmapFilter extends Filter3D {
-	
-	private var _data : Vector.<Number>;
-	private var _label : FsRegisterLabel;
-	
-	public function U3DLightmapFilter() : void {
-		this.priority = 14;
-		this._data = Vector.<Number>([1, 1, 0, 0]);
-		this._label = new FsRegisterLabel(null);
-	}
-	
-	public function set texture(value:Texture3D):void {
-		this._label.texture = value;
-	}
-	
-	public function set tilingOffset(value : Vector3D) : void {
-		this._data[0] = value.x;
-		this._data[1] = value.y;
-		this._data[2] = value.z;
-		this._data[3] = value.w;
-	}
-	
-	override public function getFragmentCode(regCache:ShaderRegisterCache, agal:Boolean):String {
-		
-		var bias : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(_data));
-		var temp : ShaderRegisterElement = regCache.getFt();
-		var fs0  : ShaderRegisterElement = regCache.getFs(this._label);
-		var intensity : ShaderRegisterElement = regCache.getFc(1, new FcRegisterLabel(Vector.<Number>([2.0, 0, 0, 0])));
-		
-		var code : String = "";
-		
-		if (agal) {
-			// scale
-			code += "mul " + temp + ".xy, " + regCache.getV(Surface3D.UV1) + ".xy, " + bias + ".xy\n";
-			code += "add " + temp + ".xy, " + temp + ".xy, " + bias + ".zw \n";
-			// opengl vs dx=> 1-uv.y
-			code += "sub " + temp + ".y, " + regCache.fc0123 + ".y, " + temp + ".y \n";
-			code += "tex " + temp + ", " + temp + ".xy, " + fs0 + description(this._label.texture);
-			code += "mul " + temp + ", " + temp + ", " + intensity + ".x \n";
-			code += "mul " + regCache.oc + ", " + regCache.oc + ", " + temp + " \n";
-		}
-		
-		regCache.removeFt(temp);
-		return code;
-	}
-	
-}
-
-class LightmapShader extends DiffuseShader {
-	
-	private static var _instance : LightmapShader;
-	
-	private var filter : U3DLightmapFilter;
-		
-	public function LightmapShader() : void {
-		this.filter = new U3DLightmapFilter();
-		this.addFilter(this.filter);
-	}
-	
-	public function set tilingOffset(value : Vector3D) : void {
-		this.filter.tilingOffset = value;
-	}
-	
-	public function set lightmap(value : Texture3D) : void {
-		this.filter.texture = value;
-	}
-	
-	public static function get instance() : LightmapShader {
-		if (!_instance) {
-			_instance = new LightmapShader();
-		}
-		return _instance;
-	}
-	
-}
-
-class LightmapMaterial extends DiffuseMaterial {
-	
-	private var _lightmap : Texture3D;
-	private var _tilingOffset : Vector3D;
-	 
-	public function LightmapMaterial(texture : Texture3D, lightmap : Texture3D, tilingOffset : Vector3D) : void {
-		super(texture);
-		this._shader = LightmapShader.instance;
-		this.lightmap = lightmap;
-		this.tilingOffset = tilingOffset;
-	}
-	
-	override public function updateMaterial(scene:Scene3D):void {
-		LightmapShader(shader).texture = this.texture;	
-		LightmapShader(shader).tilingOffset = this.tilingOffset;
-		LightmapShader(shader).lightmap = this.lightmap;
-	}
-	
-	public function get tilingOffset():Vector3D {
-		return _tilingOffset;
-	}
-
-	public function set tilingOffset(value:Vector3D):void {
-		_tilingOffset = value;
-	}
-
-	public function get lightmap():Texture3D {
-		return _lightmap;
-	}
-
-	public function set lightmap(value:Texture3D):void {
-		_lightmap = value;
-	}
-
-}
 
 class UMesh extends Mesh3D {
 	
@@ -320,7 +199,7 @@ class UMesh extends Mesh3D {
 } 
 
 class UTexture extends Bitmap2DTexture {
-		
+	
 	private var _loaded : Boolean;
 	private var loader : Loader;
 	private var url : String;
@@ -353,5 +232,5 @@ class UTexture extends Bitmap2DTexture {
 	public function get loaded():Boolean {
 		return _loaded;
 	}
-
+	
 }

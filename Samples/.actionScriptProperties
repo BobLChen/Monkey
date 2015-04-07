@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties analytics="false" mainApplicationPath="Test_09.as" projectUUID="5fa14a0b-bddc-4808-8e1b-90a9f74e9525" version="11">
+<actionScriptProperties analytics="false" mainApplicationPath="Test_10.as" projectUUID="5fa14a0b-bddc-4808-8e1b-90a9f74e9525" version="11">
   <compiler additionalCompilerArguments="-locale en_US" advancedTelemetry="true" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" useFlashSDK="true" verifyDigests="true" warn="true">
     <compilerSourcePath>
       <compilerSourcePathEntry kind="1" linkType="1" path="/Users/Neil/as3workpace/Monkey/Monkey/src"/>
@@ -34,6 +34,7 @@
     <sourceAttachmentPath/>
   </compiler>
   <applications>
+    <application path="Test_10.as"/>
     <application path="Test_09.as"/>
     <application path="blog/samples/Stage3d16.as"/>
     <application path="Test_08.as"/>
