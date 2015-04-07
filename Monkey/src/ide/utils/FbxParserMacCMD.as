@@ -77,8 +77,8 @@ package ide.utils {
 			}
 			args.push("-max_quat=" + quatBoneNum);
 			args.push("-max_m34=" + m34BoneNum);
-			args.push("-path='" + path + "'");
-			args.push("-mount='" + mount + "'");
+			args.push("-path=" + path);
+			args.push("-mount=" + mount);
 			
 			App.core.dispatchEvent(new LogEvent(file.url + "-" + file.exists));
 			
