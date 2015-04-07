@@ -2,6 +2,7 @@ package monkey.core.utils {
 	
 	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
+	import flash.utils.CompressionAlgorithm;
 	import flash.utils.Endian;
 	
 	import monkey.core.base.Bounds3D;
@@ -28,7 +29,7 @@ package monkey.core.utils {
 		public static function readMesh(bytes : ByteArray) : Mesh3D {
 			bytes.endian = Endian.LITTLE_ENDIAN;
 			// 读取压缩格式
-			var type : int = bytes.readInt();
+			var algorithm : int = bytes.readInt();
 			// 读取压缩前长度
 			var size : int = bytes.readInt();
 			// 解压
@@ -36,7 +37,13 @@ package monkey.core.utils {
 			data.endian = Endian.LITTLE_ENDIAN;
 			bytes.readBytes(data, 0, bytes.bytesAvailable);
 			
-			data.uncompress();
+			if (algorithm == 1) {
+				data.uncompress(CompressionAlgorithm.ZLIB);
+			} else if (algorithm == 2) {
+				data.uncompress(CompressionAlgorithm.LZMA);				
+			} else if (algorithm == 3) {
+				data.uncompress(CompressionAlgorithm.DEFLATE);
+			}
 			
 			var mesh : Mesh3D   = new Mesh3D([]);
 			var anim : Boolean  = false;

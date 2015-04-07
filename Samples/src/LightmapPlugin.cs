@@ -21,10 +21,7 @@ public class LightmapPlugin : EditorWindow {
 			writeMeshs();
 			Debug.Log("ʕ•̫͡•ʕ*̫͡*ʕ complete");
 		}
-
 	}
-
-
 
 	private static void createFloder() {
 		folderName = EditorUtility.SaveFolderPanel("Select Folder", "lightmap", "lightmap");
@@ -54,9 +51,8 @@ public class LightmapPlugin : EditorWindow {
 		if (File.Exists(filepath)) {
 			File.Delete(filepath);
 		}
-		FileStream fs = new FileStream(filepath, FileMode.Create);
-//		BinaryWriter bw = new BinaryWriter(new GZipStream(fs, CompressionMode.Compress));
-		BinaryWriter bw = new BinaryWriter(fs);
+		MemoryStream ms = new MemoryStream();
+		BinaryWriter bw = new BinaryWriter(ms);
 		Debug.Log("Write Mesh:" + m.name + " to disk:" + filepath);
 		// write length
 		bw.Write(m.name.Length);
@@ -133,11 +129,28 @@ public class LightmapPlugin : EditorWindow {
 		bw.Write(m.bounds.max.x);
 		bw.Write(m.bounds.max.y);
 		bw.Write(m.bounds.max.z);
-		// write to disk
 		bw.Close();
+		
+		int size = ms.GetBuffer().Length;
+		MemoryStream compressionBytes = new MemoryStream();
+		// write to disk
+		DeflateStream compressionStream = new DeflateStream(compressionBytes, CompressionMode.Compress);
+		compressionStream.Write(ms.GetBuffer(), 0, ms.GetBuffer().Length);
+		compressionStream.Close();
+
+		FileStream fs = new FileStream(filepath, FileMode.Create);
+		BinaryWriter cbw = new BinaryWriter(fs);
+		// write compression type
+		cbw.Write(3);
+		// write original size
+		cbw.Write(size);
+		// write compressed data
+		cbw.Write(compressionBytes.GetBuffer());
+
+		cbw.Close();
 		fs.Close();
 	}
-
+	
 	private static void writeConfig() {
 		JsonWriter cfg = new JsonWriter();
 		cfg.WriteObjectStart();

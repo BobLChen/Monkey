@@ -3,6 +3,7 @@ package monkey.core.utils {
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
+	import flash.utils.CompressionAlgorithm;
 	import flash.utils.Endian;
 	
 	import monkey.core.animator.Animator;
@@ -25,14 +26,19 @@ package monkey.core.utils {
 		public static function readAnim(bytes : ByteArray) : Animator {
 			bytes.endian = Endian.LITTLE_ENDIAN;
 			// 读取压缩格式
-			var lzma : int = bytes.readInt();
+			var algorithm : int = bytes.readInt();
 			// 读取压缩之前的长度
 			var size : int = bytes.readInt();
 			var data : ByteArray = new ByteArray();
 			data.endian = Endian.LITTLE_ENDIAN;
 			bytes.readBytes(data, 0, bytes.bytesAvailable);
 			// 解压
-			data.uncompress();
+			if (algorithm == 1) {
+				data.uncompress();
+			} else if (algorithm == 2) {
+				data.uncompress(CompressionAlgorithm.LZMA);				
+			}
+			// 
 			var type : int = data.readInt();
 			if (type == 0) {
 				return readFrameAnim(data, type);
