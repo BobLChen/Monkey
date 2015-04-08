@@ -120,7 +120,7 @@ package ide {
 			this._output.minHeight = 100;
 			// 属性面板
 			this._property = new TabControl();
-			this._property.minWidth = 120;
+			this._property.minWidth = 200;
 			// 层级面板
 			this._hierarchy = new TabControl();
 			this._hierarchy.minWidth = 200;
