@@ -14,7 +14,7 @@ package monkey.core.shader.filters {
 	 */	
 	public class BloomExtractFilter extends Filter3D {
 		
-		private var bias 	: Vector.<Number> = Vector.<Number>([0.2126,0.7152,0.0722, 0.3]);
+		private var bias 	: Vector.<Number>;
 		private var offsets : Vector.<Number>;
 		private var _fsLabel : FsRegisterLabel;
 		
@@ -25,10 +25,15 @@ package monkey.core.shader.filters {
 		 * @param offsetY	贴图高度偏移量:例如1/height
 		 * 
 		 */		
-		public function BloomExtractFilter(texture : Texture3D, offsetX : Number, offsetY : Number) {
+		public function BloomExtractFilter(texture : Texture3D, offsetX : Number, offsetY : Number, intensity : Number = 0.75) {
 			super("BloomExtractFilter");
 			this._fsLabel = new FsRegisterLabel(texture);
 			this.offsets  = Vector.<Number>([offsetX, offsetY, -offsetX, -offsetY]);
+			this.bias	  = Vector.<Number>([0.2126,0.7152,0.0722, intensity]);
+		}
+		
+		public function set intensity(value : Number) : void {
+			this.bias[3] = value;
 		}
 		
 		public function get texture():Texture3D {

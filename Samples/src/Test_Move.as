@@ -16,12 +16,12 @@ package {
 	import monkey.core.utils.Input3D;
 	import monkey.core.utils.Object3DUtils;
 
-	public class Test_03 extends Sprite {
+	public class Test_Move extends Sprite {
 		
 		private var scene : Scene3D;
 		private var cube  : Object3D;
 		
-		public function Test_03() {
+		public function Test_Move() {
 			super();
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;

@@ -5,9 +5,8 @@ package {
 	import flash.display.StageScaleMode;
 	import flash.utils.getTimer;
 	
-	import monkey.core.animator.Animator;
+	import monkey.core.animator.Animator; 
 	import monkey.core.base.Object3D;
-	import monkey.core.entities.Mesh3D;
 	import monkey.core.materials.SkeDifQuatMaterial;
 	import monkey.core.renderer.SkeletonRenderer;
 	import monkey.core.scene.Scene3D;
@@ -17,7 +16,7 @@ package {
 	import monkey.core.utils.FPSStats;
 	import monkey.core.utils.Mesh3DUtils;
 
-	public class Test_04 extends Sprite {
+	public class Test_SkeletonQuat extends Sprite {
 		
 		[Embed(source="../assets/test_04/xiaonan_boo1.mesh", mimeType="application/octet-stream")]
 		private var DATA : Class;
@@ -28,7 +27,7 @@ package {
 		
 		private var scene : Scene3D;
 		
-		public function Test_04() {
+		public function Test_SkeletonQuat() {
 			super();
 			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;

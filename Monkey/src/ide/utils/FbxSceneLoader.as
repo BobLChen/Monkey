@@ -73,10 +73,12 @@ package ide.utils {
 				fs.readBytes(animBytes, 0, fs.bytesAvailable);
 				fs.close();
 				var anim : Animator = AnimUtil.readAnim(animBytes);
-				if ((anim as SkeletonAnimator).quat) {
-					obj.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(meshBytes), new SkeDifQuatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData))));
-				} else {
-					obj.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(meshBytes), new SkeDifMatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData))));					
+				if ((anim as SkeletonAnimator)) {
+					if ((anim as SkeletonAnimator).quat) {
+						obj.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(meshBytes), new SkeDifQuatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData))));
+					} else {
+						obj.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(meshBytes), new SkeDifMatMaterial(new Bitmap2DTexture(Texture3DUtils.nullBitmapData))));					
+					}
 				}
 				obj.addComponent(anim);
 			} else {

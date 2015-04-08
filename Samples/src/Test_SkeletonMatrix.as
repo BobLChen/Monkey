@@ -16,7 +16,7 @@ package {
 	import monkey.core.utils.FPSStats;
 	import monkey.core.utils.Mesh3DUtils;
 
-	public class Test_05 extends Sprite {
+	public class Test_SkeletonMatrix extends Sprite {
 		
 		[Embed(source="../assets/test_05/xiaonan_boo1.mesh", mimeType="application/octet-stream")]
 		private var DATA : Class;
@@ -27,7 +27,7 @@ package {
 		
 		private var scene : Scene3D;
 		
-		public function Test_05() {
+		public function Test_SkeletonMatrix() {
 			super();
 			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -38,7 +38,7 @@ package {
 			this.scene = new Viewer3D(this);
 			this.scene.camera.transform.z = -1000;
 			this.scene.camera.transform.lookAt(0, 0, 0);
-			this.scene.autoResize = true;
+			this.scene.autoResize = true; 
 			
 			var t : int = getTimer();
 			

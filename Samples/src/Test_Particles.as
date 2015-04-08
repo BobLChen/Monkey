@@ -12,14 +12,14 @@ package {
 	import monkey.core.utils.FPSStats;
 	import monkey.loader.ParticleLoader;
 
-	public class Test_06 extends Sprite {
+	public class Test_Particles extends Sprite {
 		
 		[Embed(source="../assets/test_06/test_optimize.particle", mimeType="application/octet-stream")]
 		private var DATA  : Class;
 		
 		private var scene : Scene3D;
 		
-		public function Test_06() {
+		public function Test_Particles() {
 			super();  
 			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;

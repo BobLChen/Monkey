@@ -23,7 +23,7 @@ package {
 	import monkey.core.utils.FPSStats;
 	import monkey.core.utils.Mesh3DUtils;
 	
-	public class Test_07 extends Sprite {
+	public class Test_AppendAnimation extends Sprite {
 		
 		[Embed(source="../assets/test_07/akali.mesh", mimeType="application/octet-stream")]
 		private var MESH : Class;
@@ -52,7 +52,7 @@ package {
 		private var keyMap  : Dictionary;
 		private var akali	: Object3D;
 		
-		public function Test_07() {
+		public function Test_AppendAnimation() {
 			super();
 			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;

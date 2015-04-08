@@ -13,14 +13,14 @@ package {
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Mesh3DUtils;
 
-	public class Test_02 extends Sprite {
+	public class Test_ImportMesh extends Sprite {
 		
 		[Embed(source="../assets/test_02/xiaonan_boo1.mesh", mimeType="application/octet-stream")]
 		private var DATA : Class;
 		
 		private var scene : Scene3D;
 				
-		public function Test_02() {
+		public function Test_ImportMesh() {
 			super();
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;

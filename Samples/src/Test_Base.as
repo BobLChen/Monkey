@@ -12,11 +12,11 @@ package {
 	import monkey.core.scene.Viewer3D;
 	import monkey.core.utils.Color;
 
-	public class Test_01 extends Sprite {
+	public class Test_Base extends Sprite {
 		
 		private var scene : Scene3D;
 		
-		public function Test_01() {
+		public function Test_Base() {
 			super();
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;

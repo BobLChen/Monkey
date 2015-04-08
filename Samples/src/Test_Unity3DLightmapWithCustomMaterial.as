@@ -17,7 +17,7 @@ package {
 	import monkey.core.utils.FPSStats;
 	import monkey.core.utils.Input3D; 
 	
-	public class Test_09 extends Sprite { 
+	public class Test_Unity3DLightmapWithCustomMaterial extends Sprite { 
 		
 		private var scene: Scene3D;
 		private var cfg : Object;
@@ -26,7 +26,7 @@ package {
 		private var meshPool : Dictionary = new Dictionary();
 		private var texturePool : Dictionary = new Dictionary();
 		
-		public function Test_09() {
+		public function Test_Unity3DLightmapWithCustomMaterial() {
 			super(); 
 			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
