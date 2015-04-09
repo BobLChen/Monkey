@@ -14,7 +14,7 @@ package monkey.core.utils {
 	public class FPSStats extends Sprite {
 		
 		protected var WIDTH 		: uint = 70;
-		protected var HEIGHT 		: uint = 100;
+		protected var HEIGHT 		: uint = 80;
 		protected var xml 			: XML;
 		protected var text 			: TextField;
 		protected var style 		: StyleSheet;
@@ -24,7 +24,6 @@ package monkey.core.utils {
 		protected var ms_prev 		: uint;
 		protected var mem 			: Number;
 		protected var mem_max 		: Number;
-		protected var graph 		: Bitmap;
 		protected var rectangle 	: Rectangle;
 		protected var fps_graph 	: uint;
 		protected var mem_graph 	: uint;
@@ -84,9 +83,6 @@ package monkey.core.utils {
 			text.selectable = false;
 			text.mouseEnabled = false;
 			
-			graph = new Bitmap();
-			graph.y = 80;
-			
 			rectangle = new Rectangle(WIDTH - 1, 0, 1, HEIGHT - 50);
 			
 			addEventListener(Event.ADDED_TO_STAGE, init, false, 0, true);
@@ -101,9 +97,6 @@ package monkey.core.utils {
 			
 			addChild(text);
 			
-			graph.bitmapData = new BitmapData(WIDTH, HEIGHT, false, theme.bg);
-			addChild(graph);
-			
 			addEventListener(MouseEvent.CLICK, onClick);
 			addEventListener(Event.ENTER_FRAME, update);
 		}
@@ -114,8 +107,6 @@ package monkey.core.utils {
 			
 			while (numChildren > 0)
 				removeChildAt(0);
-			
-			graph.bitmapData.dispose();
 			
 			removeEventListener(MouseEvent.CLICK, onClick);
 			removeEventListener(Event.ENTER_FRAME, update);
@@ -130,17 +121,6 @@ package monkey.core.utils {
 				ms_prev = timer;
 				mem = Number((System.totalMemory * 0.000000954).toFixed(3));
 				mem_max = mem_max > mem ? mem_max : mem;
-				
-				fps_graph = Math.min(graph.height, (fps / stage.frameRate) * graph.height);
-				mem_graph = Math.min(graph.height, Math.sqrt(Math.sqrt(mem * 5000))) - 2;
-				mem_max_graph = Math.min(graph.height, Math.sqrt(Math.sqrt(mem_max * 5000))) - 2;
-				
-				graph.bitmapData.scroll(-1, 0);
-				graph.bitmapData.fillRect(rectangle, theme.bg);
-				graph.bitmapData.setPixel(graph.width - 1, graph.height - fps_graph, theme.fps);
-				graph.bitmapData.setPixel(graph.width - 1, graph.height - ((timer - ms) >> 1), theme.ms);
-				graph.bitmapData.setPixel(graph.width - 1, graph.height - mem_graph, theme.mem);
-				graph.bitmapData.setPixel(graph.width - 1, graph.height - mem_max_graph, theme.memmax);
 				
 				xml.fps = "FPS: " + fps + " / " + stage.frameRate;
 				xml.mem = "MEM: " + mem;
