@@ -180,7 +180,9 @@ package monkey.core.base {
 		 * 
 		 */		
 		public function addChild(child : Object3D) : void {
-			child.parent = this;
+			if (child) {
+				child.parent = this;
+			}
 		}
 		
 		/**
@@ -189,7 +191,9 @@ package monkey.core.base {
 		 * 
 		 */		
 		public function removeChild(child : Object3D) : void {
-			child.parent = null;
+			if (child) {
+				child.parent = null;
+			}
 		}
 		
 		/**
