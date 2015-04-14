@@ -9,7 +9,6 @@ package monkey.core.components {
 	import monkey.core.interfaces.IComponent;
 	import monkey.core.materials.DiffuseMaterial;
 	import monkey.core.materials.Material3D;
-	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.textures.Texture3D;
 	import monkey.core.utils.Device3D;
 	import monkey.core.utils.MathUtils;
@@ -41,7 +40,7 @@ package monkey.core.components {
 		/** 条带节点 */
 		private var sections	: Vector.<TrailSection>;
 		
-		private var _renderer	: MeshRenderer;				// 渲染器
+		private var _mesh		: Mesh3D;					// 模型
 		private var _material 	: DiffuseMaterial;			// 材质
 		private var _texture  	: Texture3D;				// 贴图
 		
@@ -50,9 +49,15 @@ package monkey.core.components {
 			this.surf 	   = new Surface3D();
 			this.sections  = new Vector.<TrailSection>();
 			this._material = new DiffuseMaterial(texture);
-			this._renderer = new MeshRenderer(new Mesh3D([surf]), this._material);
+			this._mesh	   = new Mesh3D([surf]);
 			this._material.twoSided  = true;
 			this._material.blendMode = Material3D.BLEND_ADDITIVE;
+		}
+		
+		override public function dispose(force:Boolean=false):void {
+			super.dispose(force);
+			this.mesh.dispose(force);
+			this.material.dispose(force);
 		}
 		
 		/**
@@ -69,8 +74,8 @@ package monkey.core.components {
 		 * @return 
 		 * 
 		 */		
-		public function get renderer():MeshRenderer {
-			return _renderer;
+		public function get mesh():Mesh3D {
+			return _mesh;
 		}
 		
 		/**
@@ -110,14 +115,12 @@ package monkey.core.components {
 		
 		override public function onAdd(master:Object3D):void {
 			super.onAdd(master);
-			this._renderer.onAdd(master);
 			this.object3D.addEventListener(Object3D.EXIT_DRAW_EVENT, onExitDraw);
 		}
 		
 		override public function onRemove(master:Object3D):void {
 			super.onRemove(master);
 			master.removeEventListener(Object3D.EXIT_DRAW_EVENT, onExitDraw);
-			this._renderer.onRemove(master);
 		}
 		
 		/**
@@ -177,14 +180,14 @@ package monkey.core.components {
 			this.surf.indexVector = indices;
 			this.surf.setVertexVector(Surface3D.POSITION, vertices, 3);
 			this.surf.setVertexVector(Surface3D.UV0, uvs, 2);
-			
+			// 绘制
 			Device3D.world.identity();
 			Device3D.mvp.copyFrom(Device3D.world);
 			Device3D.mvp.append(Device3D.viewProjection);
-			
-			// 绘制
-			this._renderer.onDraw(this.object3D.scene);
-			
+			material.updateMaterial(object3D.scene);
+			for (i = 0; i < mesh.surfaces.length; i++) {
+				material.draw(object3D.scene, mesh.surfaces[i]);
+			}
 			// tween to
 			if (this.time > this.tweenTime) {
 				this.time -= Time3D.deltaTime * speed;
