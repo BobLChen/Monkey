@@ -170,9 +170,6 @@ package monkey.core.shader {
 			if (!this.scene || this._programDirty) {
 				this.upload(scene3d);
 			}
-			if (!surface.scene) {
-				surface.upload(scene3d);
-			}
 			for each (var filter : Filter3D in filters) {
 				filter.update();
 			}

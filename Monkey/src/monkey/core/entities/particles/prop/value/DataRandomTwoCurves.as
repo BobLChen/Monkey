@@ -21,7 +21,7 @@ package monkey.core.entities.particles.prop.value {
 		override public function getValue(x : Number) : Number {
 			var min : Number = minCurves.curve.getY(x);
 			var max : Number = maxCurves.curve.getY(x);
-			return MathUtils.clamp(min, max, Math.random());
+			return MathUtils.lerp(min, max, Math.random());
 		}
 		
 	}

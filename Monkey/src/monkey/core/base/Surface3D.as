@@ -10,7 +10,6 @@ package monkey.core.base {
 	
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Surface3DUtils;
-	import monkey.core.utils.UUID;
 
 	/**
 	 * 网格数据 
@@ -371,7 +370,29 @@ package monkey.core.base {
 			return -1;
 		}
 		
-		private var id : String;
+		public function freeMemory(force : Boolean = false) : void {
+			if (disposed) {
+				return;
+			}
+			// 存在克隆对象，引用计数减一
+			if (ref > 0 && !force) {
+				ref--;
+				return;
+			}
+			// 清空内存数据
+			for (var i:int = 0; i < LENGTH; i++) {
+				if (vertexVector[i]) {
+					vertexVector[i] = null;
+				}
+				if (vertexBytes[i]) {
+					vertexBytes[i].clear();
+					vertexBytes[i] = null;
+				}
+			}
+			this.formats 	  = new Vector.<String>(LENGTH, true);
+			this.vertexBytes  = new Vector.<ByteArray>(LENGTH, true);
+			this.vertexVector = new Vector.<Vector.<Number>>(LENGTH, true);
+		}
 		
 		/**
 		 * 销毁surface3d 
@@ -400,8 +421,6 @@ package monkey.core.base {
 			this.formats = null;
 			this.vertexBytes = null;
 			this.vertexVector = null;
-			
-			id = UUID.generate();
 		}
 	}
 }

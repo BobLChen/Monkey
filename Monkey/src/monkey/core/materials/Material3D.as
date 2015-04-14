@@ -72,6 +72,9 @@ package monkey.core.materials {
 				scene.context.setDepthTest(depthWrite, depthCompare);
 				scene.context.setCulling(cullFace);
 			}
+			if (!surf.scene) {
+				surf.upload(scene);
+			}
 			shader.draw(scene, surf, 0, surf.numTriangles);
 			// 重置回默认状态
 			if (_stateDirty) {

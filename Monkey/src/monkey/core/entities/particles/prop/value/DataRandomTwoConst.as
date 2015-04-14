@@ -19,7 +19,7 @@ package monkey.core.entities.particles.prop.value {
 		}
 		
 		override public function getValue(x : Number) : Number {
-			return MathUtils.clamp(minValue, maxValue, Math.random());
+			return MathUtils.lerp(minValue, maxValue, Math.random());
 		}
 		
 	}

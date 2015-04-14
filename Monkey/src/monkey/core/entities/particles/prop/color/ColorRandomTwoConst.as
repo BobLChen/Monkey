@@ -70,10 +70,10 @@ package monkey.core.entities.particles.prop.color {
 		}
 				
 		override public function getRGBA(x : Number) : Vector3D {
-			this._rgba.x = MathUtils.clamp(_minRGB.x, _maxRGB.x, Math.random());
-			this._rgba.y = MathUtils.clamp(_minRGB.y, _maxRGB.y, Math.random());
-			this._rgba.z = MathUtils.clamp(_minRGB.z, _maxRGB.z, Math.random());
-			this._rgba.w = MathUtils.clamp(_minRGB.w, _maxRGB.w, Math.random());
+			this._rgba.x = MathUtils.lerp(_minRGB.x, _maxRGB.x, Math.random());
+			this._rgba.y = MathUtils.lerp(_minRGB.y, _maxRGB.y, Math.random());
+			this._rgba.z = MathUtils.lerp(_minRGB.z, _maxRGB.z, Math.random());
+			this._rgba.w = MathUtils.lerp(_minRGB.w, _maxRGB.w, Math.random());
 			return _rgba;
 		}
 		

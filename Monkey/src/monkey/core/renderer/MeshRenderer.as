@@ -123,7 +123,7 @@ package monkey.core.renderer {
 				material.draw(scene, mesh.surfaces[i]);
 			}
 		}
-				
+			
 		public function get material():Material3D {
 			return _mat;
 		}

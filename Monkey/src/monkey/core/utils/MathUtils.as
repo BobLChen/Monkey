@@ -5,8 +5,17 @@ package monkey.core.utils {
 		public function MathUtils() {
 			
 		}
-				
-		public static function clamp(min : Number, max : Number, smooth : Number) : Number {
+		
+		public static function clamp(min : Number, max : Number, value : Number) : Number {
+			if (value <= min) {
+				return min;
+			} else if (value >= max) {
+				return max;
+			}
+			return value;
+		}
+		
+		public static function lerp(min : Number, max : Number, smooth : Number) : Number {
 			return min + (max - min) * smooth;
 		}
 		
