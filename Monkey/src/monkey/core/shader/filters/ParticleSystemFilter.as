@@ -153,7 +153,7 @@ package monkey.core.shader.filters {
 			var code : String = "";
 			if (agal) {
 				// 粒子贴图
-				code += "tex " + regCache.oc + ", " + regCache.getV(Surface3D.UV0) + ", " + fs0 + "<2d, linear, miplinear, repeat> \n";
+				code += "tex " + regCache.oc + ", " + regCache.getV(Surface3D.UV0) + ", " + fs0 + "<2d, linear, miplinear, clamp> \n";
 				// 混合顶点颜色
 				code += "mul " + regCache.oc + ".xyz, " + regCache.oc + ".xyz, " + regCache.getV(Surface3D.CUSTOM3) + ".xyz \n";
 				code += "mul " + regCache.oc + ".xyz, " + regCache.oc + ".xyz, " + regCache.getV(Surface3D.CUSTOM3) + ".w \n";
