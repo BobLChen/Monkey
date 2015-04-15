@@ -5,7 +5,6 @@ package {
 	import flash.display.StageScaleMode;
 	
 	import monkey.core.base.Object3D;
-	import monkey.core.entities.primitives.Cube;
 	import monkey.core.entities.primitives.Plane;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;

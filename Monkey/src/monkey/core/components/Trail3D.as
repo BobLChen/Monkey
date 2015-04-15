@@ -51,7 +51,7 @@ package monkey.core.components {
 			this._material = new TrailMaterial(null);
 			this._mesh	   = new Mesh3D([surf]);
 			this._material.twoSided  = true;
-			this._material.blendMode = Material3D.BLEND_ADDITIVE;
+			this._material.blendMode = Material3D.BLEND_SCREEN;
 			this.texture   = texture;
 		}
 		

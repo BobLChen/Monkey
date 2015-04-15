@@ -280,7 +280,7 @@ package monkey.core.shader {
 		 * 
 		 */		
 		public function upload(scene3d : Scene3D) : void {
-			if (scene == scene3d) {
+			if (scene == scene3d && !_programDirty) {
 				return;
 			}
 			if (!_programDirty) {
