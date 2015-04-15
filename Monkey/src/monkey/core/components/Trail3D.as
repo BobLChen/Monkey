@@ -9,9 +9,9 @@ package monkey.core.components {
 	import monkey.core.interfaces.IComponent;
 	import monkey.core.materials.DiffuseMaterial;
 	import monkey.core.materials.Material3D;
+	import monkey.core.materials.TrailMaterial;
 	import monkey.core.textures.Texture3D;
 	import monkey.core.utils.Device3D;
-	import monkey.core.utils.MathUtils;
 	import monkey.core.utils.Time3D;
 	import monkey.core.utils.Vector3DUtils;
 
@@ -41,17 +41,18 @@ package monkey.core.components {
 		private var sections	: Vector.<TrailSection>;
 		
 		private var _mesh		: Mesh3D;					// 模型
-		private var _material 	: DiffuseMaterial;			// 材质
+		private var _material 	: TrailMaterial;			// 材质
 		private var _texture  	: Texture3D;				// 贴图
 		
 		public function Trail3D(texture : Texture3D) {
 			super();
 			this.surf 	   = new Surface3D();
 			this.sections  = new Vector.<TrailSection>();
-			this._material = new DiffuseMaterial(texture);
+			this._material = new TrailMaterial(null);
 			this._mesh	   = new Mesh3D([surf]);
 			this._material.twoSided  = true;
 			this._material.blendMode = Material3D.BLEND_ADDITIVE;
+			this.texture   = texture;
 		}
 		
 		override public function dispose(force:Boolean=false):void {
@@ -93,6 +94,7 @@ package monkey.core.components {
 		 * 
 		 */		
 		public function set texture(value:Texture3D):void {
+			value.wrapMode = Texture3D.WRAP_CLAMP;
 			this._texture = value;
 			this._material.texture = value;
 		}
@@ -145,11 +147,7 @@ package monkey.core.components {
 			// 
 			for (var i:int = 0; i < sections.length; i++) {
 				var section : TrailSection = sections[i];
-				var u : Number = 0;
-				if (i != 0) {
-					u = (Time3D.totalTime - section.time) / time;
-					u = MathUtils.clamp(0, 0.99, u);
-				}
+				var u : Number = i * 1.0 / sections.length;
 				var upDir : Vector3D = section.upDir;
 				var step  : int = i * 2 * 3;
 				// 顶点
