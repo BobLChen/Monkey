@@ -19,7 +19,7 @@ package monkey.core.shader.filters {
 			super("UnityLightmapFilter");
 			this.priority = 14;
 			this._data  = Vector.<Number>([1, 1, 0, 0]);
-			this._bias  = Vector.<Number>([1, 0, 0, 0]);
+			this._bias  = Vector.<Number>([2, 0, 0, 0]);
 			this._label = new FsRegisterLabel(null);
 		}
 		
@@ -53,9 +53,7 @@ package monkey.core.shader.filters {
 				code += "sub " + ft0 + ".y, " + regCache.fc0123 + ".y, " + ft0 + ".y \n";
 				code += "tex " + ft0 + ", " + ft0 + ".xy, " + fs0 + description(this._label.texture);
 				code += "mul " + ft0 + ", " + ft0 + ", " + fc1 + ".x \n";
-				
-				code += "mul " + ft0 + ", " + ft0 + ", " + regCache.oc + " \n";
-				code += "add " + regCache.oc + ", " + regCache.oc + ", " + ft0 + " \n";
+				code += "mul " + regCache.oc + ", " + ft0 + ", " + regCache.oc + " \n";
 			}
 			regCache.removeFt(ft0);
 			return code;

@@ -118,7 +118,7 @@ package {
 			
 			if (config.MainTexture && config.Mesh && config.lightmap) {
 				obj.addComponent(
-					new MeshRenderer(getMesh(config.Mesh),
+					new MeshRenderer(getMesh(config.Mesh), 
 						new UnityLightmapDiffuseMaterial(
 							getTetxure(config.MainTexture),
 							getTetxure(config.lightmap + ".png"),

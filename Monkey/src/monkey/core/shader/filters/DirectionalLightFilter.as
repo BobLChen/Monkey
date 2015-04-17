@@ -15,7 +15,7 @@ package monkey.core.shader.filters {
 	import monkey.core.utils.Vector3DUtils;
 	
 	/**
-	 * 太阳光filter 
+	 * 平行光 filter 
 	 * @author Neil
 	 * 
 	 */	
@@ -42,7 +42,9 @@ package monkey.core.shader.filters {
 		}
 		
 		public function set light(light : DirectionalLight) : void {
-			
+			if (!light) {
+				return;
+			}
 			if (this._light) {
 				this._light.removeEventListener(Event.CHANGE, change);
 				this._light.transform.removeEventListener(Transform3D.UPDATE_TRANSFORM_EVENT, change);
@@ -50,12 +52,7 @@ package monkey.core.shader.filters {
 			this._light = light;
 			this._light.addEventListener(Event.CHANGE, change);
 			this._light.transform.addEventListener(Transform3D.UPDATE_TRANSFORM_EVENT, change);
-			light.transform.getDir(false, Vector3DUtils.vec0);
-			this.dirData 		= Vector3DUtils.vec0;
-			this.lightColor 	= light.color;
-			this.power 			= light.power;
-			this.ambient 		= light.ambient;
-			this.specular 		= light.specular;
+			this.change(null);
 		}
 		
 		/**
@@ -64,11 +61,13 @@ package monkey.core.shader.filters {
 		 * 
 		 */		
 		private function change(event:Event) : void {
-			this.dirData 	= _light.transform.getDir(true);
-			this.lightColor = _light.color;
-			this.ambient 	= _light.ambient;
-			this.specular 	= _light.specular;
-			this.power 		= _light.power;
+			this._light.transform.getDir(false, Vector3DUtils.vec0);
+			this.dirData 		= Vector3DUtils.vec0;
+			this.lightColor 	= this._light.color;
+			this.power 			= this._light.power;
+			this.ambient 		= this._light.ambient;
+			this.specular 		= this._light.specular;
+			this.intensity		= this._light.intensity;
 		}
 		
 		/**
@@ -164,17 +163,18 @@ package monkey.core.shader.filters {
 			code += 'dp3 ' + ft0 + '.w, ' + ft0 + '.xyz, ' + lightDir + '.xyz \n';
 			code += 'max ' + ft0 + '.w, ' + ft0 + '.w, ' + regCache.fc0123 + '.x \n';
 			code += 'mul ' + ft0 + '.xyz, ' + colorFc + '.xyz, ' + ft0 + '.w \n';
-			// sat 灯光颜色
-			code += 'sat ' + ft0 + '.xyz, ' + ft0 + '.xyz \n';
 			// 灯光颜色=灯光颜色+环境色
 			code += 'add ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + ambFc + '.xyz \n';
 			code += 'mul ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + regCache.oc + '.xyz \n';
 			// 高光颜色*高光
 			code += 'mul ' + ft2 + '.xyz, ' + ft2 + '.w, ' + specuFc + '.xyz \n';
 			code += 'add ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + ft2 + '.xyz \n';
+			// 高光颜色*高光
+			code += 'mul ' + ft2 + '.xyz, ' + ft2 + '.w, ' + specuFc + '.xyz \n';
+			code += 'add ' + ft0 + '.xyz, ' + ft0 + '.xyz, ' + ft2 + '.xyz \n';
 			// 强度
-			code += 'mul ' + regCache.oc + '.xyz, ' + ft0 + '.xyz, ' + colorFc + '.w \n';
-						
+			code += 'mov ' + regCache.oc + '.xyz, ' + ft0 + '.xyz \n';
+			
 			regCache.removeFt(ft0);
 			regCache.removeFt(ft1);
 			regCache.removeFt(ft2);

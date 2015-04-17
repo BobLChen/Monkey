@@ -27,6 +27,7 @@ package monkey.core.shader.filters {
 			super("ColorFilter");
 			this.data = Vector.<Number>([1, 1, 1, 1]);
 			this.priority = 100;
+			this.color = color;
 		}
 		
 		public function get color():Color {

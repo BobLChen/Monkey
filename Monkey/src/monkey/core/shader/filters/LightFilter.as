@@ -1,5 +1,6 @@
 package monkey.core.shader.filters {
 	
+	import monkey.core.shader.utils.ShaderRegisterCache;
 	import monkey.core.utils.Color;
 	
 	/**
@@ -18,7 +19,7 @@ package monkey.core.shader.filters {
 			super("LightFilter");
 			this.priority = 13;
 			this._ambientData 	= Vector.<Number>([0.2, 0.2, 0.2, 1]);
-			this._lightData 	= Vector.<Number>([1, 1, 1, 1.2]);
+			this._lightData 	= Vector.<Number>([1, 1, 1, 1]);
 			this.ambient 		= new Color(0xc8c8c8);
 			this.lightColor 	= new Color(0xffffff);
 		}
@@ -45,9 +46,12 @@ package monkey.core.shader.filters {
 		 * 
 		 */		
 		public function set intensity(value : Number) : void {
-			this._lightData[3] = value;	
+			this._lightData[3] = value;
+			this._lightData[0] *= value;
+			this._lightData[1] *= value;
+			this._lightData[2] *= value;
 		}
-		
+				
 		public function get intensity() : Number {
 			return this._lightData[3];
 		}

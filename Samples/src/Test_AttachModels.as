@@ -21,7 +21,7 @@ package {
 	import monkey.core.utils.Mesh3DUtils;
 	import monkey.loader.ParticleLoader;
 	
-	public class Test_AttackModels extends Sprite {
+	public class Test_AttachModels extends Sprite {
 		
 		[Embed(source="../assets/test_07/akali.mesh", mimeType="application/octet-stream")]
 		private var MESH : Class;
@@ -35,7 +35,7 @@ package {
 		private var scene 	: Scene3D;
 		private var akali	: Object3D;
 		
-		public function Test_AttackModels() { 
+		public function Test_AttachModels() { 
 			super();
 			
 			// 使用FBX导入时，在Mount栏目输入:weapon,weapon_b
