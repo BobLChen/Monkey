@@ -45,7 +45,7 @@ package monkey.core.utils {
 		 * @return 
 		 * 
 		 */		
-		public function getScreenRect(bounds : Bounds3D, transform : Matrix3D, out : Rectangle = null, camera : Camera3D = null, viewPort : Rectangle = null) : Rectangle {
+		public static function getScreenRect(bounds : Bounds3D, transform : Matrix3D, out : Rectangle = null, camera : Camera3D = null, viewPort : Rectangle = null) : Rectangle {
 			if (!out) {
 				out = new Rectangle();
 			}
@@ -68,7 +68,7 @@ package monkey.core.utils {
 			out.setTo(vec.x, vec.y, vec.x, vec.y);
 			var i : int = 1;
 			while (i < 8) {
-				vec = this.projectCorner(i, Matrix3DUtils.MATRIX3D, bounds);
+				vec = projectCorner(i, Matrix3DUtils.MATRIX3D, bounds);
 				if (vec.w > 0) {
 					inFront = true;
 				}
@@ -120,7 +120,7 @@ package monkey.core.utils {
 			return out;
 		}
 		
-		private function projectCorner(i : int, m : Matrix3D, bounds : Bounds3D) : Vector3D {
+		private static function projectCorner(i : int, m : Matrix3D, bounds : Bounds3D) : Vector3D {
 			switch (i) {
 				case 0:
 					Vector3DUtils.vec1.setTo(bounds.min.x, bounds.min.y, bounds.min.z);
