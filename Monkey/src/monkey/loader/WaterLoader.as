@@ -92,6 +92,7 @@ package monkey.loader {
 			this.water.blendColor = new Color(cfg.blendColor);
 			this.water.transform.local.copyRawDataFrom(Vector.<Number>(cfg.transform));
 			this.addChild(water);
+			this.transform.updateTransforms(true);
 			this.dispatchEvent(event);
 		}
 		

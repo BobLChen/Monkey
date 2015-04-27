@@ -103,6 +103,7 @@ package monkey.loader {
 			this.skybox.setLayer(this.cfg.layer);
 			this.zip.dispose();
 			this.addChild(skybox);
+			this.transform.updateTransforms(true);
 			this.dispatchEvent(event);
 		}
 		

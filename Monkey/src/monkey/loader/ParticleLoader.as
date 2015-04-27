@@ -125,6 +125,7 @@ package monkey.loader {
 			this._loaded = true;
 			this.freeAssets();
 			this.addChild(particles);
+			this.transform.updateTransforms(true);
 			this.particles.play();
 			this.dispatchEvent(new Event(Event.COMPLETE));
 		}
