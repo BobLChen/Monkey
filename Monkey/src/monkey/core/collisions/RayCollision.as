@@ -43,9 +43,16 @@ package monkey.core.collisions {
 			var collisionDistance : Number = 0;
 			
 			for each (var collider : Collider in this.list) {
-				if (!collider.mesh || !collider.object3D.visible || !collider.enable) {
+				if (
+					!collider.mesh || 														// 碰撞体没有实体
+					!collider.object3D.visible || 											// object3d没有显示
+					!collider.enable || 													// 碰撞体没有启用
+					(collider.object3D.renderer && !collider.object3D.renderer.inView) ||	// object3d含有模型，但是未在视口范围内
+					(!collider.object3D.renderer && !collider.object3D.inView())) 			// object3d不含实体，并且未在视口范围内
+				{
 					continue;
 				}
+				
 				// 转换起点和方向到模型local空间
 				collider.object3D.transform.globalToLocal(from, RayFrom);
 				collider.object3D.transform.globalToLocalVector(dir, RayDir);
