@@ -5,7 +5,7 @@
 	import ui.core.controls.Layout;
 
 	public class PropertiesGroup {
-
+		
 		public var accordion : Accordion;
 		public var layout : Layout;
 

@@ -66,18 +66,18 @@ package ide.plugins {
 			this._layout.space = 1;
 			this._layout.minHeight = 800;
 			this._layout.addControl(this._nameGroup);
-			
-			this._groups.push(new GeneralGroup());
-			this._groups.push(new TransformGroup());
-			this._groups.push(new MeshGroup());
-			this._groups.push(new BoundsGroup());
-			this._groups.push(new NavmeshGroup());
-			this._groups.push(new WaterGroup());
-			this._groups.push(new SkyboxGroup());
-			this._groups.push(new ParticlesGroup());
-			this._groups.push(new DirectionLightGroup());
-			this._groups.push(new PointLightGroup());
-			this._groups.push(new AnimatorGroup());
+						
+			this.addPropGroup(new GeneralGroup());
+			this.addPropGroup(new TransformGroup());
+			this.addPropGroup(new MeshGroup());
+			this.addPropGroup(new BoundsGroup());
+			this.addPropGroup(new NavmeshGroup());
+			this.addPropGroup(new WaterGroup());
+			this.addPropGroup(new SkyboxGroup());
+			this.addPropGroup(new ParticlesGroup());
+			this.addPropGroup(new DirectionLightGroup());
+			this.addPropGroup(new PointLightGroup());
+			this.addPropGroup(new AnimatorGroup());
 			
 			this._icon.gotoAndStop(0);
 			this._icon.x = 20;
@@ -91,6 +91,15 @@ package ide.plugins {
 						
 			this._app.studio.property.addPanel(_panel);
 			this._app.studio.property.open();
+		}
+		
+		/**
+		 * 添加一个属性栏目 
+		 * @param group
+		 * 
+		 */		
+		public function addPropGroup(group : PropertiesGroup) : void {
+			this._groups.push(group);
 		}
 		
 		protected function changingControlEvent(event : Event) : void {

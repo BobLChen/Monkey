@@ -131,7 +131,22 @@ package ide {
 			plugin.start();
 			this._plugins.push(plugin);
 		}
-
+		
+		/**
+		 * 通过类类型获取对应的Plugin 
+		 * @param clazz
+		 * @return 
+		 * 
+		 */		
+		public function getPluginByClazz(clazz : Class) : IPlugin {
+			for each (var ip : IPlugin in this._plugins) {
+				if (ip is clazz) {
+					return ip;
+				}
+			}
+			return null;
+		}
+		
 		/**
 		 * 按键
 		 * @param event

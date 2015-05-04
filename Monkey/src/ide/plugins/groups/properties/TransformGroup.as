@@ -18,7 +18,7 @@
 	 * 
 	 */	
 	public class TransformGroup extends PropertiesGroup {
-
+		
 		private var posX : Spinner;
 		private var posY : Spinner;
 		private var posZ : Spinner;

@@ -23,19 +23,19 @@ package monkey.loader {
 	 */	
 	public class WaterLoader extends Object3D implements IQueLoader {
 		
-		public var water	: Water3D;
+		public var water		: Water3D;
 		
-		private var zip 	: Zip;
-		private var cfg 	: Object;		
-		private var tex 	: BitmapData;
-		private var loader 	: Loader;
-		private var url		: String;
+		private var zip 		: Zip;
+		private var cfg 		: Object;		
+		private var tex 		: BitmapData;
+		private var loader 		: Loader;
+		private var url			: String;
 		
-		private var _bytesLoaded : uint;
-		private var _bytesTotal	 : uint;
-		private var _urlloader	 : URLLoader;
-		private var _closed		 : Boolean;
-		private var _loaded		 : Boolean;
+		private var _bytesLoaded: uint;
+		private var _bytesTotal	: uint;
+		private var _urlloader	: URLLoader;
+		private var _closed		: Boolean;
+		private var _loaded		: Boolean;
 		
 		public function WaterLoader(url : String) {
 			super();
