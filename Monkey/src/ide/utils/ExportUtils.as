@@ -144,11 +144,12 @@ package ide.utils {
 			config.rate			= particle.rate;
 			config.bursts	 	= particle.bursts;
 			config.duration		= particle.duration;
+			config.autoRot		= particle.autoRot;
 			
 			if (optimize) {
 				return config;
 			}
-						
+			
 			config.lifetimeData = particle.userData.lifetime;
 			config.shape		= particle.shape;
 			config.startColor	= particle.startColor;

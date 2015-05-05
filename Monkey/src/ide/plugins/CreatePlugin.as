@@ -24,7 +24,6 @@ package ide.plugins {
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.utils.Color;
-	import monkey.core.utils.GradientColor;
 	import monkey.core.utils.Texture3DUtils;
 	import monkey.core.utils.UUID;
 	

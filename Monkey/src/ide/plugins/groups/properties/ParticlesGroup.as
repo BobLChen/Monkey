@@ -2,6 +2,7 @@ package ide.plugins.groups.properties {
 
 	import ide.App;
 	import ide.plugins.groups.particles.TimeGroup;
+	import ide.plugins.groups.particles.base.AutoRotGroup;
 	import ide.plugins.groups.particles.base.BillboardGroup;
 	import ide.plugins.groups.particles.base.MaxParticleGroup;
 	import ide.plugins.groups.particles.base.TextureGroup;
@@ -60,6 +61,8 @@ package ide.plugins.groups.properties {
 			this.groups.push(this.layout.addControl(new WorldSpaceGroup()));
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new BillboardGroup()));
+			this.layout.addControl(new Separator());
+			this.groups.push(this.layout.addControl(new AutoRotGroup()));
 			this.layout.addControl(new Separator());
 			this.groups.push(this.layout.addControl(new RateGroup()));
 			this.layout.addControl(new Separator());
