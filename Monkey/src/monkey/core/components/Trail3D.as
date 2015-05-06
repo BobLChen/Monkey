@@ -94,6 +94,9 @@ package monkey.core.components {
 		 * 
 		 */		
 		public function set texture(value:Texture3D):void {
+			if (!value) {
+				return;
+			}
 			value.wrapMode = Texture3D.WRAP_CLAMP;
 			this._texture = value;
 			this._material.texture = value;

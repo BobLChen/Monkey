@@ -52,8 +52,8 @@ package monkey.core.entities.particles {
 		private static const vector3d 		: Vector3D = new Vector3D();					// vector缓存
 		/** 默认关键帧 */
 		private static var _defKeyframe 	: ByteArray;
+		/** 默认lifetime color */
 				
-		private var _autoRot		: Boolean;						// 朝着方向自动旋转
 		private var _duration 				: Number; 						// 持续发射时间
 		private var _loops 					: Boolean; 						// 循环发射模式
 		private var _startDelay 			: Number; 						// 开始延迟时间
@@ -114,7 +114,6 @@ package monkey.core.entities.particles {
 			this.userData.optimize   	= config.optimize;
 			this.mesh.bounds			= new Bounds3D();
 			
-			this._autoRot				= config.autoRot;
 			this._lastIdx		 		= 0;
 			this._simulationSpace		= config.world;
 			this._totalTime				= config.totalTime;
@@ -204,7 +203,6 @@ package monkey.core.entities.particles {
 			for each (var child : Object3D in children) {
 				c.addChild(child.clone());
 			}
-			c._autoRot 	= this._autoRot;
 			c._layer 			= this._layer;
 			c._duration 		= this._duration;
 			c._loops			= this._loops;
@@ -425,12 +423,6 @@ package monkey.core.entities.particles {
 			var step2 : int = shape.vertNum * idx * 2;
 			var step3 : int = shape.vertNum * idx * 3;
 			var step4 : int = shape.vertNum * idx * 4;
-			// 沿着线速度
-			if (this.autoRot) {
-				vector3d.setTo(velocity[step3 + 0], velocity[step3 + 1], velocity[step3 + 2]);
-				vector3d.normalize();
-				Matrix3DUtils.setOrientation(matrix3d, vector3d);
-			}
 			// 遍历shape
 			for (var j:int = 0; j < shape.vertNum; j++) {
 				// 转换位置数据
@@ -687,23 +679,6 @@ package monkey.core.entities.particles {
 		public function set shape(value : ParticleShape) : void {
 			_shape = value;
 			_needBuild = true;
-		}
-		
-		/**
-		 * 沿着方向自动旋转 
-		 * @return 
-		 * 
-		 */		
-		public function get autoRot():Boolean {
-			return _autoRot;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function set autoRot(value:Boolean):void {
-			this._autoRot = value;
-			this._needBuild = true;
 		}
 
 		/**
