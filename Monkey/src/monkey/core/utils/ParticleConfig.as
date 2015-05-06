@@ -80,7 +80,9 @@ package monkey.core.utils {
 		public var totalFrames		: Number  = 0;
 		/** 粒子系统的间隔 */
 		public var tototalLife		: Number  = 0;
-		
+		/** 自动旋转 */
+		public var autoRot			: Boolean = false;
+				
 		private var _shape 			: Object  = {};					// 粒子形状
 		private var _bursts			: Object  = [];					// 爆炸
 		private var _frame			: Object  = [1, 1];				// uv动画
