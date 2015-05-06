@@ -12,5 +12,6 @@ package monkey.core.utils {
 		public static const WATER	: String = "water";
 		public static const SKYBOX  : String = "sky";
 		public static const PARTICLE: String = "particle";
+		public static const TRAIL	: String = "trail";
 	}
 }
