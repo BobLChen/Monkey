@@ -27,6 +27,7 @@ package monkey.core.utils {
 		 * 
 		 */		
 		public static function readMesh(bytes : ByteArray) : Mesh3D {
+			bytes.position = 0;
 			bytes.endian = Endian.LITTLE_ENDIAN;
 			// 读取压缩格式
 			var algorithm : int = bytes.readInt();
