@@ -139,7 +139,7 @@ public class LightmapPlugin : EditorWindow {
 		DeflateStream compressionStream = new DeflateStream(compressionBytes, CompressionMode.Compress);
 		compressionStream.Write(ms.GetBuffer(), 0, ms.GetBuffer().Length);
 		compressionStream.Close();
-
+		
 		FileStream fs = new FileStream(filepath, FileMode.Create);
 		BinaryWriter cbw = new BinaryWriter(fs);
 		// write compression type

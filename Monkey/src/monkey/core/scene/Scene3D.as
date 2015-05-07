@@ -116,6 +116,9 @@ package monkey.core.scene {
 				return;
 			}
 			_camera = value;
+			if (_camera) {
+				_camera.lens.setViewPort(0, 0, viewPort.width, viewPort.height);
+			}
 		}
 		
 		/**
