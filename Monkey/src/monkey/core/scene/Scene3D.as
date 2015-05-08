@@ -116,7 +116,7 @@ package monkey.core.scene {
 				return;
 			}
 			_camera = value;
-			if (_camera) {
+			if (_camera && viewPort) {
 				_camera.lens.setViewPort(0, 0, viewPort.width, viewPort.height);
 			}
 		}

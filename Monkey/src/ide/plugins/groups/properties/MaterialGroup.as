@@ -206,13 +206,13 @@
 			var type : Class = getDefinitionByName(acc.@type) as Class;
 			if (this.material[acc.@name] is Color) {
 				this.createColorUI(acc, content);
+			} else if (this.material[acc.@name] is Number) {
+				this.createNumberUI(acc, content);
 			} else if (this.material[acc.@name] is int) {
 				this.createIntUI(acc, content);
 			} else if (this.material[acc.@name] is Bitmap2DTexture) {
 				this.createBitmap2DTextureUI(acc, content);
-			} else if (this.material[acc.@name] is Number) {
-				this.createNumberUI(acc, content);
-			} else if (this.material[acc.@name] is Point) {
+			}  else if (this.material[acc.@name] is Point) {
 				this.createPointUI(acc, content);
 			} else if (this.material[acc.@name] is Boolean) {
 				this.createBoolUI(acc, content);
@@ -242,8 +242,8 @@
 			vy.addEventListener(ControlEvent.CHANGE, change);
 			vz.addEventListener(ControlEvent.CHANGE, change);
 			
-			content.maxHeight += 20;
-			content.minHeight += 20;
+			content.maxHeight += 25;
+			content.minHeight += 25;
 		}
 		
 		private function createBoolUI(acc:Object, content : Layout) : void {
@@ -252,8 +252,8 @@
 			bool.addEventListener(ControlEvent.CHANGE, function():void{
 				material[acc.@name] = bool.value;
 			});
-			content.maxHeight += 20;
-			content.minHeight += 20;
+			content.maxHeight += 25;
+			content.minHeight += 25;
 		}
 		
 		private function createPointUI(acc:Object, content : Layout) : void {
@@ -273,8 +273,8 @@
 			px.addEventListener(ControlEvent.CHANGE, change);
 			py.addEventListener(ControlEvent.CHANGE, change);
 			
-			content.maxHeight += 20;
-			content.minHeight += 20;
+			content.maxHeight += 25;
+			content.minHeight += 25;
 		}
 		
 		private function createNumberUI(acc:Object, content : Layout) : void {
@@ -283,8 +283,8 @@
 			value.addEventListener(ControlEvent.CHANGE, function(e : Event):void{
 				material[acc.@name] = value.value;
 			});
-			content.maxHeight += 20;
-			content.minHeight += 20;
+			content.maxHeight += 25;
+			content.minHeight += 25;
 		}
 		
 		private function createBitmap2DTextureUI(acc:Object, content : Layout) : void {
@@ -308,8 +308,8 @@
 			box.addControl(image);
 			
 			content.addControl(box);
-			content.maxHeight += 100;
-			content.minHeight += 100;
+			content.maxHeight += 120;
+			content.minHeight += 120;
 		}
 		
 		private function createIntUI(acc:Object, content : Layout) : void {
@@ -318,8 +318,8 @@
 			value.addEventListener(ControlEvent.CHANGE, function(e : Event):void{
 				material[acc.@name] = value.value;
 			});
-			content.maxHeight += 20;
-			content.minHeight += 20;
+			content.maxHeight += 25;
+			content.minHeight += 25;
 		}
 		
 		private function createColorUI(acc : Object, content : Layout) : void {
@@ -330,8 +330,8 @@
 				material[acc.@name].color = color.color;
 				material[acc.@name].alpha = color.alpha;
 			});
-			content.maxHeight += 20;
-			content.minHeight += 20;
+			content.maxHeight += 25;
+			content.minHeight += 25;
 		}
 				
 	}

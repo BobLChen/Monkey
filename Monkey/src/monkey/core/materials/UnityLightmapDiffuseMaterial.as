@@ -16,6 +16,7 @@ package monkey.core.materials {
 		private var _diffuse  : Texture3D;
 		private var _lightmap : Texture3D;
 		private var _tilingOffset : Vector3D;
+		private var _intensity : Number = 2;
 		
 		public function UnityLightmapDiffuseMaterial(diffuse : Texture3D, lightmap : Texture3D, tilingOffset : Vector3D) {
 			super(UnityLightmapDiffuseShader.instance);
@@ -24,6 +25,14 @@ package monkey.core.materials {
 			this.tilingOffset = tilingOffset;
 		}
 		
+		public function get intensity():Number {
+			return _intensity;
+		}
+
+		public function set intensity(value:Number):void {
+			_intensity = value;
+		}
+
 		public function get tilingOffset():Vector3D {
 			return _tilingOffset;
 		}
@@ -52,6 +61,7 @@ package monkey.core.materials {
 			UnityLightmapDiffuseShader(shader).texture = this.diffuse;
 			UnityLightmapDiffuseShader(shader).lightmap = this.lightmap;
 			UnityLightmapDiffuseShader(shader).tillingOffset = this.tilingOffset;
+			UnityLightmapDiffuseShader(shader).intensity = this.intensity;
 		}
 		
 	}

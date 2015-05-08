@@ -529,11 +529,11 @@ package monkey.core.base {
 		 * 释放 
 		 */		
 		public function dispose(force : Boolean = false) : void {
-			if (this.disposed) {
-				return;
-			}
 			if (this.parent) {
 				this.parent.removeChild(this);
+			}
+			if (this.disposed) {
+				return;
 			}
 			this._disposed = true;
 			for each (var icom : IComponent in components) {
