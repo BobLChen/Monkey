@@ -93,7 +93,7 @@ package monkey.core.camera.lens {
 		 * @return 
 		 * 
 		 */		
-		public function setViewPort(x : int, y : int, width : int, height : int):void {
+		public function setViewPort(x : Number, y : Number, width : Number, height : Number):void {
 			if (_viewPort.x == x && _viewPort.y == y && _viewPort.width == width && _viewPort.height == height) {
 				return;
 			}

@@ -56,7 +56,7 @@ package monkey.core.camera.lens {
 			return _left;
 		}
 		
-		override public function setViewPort(x:int, y:int, width:int, height:int):void {
+		override public function setViewPort(x:Number, y:Number, width:Number, height:Number):void {
 			super.setViewPort(x, y, width, height);
 			this._left 	= -width 	/ 2;
 			this._right = width 	/ 2;

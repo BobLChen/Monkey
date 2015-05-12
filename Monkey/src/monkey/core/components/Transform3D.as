@@ -85,7 +85,7 @@ package monkey.core.components {
 			}
 			return _world;
 		}
-
+		
 		public function set world(value : Matrix3D) : void {
 			this.local.copyFrom(value);
 			if (object3D.parent) {
