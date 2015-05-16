@@ -87,7 +87,7 @@ package ide.utils {
 			
 			this.addChild(obj);
 			// 读取贴图
-			if (cfg.textures.DiffuseColor.length >= 1) {
+			if (cfg.textures.DiffuseColor && cfg.textures.DiffuseColor.length >= 1) {
 				var loader : Loader = loadBitmapdata(new File(this.file.parent.url + "/" + cfg.textures.DiffuseColor[0]));
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(e:Event):void{
 					var texture : Bitmap2DTexture = new Bitmap2DTexture((loader.content as Bitmap).bitmapData);

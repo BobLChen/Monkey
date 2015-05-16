@@ -74,7 +74,7 @@ package monkey.core.animator {
 		public function copyFrom(animator : Animator) : void {
 			this.labels = new Dictionary();
 			for (var key : Object in animator.labels) {
-				this.labels[key] = animator[key];
+				this.labels[key] = animator.labels[key];
 			}
 			this.totalFrames 	= animator.totalFrames;
 			this._fps 			= animator._fps;
