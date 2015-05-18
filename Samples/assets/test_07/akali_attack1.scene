@@ -1,0 +1,46 @@
+{
+    "cameras": [], 
+    "meshes": [
+        {
+            "anim": {
+                "name": "akali_attack1_transformAkali.anim", 
+                "totalFrames": 31
+            }, 
+            "name": "akali_attack1_transformAkali.mesh", 
+            "skeleton": true, 
+            "textures": {
+                "": [], 
+                "AmbientColor": [], 
+                "AmbientFactor": [], 
+                "Bump": [], 
+                "DiffuseColor": [], 
+                "DiffuseFactor": [], 
+                "DisplacementColor": [], 
+                "EmissiveColor": [], 
+                "EmissiveFactor": [], 
+                "NormalMap": [], 
+                "TransparencyFactor": [], 
+                "TransparentColor": [], 
+                "VectorDisplacementColor": []
+            }, 
+            "transform": [
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0
+            ]
+        }
+    ]
+}
