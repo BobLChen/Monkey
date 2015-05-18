@@ -1,5 +1,5 @@
 ﻿package ui.core.controls {
-
+	
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -27,7 +27,7 @@
 		[Embed(source = "menuicon.png")]
 		private static const MenuIcon : Class;
 		private static const menuIcon : BitmapData = new MenuIcon().bitmapData;
-				
+		
 		private var _panels 			: Vector.<Panel>;			// panels
 		private var _panelTabs 			: Vector.<Sprite>;			// tabs
 		private var _currentPanel 		: Panel;					// 当前的panel
@@ -58,7 +58,7 @@
 			this._menuBtn.addEventListener(MouseEvent.CLICK, onClickedMenu);
 			this._menus = new Menu();
 			this._menuBtn.view.contextMenu = this._menus.menu;
-						
+			
 			this.flexible = 1;
 			this.view.addChild(this._background);
 			this.view.addChild(this._header);
@@ -76,11 +76,11 @@
 		public function addMenu(str : String, callback : Function) : void {
 			this._menus.addMenuItem(str, callback);
 		}
-				
+		
 		public function addPanel(panel : Panel) : void {
 			this.addPanelAt(panel, this._panels.length);
 		}
-
+		
 		public function addPanelAt(panel : Panel, idx : int) : void {
 			panel.tabControl = this;
 			var tab : Tab = new Tab(this, panel);
@@ -88,7 +88,7 @@
 			this._panelTabs.splice(idx, 0, tab);
 			this._panels.splice(idx, 0, panel);
 		}
-	
+		
 		public function removePanel(panel : Panel) : void {
 			var idx : int = this._panels.indexOf(panel);
 			if (idx == -1) {
@@ -111,7 +111,7 @@
 			}
 			this.draw();
 		}
-
+		
 		public function open() : void {
 			visible = true;
 			this.setCurrentPanel(this.currentPanel);
@@ -166,23 +166,23 @@
 			box.update();
 			box.draw();
 		}
-
+		
 		private function tabMouseDown(e : MouseEvent) : void {
 			this._lastX = e.stageX;
 			this._lastY = e.stageY;
 			this._lastTab = (e.currentTarget as Tab);
 			this.setCurrentPanel(this._lastTab.panel);
 		}
-
+		
 		private function activate() : void {
 			this._panel.graphics.beginFill(0xFFFF, 0);
 			this._panel.graphics.drawRect(0, 0, width, height);
 		}
-
+		
 		private function deactivate() : void {
 			this._panel.graphics.clear();
 		}
-
+		
 		public function setCurrentPanel(panel : Panel = null) : void {
 			if (this._currentPanel != null) {
 				this._currentPanel.dispatchEvent(new PanelEvent(PanelEvent.DEACTIVATE));
@@ -204,7 +204,7 @@
 				this._currentPanel.dispatchEvent(new PanelEvent(PanelEvent.ACTIVATE));
 			}
 		}
-				
+		
 		override public function draw() : void {
 			var maxW : Number;
 			if (this._currentPanel != null) {
@@ -293,7 +293,7 @@
 				this._line.graphics.drawRect(0, 0, width, height);
 			}
 		}
-
+		
 		private function get openPanels() : Vector.<Panel> {
 			var result : Vector.<Panel> = new Vector.<Panel>();
 			for each (var panel : Panel in this._panels) {
@@ -303,15 +303,15 @@
 			}
 			return result;
 		}
-
+		
 		public function get panels() : Vector.<Panel> {
 			return this._panels;
 		}
-
+		
 		public function get currentPanel() : Panel {
 			return this._currentPanel;
 		}
-
+		
 	}
 }
 
@@ -329,9 +329,9 @@ import ui.core.controls.TabControl;
 import ui.core.type.Align;
 
 class Tab extends Sprite {
-
+	
 	private static var font : BitmapFont = new BitmapFont(new TextFormat("Arial", 10, 0xB0B0B0, true), [new DropShadowFilter(4, 45, 0, 0.3, 4, 4, 1, 4)]);
-
+	
 	private var _selected : Boolean;
 	private var _background : Sprite;
 	private var _foreground : Sprite;
@@ -339,7 +339,7 @@ class Tab extends Sprite {
 	private var _width : Number = 0;
 	public var tabControl : TabControl;
 	public var panel : Panel;
-
+	
 	public function Tab(tabcontrol : TabControl, panel : Panel) {
 		this._background = new Sprite();
 		this._foreground = new Sprite();
@@ -359,20 +359,20 @@ class Tab extends Sprite {
 	override public function get width() : Number {
 		return font.textWidth(this.panel.text) + 16;
 	}
-
+	
 	override public function set width(value : Number) : void {
 		this._width = value;
 	}
-
+	
 	public function get selected() : Boolean {
 		return this._selected;
 	}
-
+	
 	public function set selected(e : Boolean) : void {
 		this._selected = e;
 		this.draw();
 	}
-
+	
 	public function draw() : void {
 		this._background.visible = !this._selected;
 		this._background.width = this.width;
@@ -390,5 +390,5 @@ class Tab extends Sprite {
 		this._lines.graphics.lineTo((this.width - 0), 18);
 		font.draw(this._foreground.graphics, 8, 0, this._width - 16, height, this.panel.text, Align.LEFT);
 	}
-
+	
 }

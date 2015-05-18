@@ -8,7 +8,7 @@ package monkey.core.utils {
 	 * 
 	 */	
 	public class Curves {
-				
+		
 		public var datas : Vector.<Point>;
 		
 		public function Curves() {

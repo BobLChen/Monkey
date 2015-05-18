@@ -9,7 +9,7 @@ package ui.core.controls {
 	
 	import ui.core.Style;
 	import ui.core.event.ControlEvent;
-
+	
 	public class LinearsEditor extends Control {
 		
 		public var lockX : Boolean;
@@ -418,7 +418,7 @@ package ui.core.controls {
 			this.tips.y = mouse.y;
 			this.tips.text = "x=" + flag.value.x.toFixed(2) + " y=" + flag.value.y.toFixed(2);
 		}
-				
+		
 	}
 }
 

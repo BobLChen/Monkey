@@ -15,7 +15,7 @@ package ide.plugins.groups.particles.emission {
 	import ui.core.controls.Label;
 	import ui.core.controls.Spinner;
 	import ui.core.event.ControlEvent;
-
+	
 	public class BurstsGroup extends ParticleBaseGroup {
 		
 		[Embed(source="add.png")]
@@ -60,7 +60,7 @@ package ide.plugins.groups.particles.emission {
 			item.addControl(time);
 			item.addControl(num);
 			item.addControl(btn);
-						
+			
 			this.addControl(item);
 			this.dict[time]= data;		// 时间->数据
 			this.dict[num] = data;		// 数量->数据

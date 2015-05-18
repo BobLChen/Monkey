@@ -125,7 +125,7 @@ package ide.utils {
 			config.cullFace		= particle.renderer.material.cullFace;
 			config.sourceFactor	= particle.renderer.material.sourceFactor;
 			config.destFactor	= particle.renderer.material.destFactor;
-						
+			
 			config.totalFrames 	= particle.loops ? -1 : particle.animator.totalFrames;
 			config.imageName	= particle.userData.imageName;
 			config.uuid			= particle.userData.uuid;
@@ -161,7 +161,7 @@ package ide.utils {
 			
 			return config;
 		}
-				
+		
 		/**
 		 * 导出water
 		 * @param water

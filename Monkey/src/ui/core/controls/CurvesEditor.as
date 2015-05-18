@@ -9,7 +9,7 @@ package ui.core.controls {
 	
 	import ui.core.Style;
 	import ui.core.event.ControlEvent;
-
+	
 	public class CurvesEditor extends Control {
 		
 		public var lockX : Boolean;
@@ -49,7 +49,7 @@ package ui.core.controls {
 		public function get points():Vector.<Point> {
 			return _points;
 		}
-
+		
 		public function set points(value:Vector.<Point>):void {
 			this.clear();
 			for (var i:int = 0; i < value.length; i++) {
@@ -432,7 +432,7 @@ package ui.core.controls {
 			this.tips.y = mouse.y;
 			this.tips.text = "x=" + flag.value.x.toFixed(2) + " y=" + flag.value.y.toFixed(2);
 		}
-				
+		
 	}
 }
 

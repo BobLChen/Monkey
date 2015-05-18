@@ -44,11 +44,11 @@ package {
 		
 		private var scene : Scene3D;
 		
-		[Embed(source="../assets/test_07/akali_attack1_transformAkali.mesh", mimeType="application/octet-stream")]
+		[Embed(source="../assets/test_04/xiaonan_boo1.mesh", mimeType="application/octet-stream")]
 		private var MESH : Class;
-		[Embed(source="../assets/test_07/akali.jpg")]
+		[Embed(source="../assets/test_04/xiaonan_boo1.jpg")]
 		private var IMG  : Class;
-		[Embed(source="../assets/test_08/dance.anim", mimeType="application/octet-stream")]
+		[Embed(source="../assets/test_04/xiaonan_boo1.anim", mimeType="application/octet-stream")]
 		private var Dance : Class;
 		
 		private var akali	: Object3D;
@@ -61,7 +61,7 @@ package {
 			
 			this.scene = new Viewer3D(this);
 			this.scene.background = new Color(0x000000);
-			this.scene.camera.transform.z = -700;
+			this.scene.camera.transform.z = -100;
 			this.scene.autoResize = true;
 			
 			this.akali	= new Object3D();
@@ -96,7 +96,7 @@ class CustomShader extends SkeDifQuatShader {
 			
 	public function CustomShader() : void {
 		super();
-		this.rim = new RimFilter(new Color(0xFF0000), 5);
+		this.rim = new RimFilter(new Color(0x00FF00), 5);
 		this.addFilter(rim);
 	}
 	
@@ -116,24 +116,14 @@ class CustomShader extends SkeDifQuatShader {
 
 class CustomMaterial extends SkeDifQuatMaterial {
 	
-	private var _rimPower : Number = 100.0;
-	
 	public function CustomMaterial(texture : Texture3D) : void {
 		super(texture);	
 		this._shader = CustomShader.instance;
 	}
-	
-	public function get rimPower():Number {
-		return _rimPower;
-	}
-	
-	public function set rimPower(value:Number):void {
-		_rimPower = value;
-	}
-	
+		
 	override public function updateMaterial(scene:Scene3D):void {
 		super.updateMaterial(scene);
-		CustomShader(shader).rimPower = this.rimPower;
+		CustomShader(shader).rimPower = 2;
 	}
 	
 
