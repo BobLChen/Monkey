@@ -14,6 +14,7 @@ package ide.plugins {
 	import monkey.core.camera.lens.PerspectiveLens;
 	import monkey.core.collisions.MouseCollision;
 	import monkey.core.collisions.collider.Collider;
+	import monkey.core.entities.Axis3D;
 	import monkey.core.entities.Grid3D;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Color;
@@ -44,6 +45,8 @@ package ide.plugins {
 		private var _rotationSpeedX : Number = 0;			// speedx
 		private var _rotationSpeedY : Number = 0;			// speedy
 		private var _showGrid 		: Boolean;				// 是否显示网格
+		private var _axis3D			: Axis3D;				// 轴心
+		private var _showAxis3D		: Boolean;				// 是否显示轴
 		private var _mouseMoved 	: Boolean;				// mouse moved
 		private var _sceneCamera 	: Camera3D;				
 		
@@ -56,6 +59,8 @@ package ide.plugins {
 			this._mouse			= new MouseCollision();
 			this._orbitPoint 	= new Vector3D();
 			this._orbitAxis 	= new Vector3D();
+			this._axis3D		= new Axis3D();
+			this._showAxis3D	= true;
 			this._sceneCamera   = new Camera3D(new PerspectiveLens());
 			this._lastFrame 	= 0;
 			this._grid 			= new Grid3D();
@@ -71,7 +76,15 @@ package ide.plugins {
 			this.addEventListener(Event.CONTEXT3D_CREATE, contextCreateEvent);
 			this.addEventListener(Scene3D.POST_RENDER_EVENT, onPostRender);
 		}
-						
+		
+		public function get showAxis3D():Boolean {
+			return _showAxis3D;
+		}
+
+		public function set showAxis3D(value:Boolean):void {
+			_showAxis3D = value;
+		}
+
 		public function get mouse():MouseCollision {
 			return _mouse;
 		}
@@ -302,6 +315,9 @@ package ide.plugins {
 		override public function render():void {
 			if (this._showGrid) {
 				this._grid.draw(this);
+			}
+			if (this._showAxis3D) {
+				this._axis3D.draw(this);
 			}
 			super.render();
 		}

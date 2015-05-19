@@ -109,7 +109,7 @@ class CustomShader extends SkeDifQuatShader {
 			_instance = new CustomShader();
 		}
 		return _instance;
-	}
+	} 
 	
 }
 
