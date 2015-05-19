@@ -51,10 +51,6 @@ package monkey.core.shader.filters {
 			this._bias[0] = value;
 		}
 		
-		public function get intensity() : Number {
-			return this._bias[0];
-		}
-		
 		override public function getFragmentCode(regCache:ShaderRegisterCache, agal:Boolean):String {
 			var ft0 : ShaderRegisterElement = regCache.getFt();
 			var fs0 : ShaderRegisterElement = regCache.getFs(_label);

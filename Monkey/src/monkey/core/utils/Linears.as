@@ -8,7 +8,7 @@ package monkey.core.utils {
 	 * 
 	 */	
 	public class Linears {
-		
+				
 		public var datas : Vector.<Point>;
 		public var yValue: Number = 1;
 		

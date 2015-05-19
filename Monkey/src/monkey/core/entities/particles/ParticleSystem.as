@@ -204,6 +204,9 @@ package monkey.core.entities.particles {
 			for each (var child : Object3D in children) {
 				c.addChild(child.clone());
 			}
+			c._disposed			= this._disposed;
+			c._scene			= this._scene;
+			c._visible			= this._visible;
 			c._autoRot 			= this._autoRot;
 			c._layer 			= this._layer;
 			c._duration 		= this._duration;
@@ -229,6 +232,7 @@ package monkey.core.entities.particles {
 			c._colorOverLifetime= this._colorOverLifetime;
 			c._simulationSpace	= this._simulationSpace;
 			c.blendTexture		= this.blendTexture;
+			c.name				= this.name;
 			return c;
 		}
 		
