@@ -44,6 +44,18 @@ package monkey.core.utils {
 			return this._rgba.w;
 		}
 		
+		public static function get BLUE() : Color {
+			return new Color(0x0000FF);
+		}
+		
+		public static function get GREEN() : Color {
+			return new Color(0x00FF00);
+		}
+		
+		public static function get RED() : Color {
+			return new Color(0xFF0000);
+		}
+		
 		public static function get WHITE() : Color {
 			return new Color(0xFFFFFF);
 		}

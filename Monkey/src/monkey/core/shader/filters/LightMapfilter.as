@@ -35,6 +35,10 @@ package monkey.core.shader.filters {
 			this._label = new FsRegisterLabel(texture);
 		}
 		
+		public function get intensity() : Number {
+			return this._bias[0];
+		}
+		
 		public function get mode():String {
 			return _mode;
 		}
