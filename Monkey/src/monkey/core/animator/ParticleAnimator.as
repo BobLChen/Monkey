@@ -49,13 +49,13 @@ package monkey.core.animator {
 				return;
 			}
 			this._currentFrame += Time3D.deltaTime;
-			if (this._currentFrame > this._totalFrames) {
+			if (this._currentFrame >= this._totalFrames) {
 				this._playing = false;
 				if (this.hasEventListener(ANIMATION_COMPLETE_EVENT)) {
 					this.dispatchEvent(animCompleteEvent);
 				}
 			}
 		}
-				
+		
 	}
 }
