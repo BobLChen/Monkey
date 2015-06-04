@@ -16,7 +16,7 @@ package ide.plugins {
 	import monkey.navmesh.NavigationMesh;
 	
 	import ui.core.interfaces.IPlugin;
-
+	
 	public class ExportPlugin implements IPlugin {
 
 		private var _app : App;
@@ -66,7 +66,6 @@ package ide.plugins {
 					fs.open(f, FileMode.WRITE);
 					fs.writeBytes(optimize, 0, optimize.length);
 					fs.close();
-					
 					f  = new File(file.url + "." + AssetsType.PARTICLE);
 					fs = new FileStream();
 					fs.open(f, FileMode.WRITE);
