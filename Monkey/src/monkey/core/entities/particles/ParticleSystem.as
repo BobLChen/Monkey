@@ -56,6 +56,7 @@ package monkey.core.entities.particles {
 		private var _autoRot				: Boolean;						// 朝着方向自动旋转
 		private var _duration 				: Number; 						// 持续发射时间
 		private var _loops 					: Boolean; 						// 循环发射模式
+		private var _playLoops				: int;							// 播放循环次数
 		private var _startDelay 			: Number; 						// 开始延迟时间
 		private var _startLifeTime 			: PropData; 					// 生命周期
 		private var _startSpeed 			: PropData; 					// 速度
@@ -93,6 +94,23 @@ package monkey.core.entities.particles {
 		}
 		
 		/**
+		 * 播放次数 
+		 * @return 
+		 * 
+		 */		
+		public function get playLoops():int {
+			return _playLoops;
+		}
+
+		public function set playLoops(value:int):void {
+			_playLoops = value;
+			if (_playLoops <= 0) {
+				_playLoops = 1;
+			}
+			(this.animator as ParticleAnimator).playLoops = this.playLoops;
+		}
+		
+		/**
 		 * 通过配置文件初始化 
 		 * @param config
 		 * 
@@ -124,6 +142,7 @@ package monkey.core.entities.particles {
 			this._shape					= new ParticleShape();
 			this._shape.vertNum			= config.vertNum;
 			
+			this.playLoops				= config.playLoops;
 			this.blendColor				= new Color();
 			this.frame					= new Point(config.frame[0], config.frame[1]);
 			this.billboard				= config.billboard;
@@ -170,6 +189,7 @@ package monkey.core.entities.particles {
 			this.name			 = "Particle";
 			this.shape 			 = new SphereShape();
 			this.shape.mode 	 = mode;				
+			this.playLoops		 = 1;
 			this.rate 			 = 10;								
 			this.blendColor		 = new Color();
 			this.bursts 		 = new Vector.<Point>();		
@@ -211,6 +231,7 @@ package monkey.core.entities.particles {
 			c._layer 			= this._layer;
 			c._duration 		= this._duration;
 			c._loops			= this._loops;
+			c._playLoops		= this._playLoops;
 			c._startDelay		= this._startDelay;
 			c._startLifeTime	= this._startLifeTime;
 			c._startSpeed		= this._startSpeed;

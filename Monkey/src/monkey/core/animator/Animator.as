@@ -28,7 +28,8 @@ package monkey.core.animator {
 		/** 动画标签 */
 		public var labels 			: Dictionary;
 		
-		protected var _totalFrames 	: Number = 0;
+		protected var _completed	: Boolean;			// 是否播放完成
+		protected var _totalFrames 	: Number = 0;		// 总帧数
 		protected var _fps 			: Number;			// 帧频
 		protected var _hz  	 		: Number;			// 播放速度
 		protected var _from	 		: Number;			// 起始帧
@@ -46,6 +47,20 @@ package monkey.core.animator {
 			this.frameSpeed = 1.0;
 		}
 		
+		/**
+		 * 是否播放完成 
+		 * @return 
+		 * 
+		 */		
+		public function get completed():Boolean {
+			return _completed;
+		}
+
+		/**
+		 * 拼接动画 
+		 * @param anim
+		 * 
+		 */		
 		public function append(anim : Animator) : void {
 			for (var name : String in anim.labels) {
 				var label : Label3D = anim.labels[name];
@@ -54,10 +69,20 @@ package monkey.core.animator {
 			this._totalFrames += anim.totalFrames;
 		}
 		
+		/**
+		 * hz 
+		 * @return 
+		 * 
+		 */		
 		public function get hz():Number {
 			return _hz;
 		}
 
+		/**
+		 * 总帧数 
+		 * @return 
+		 * 
+		 */		
 		public function get totalFrames():Number {
 			return _totalFrames;
 		}
@@ -160,6 +185,7 @@ package monkey.core.animator {
 				this.currentFrame = frame as Number;
 			}
 			this._playing = false;
+			this._completed = false;
 		}
 		
 		/**
@@ -190,6 +216,7 @@ package monkey.core.animator {
 				this.currentFrame = frame as Number;
 			}
 			this._playing = true;
+			this._completed = false;
 			this._animationMode = animationMode;
 		}
 		
@@ -212,6 +239,7 @@ package monkey.core.animator {
 			this._from = 0;
 			this._to   = totalFrames - 1;
 			this._playing = true;
+			this._completed	= false;
 			this._animationMode = animationMode;
 		}
 				
@@ -252,6 +280,7 @@ package monkey.core.animator {
 			}
 			this.currentFrame = this._currentFrame;
 			if (complete && hasEventListener(ANIMATION_COMPLETE_EVENT)) {
+				this._completed = true;
 				this.dispatchEvent(animCompleteEvent);
 			}
 		}
@@ -280,6 +309,7 @@ package monkey.core.animator {
 			}
 			this.currentFrame = this._currentFrame;
 			if (complete && hasEventListener(ANIMATION_COMPLETE_EVENT)) {
+				this._completed = true;
 				this.dispatchEvent(animCompleteEvent);
 			}
 		}

@@ -70,6 +70,8 @@ package monkey.core.utils {
 		public var duration			: Number  = 5;
 		/** 循环 */
 		public var loops			: Boolean =  true;
+		/** 播放次数 */
+		public var playLoops		: int 	  = 1;
 		/** 开始延时 */
 		public var startDelay		: Number  = 0;
 		/** 发射频率 */

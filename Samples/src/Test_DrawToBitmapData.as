@@ -69,7 +69,7 @@ package {
 			loader.addEventListener(Event.COMPLETE, onLoadComplete);
 			
 			this.scene.addChild(loader);
-		}
+		} 
 		
 		protected function onLoadComplete(event:Event) : void {
 			var loader : ParticleLoader = event.target as ParticleLoader;

@@ -132,6 +132,7 @@ package ide.utils {
 			config.optimize		= optimize;
 			config.world		= particle.worldspace;
 			config.loops		= particle.loops;
+			config.playLoops	= particle.playLoops;
 			config.billboard	= particle.billboard;
 			config.frame		= particle.frame;
 			config.totalLife  	= particle.totalLife;
