@@ -32,19 +32,19 @@ package monkey.navmesh {
 		private static const temp2 : Point = new Point();
 		
 		/** 父单元 */
-		public  var parent		: NavigationCell;
-		private var _vertives 	: Vector.<Vector3D>; 			// 顶点
+		public  var parent			: NavigationCell;
+		private var _vertives 		: Vector.<Vector3D>; 			// 顶点
 		private var _id 			: int; 							// id
-		private var _open 		: int; 							// 是否处于open表中
-		private var _plane 		: CellPlane; 					// 单元所在平面
-		private var _link 		: Vector.<NavigationCell>; 		// 单元邻接平面		
-		private var _side 		: Vector.<Line2D>; 				// 邻接边
-		private var _center 		: Vector3D; 						// 三角形中心点
+		private var _open 			: int; 							// 是否处于open表中
+		private var _plane 			: CellPlane; 					// 单元所在平面
+		private var _link 			: Vector.<NavigationCell>; 		// 单元邻接平面		
+		private var _side 			: Vector.<Line2D>; 				// 邻接边
+		private var _center 		: Vector3D; 					// 三角形中心点
 		private var _arrivalCost	: Number; 						// 达到该单元格的花费。
-		private var _heuristic 	: Number; 						// 启发式消耗
+		private var _heuristic 		: Number; 						// 启发式消耗
 		private var _arrivalWall	: int;							// 穿入边
-		private var _wallMidPoint : Vector.<Vector3D>; 			// 三边中心点
-		private var _wallDistance : Vector.<Number>; 				// 中心点之间的距离
+		private var _wallMidPoint 	: Vector.<Vector3D>; 			// 三边中心点
+		private var _wallDistance 	: Vector.<Number>; 				// 中心点之间的距离
 		
 		public function NavigationCell(v0 : Vector3D, v1 : Vector3D, v2 : Vector3D) {
 			this._vertives = new Vector.<Vector3D>();

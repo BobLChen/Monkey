@@ -61,8 +61,8 @@ package monkey.core.base {
 		protected static const removedFromSceneEvent : Event = new Event(REMOVED_FROM_SCENE_EVENN);
 		
 		/** 名称 */
-		public var name 	: String = "";
-		public var userData : Object;
+		public var name 			: String = "";
+		public var userData 		: Object;
 		
 		protected var _layer		: int;							// 层级
 		protected var _scene		: Scene3D;						// 所在场景
@@ -75,11 +75,11 @@ package monkey.core.base {
 						
 		public function Object3D() {
 			super();
+			this._components   = new Vector.<IComponent>();
+			this._children	   = new Vector.<Object3D>();
 			this.userData	   = new Object();
 			this.visible	   = true;
 			this.componentDict = new Dictionary();
-			this._components   = new Vector.<IComponent>();
-			this._children	   = new Vector.<Object3D>();
 			this.addComponent(new Transform3D());
 		}
 		
@@ -552,6 +552,13 @@ package monkey.core.base {
 			this.transform.getPosition(false, vec);
 			Matrix3DUtils.transformVector(Device3D.camera.view, vec, vec);
 			if (vec.z < Device3D.camera.near || vec.z > Device3D.camera.far) {
+				return false;
+			}
+			var rect : Rectangle = Device3D.camera.viewPort;
+			if (vec.x < -rect.width / 2 || vec.x > rect.width / 2) {
+				return false;
+			}
+			if (vec.y > rect.height / 2 || vec.y < -rect.height / 2) {
 				return false;
 			}
 			return true;

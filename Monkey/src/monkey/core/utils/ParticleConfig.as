@@ -360,7 +360,7 @@ package monkey.core.utils {
 				surf.setVertexVector(Surface3D.POSITION, Vector.<Number>(config.vertices), 3);
 				surf.indexVector = Vector.<uint>(config.indices);
 				if (config.normals) {
-					surf.setVertexVector(Surface3D.NORMAL, Vector.<Number>(config.normals), 3);
+					surf.setVertexVector(Surface3D.NORMAL, Vector.<Number>([config.normals]), 3);
 				}
 				mesh.mode = mode;
 				mesh.surf = surf;
@@ -518,32 +518,32 @@ package monkey.core.utils {
 			ret.mode.bounds 	= [aabb.min.x, aabb.min.y, aabb.min.z, aabb.max.x, aabb.max.y, aabb.max.z];
 			if (shape is SphereShape) {
 				var sphere : SphereShape = shape as SphereShape;
-				ret.type 		= SHAPE_SPHERE;
-				ret.radius 		= sphere.radius;
-				ret.shell		= sphere.shell;
-				ret.random		= sphere.random;
-				ret.hemi		= sphere.hemi;
+				ret.type 	= SHAPE_SPHERE;
+				ret.radius 	= sphere.radius;
+				ret.shell	= sphere.shell;
+				ret.random	= sphere.random;
+				ret.hemi	= sphere.hemi;
 			} else if (shape is BoxShape) {
 				var box : BoxShape = shape as BoxShape;
-				ret.type    	= SHAPE_BOX;
-				ret.min			= [box.min.x, box.min.y, box.min.z];
-				ret.max			= [box.max.x, box.max.y, box.max.z];
-				ret.smooth		= box.smooth;
-				ret.random		= box.random;
+				ret.type    = SHAPE_BOX;
+				ret.min		= [box.min.x, box.min.y, box.min.z];
+				ret.max		= [box.max.x, box.max.y, box.max.z];
+				ret.smooth	= box.smooth;
+				ret.random	= box.random;
 			} else if (shape is ConeShape) {
 				var cone : ConeShape = shape as ConeShape;
-				ret.type		= SHAPE_CONE;
-				ret.height  	= cone.height;
-				ret.angle		= cone.angle;
-				ret.radius		= cone.radius;
-				ret.shell		= cone.shell;
-				ret.volume		= cone.volume;
+				ret.type	= SHAPE_CONE;
+				ret.height  = cone.height;
+				ret.angle	= cone.angle;
+				ret.radius	= cone.radius;
+				ret.shell	= cone.shell;
+				ret.volume	= cone.volume;
 			} else if (shape is MeshShape) {
 				var mesh : MeshShape = shape as MeshShape;
-				ret.type		= SHAPE_MESH;
-				ret.vertices	= mesh.surf.getVertexVector(Surface3D.POSITION);
-				ret.normals 	= mesh.surf.getVertexVector(Surface3D.NORMAL);
-				ret.indices 	= mesh.surf.indexVector;
+				ret.type	= SHAPE_MESH;
+				ret.vertices= mesh.surf.getVertexVector(Surface3D.POSITION);
+				ret.normals = mesh.surf.getVertexVector(Surface3D.NORMAL);
+				ret.indices = mesh.surf.indexVector;
 			}
 			return ret;
 		}

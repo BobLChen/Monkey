@@ -28,12 +28,12 @@ package monkey.core.scene {
 	 */	
 	public class Scene3D extends Object3D {
 		
+		/** 创建完成 */
+		public static const CREATE_EVENT   			: String = Event.CONTEXT3D_CREATE;
 		/** 不支持该profile */
 		public static const UNSUPORT_PROFILE_EVENT 	: String = "Scene3D:UNSUPORT_PROFILE";
 		/** 软解模式 */
 		public static const SOFTWARE_EVENT 			: String = "Scene3D:SOFTWARE";
-		/** 创建完成 */
-		public static const CREATE_EVENT   			: String = Event.CONTEXT3D_CREATE;
 		/** context被销毁 */
 		public static const CONTEXT_DISPOSE 		: String = "Scene3D:DISPOSED";
 		/** pre render */
@@ -42,6 +42,9 @@ package monkey.core.scene {
 		public static const POST_RENDER_EVENT 		: String = "Scene3D:POST_RENDER";
 		/** render */
 		public static const RENDER_EVENT			: String = "Scene3D:RENDER";
+		/** 渲染完成 */
+		public static const RENDER_COMPLETE			: String = "Scene3D:RENDER_COMPLETE";
+		
 		/** enterframe事件 */
 		private static var enterFrameEvent : Event = new Event(ENTER_FRAME_EVENT);
 		/** exitframe事件 */
@@ -240,7 +243,7 @@ package monkey.core.scene {
 				this.context.clear();
 			}
 			Time3D.update();
-			this.container.addEventListener(Event.ENTER_FRAME,		  onEnterFrame);
+			this.container.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.dispatchEvent(event);
 		}
 		
@@ -263,6 +266,9 @@ package monkey.core.scene {
 			this.renderScene();
 			if (stage3dIdx == 1) {
 				Input3D.clear();
+			}
+			if (this.hasEventListener(RENDER_COMPLETE)) {
+				this.dispatchEvent(new Event(RENDER_COMPLETE));
 			}
 		}
 		
