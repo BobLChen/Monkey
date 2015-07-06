@@ -92,7 +92,7 @@ package monkey.core.components {
 		public function onDraw(scene : Scene3D) : void {
 			
 		}
-				
+		
 		/**
 		 * 开/关组件 
 		 * @param value

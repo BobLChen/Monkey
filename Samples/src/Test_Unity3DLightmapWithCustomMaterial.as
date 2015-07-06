@@ -19,7 +19,7 @@ package {
 	
 	public class Test_Unity3DLightmapWithCustomMaterial extends Sprite { 
 		
-		private var scene: Scene3D;
+		protected var scene: Scene3D;
 		private var cfg : Object;
 		private var res : String;
 		
@@ -48,8 +48,8 @@ package {
 			return parts.join("/");
 		}
 		
-		protected function onCreate(event:Event) : void {
-//			this.scene.context.enableErrorChecking = true;		
+		private function onCreate(event:Event) : void {
+			this.scene.context.enableErrorChecking = true;		
 			
 			this.res = dirName(this.loaderInfo.url) + "/../assets/Test_09/";
 			var url : String = this.res + "scene.lightmap"

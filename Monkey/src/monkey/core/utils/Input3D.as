@@ -116,13 +116,13 @@ package monkey.core.utils {
 		private static var _deltaMove 			: int = 0;
 		private static var _mouseUp 			: int = 0;
 		private static var _mouseHit 			: int = 0;
-		private static var _mouseDown 			: int;
+		private static var _mouseDown 			: int = 0;
 		private static var _rightMouseUp		: int = 0;
 		private static var _rightMouseHit		: int = 0;
-		private static var _rightMouseDown 		: int;
+		private static var _rightMouseDown 		: int = 0;
 		private static var _middleMouseUp		: int = 0;
 		private static var _middleMouseHit 		: int = 0;
-		private static var _middleMouseDown 	: int;
+		private static var _middleMouseDown 	: int = 0;
 		private static var _mouseDoubleClick	: int = 0;
 		private static var _mouseX 				: Number = 0;
 		private static var _mouseY 				: Number = 0;
@@ -134,7 +134,7 @@ package monkey.core.utils {
 		private static var _rightClickEnabled 	: Boolean;
 		private static var _stageX 				: Number = 0;
 		private static var _stageY 				: Number = 0;
-		private static var _currFrame 			: int;
+		private static var _currFrame 			: int	 = 0;
 		private static var _movementX 			: Number = 0;
 		private static var _movementY 			: Number = 0;
 		

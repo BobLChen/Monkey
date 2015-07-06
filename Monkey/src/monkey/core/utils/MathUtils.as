@@ -1,4 +1,5 @@
 package monkey.core.utils {
+	
 
 	public class MathUtils {
 		
