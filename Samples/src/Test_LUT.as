@@ -1,5 +1,7 @@
 package {
 	import flash.events.Event;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.entities.Quad;
@@ -42,7 +44,7 @@ package {
 		[Embed(source="../assets/lut/changed_lut.png")]
 		private var IMG  : Class;
 		private var rtt  : Texture3D;
-		private var lut  : Bitmap2DTexture;
+		private var lut  : Bitmap2DTexture; 
 		private var quad : Quad;
 		
 		public function Test_LUT() {
@@ -53,6 +55,14 @@ package {
 		}
 		
 		private function onCreate(event:Event) : void {
+			
+			var txt : TextField = new TextField();
+			txt.defaultTextFormat = new TextFormat(null, 20, 0xFF0000);
+			txt.width = 500;
+			txt.text = "ON/OFF PRESS F";
+			txt.y = 100;
+			this.addChild(txt);
+			
 			this.rtt = new RttTexture(2048, 2048);
 			this.rtt.upload(scene);
 			
