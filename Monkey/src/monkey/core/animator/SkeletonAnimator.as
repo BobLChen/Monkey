@@ -73,7 +73,7 @@ package monkey.core.animator {
 			for (var name : String in ske.mountDatas) {
 				var datas : Array = ske.mountDatas[name];
 				for (var i:int = 0; i < datas.length; i++) {
-					this.addMount(name, i, datas[i]);
+					this.addMount(name, this._totalFrames + i, datas[i]);
 				}
 			}
 			for (name in anim.labels) {

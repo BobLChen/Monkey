@@ -1,11 +1,11 @@
 package monkey.core.components {
 	
-	import flash.events.Event;
 	import flash.geom.Matrix3D;
 	
 	import monkey.core.animator.SkeletonAnimator;
 	import monkey.core.base.Object3D;
 	import monkey.core.interfaces.IComponent;
+	import monkey.core.scene.Scene3D;
 
 	/**
 	 * @author Neil
@@ -52,11 +52,10 @@ package monkey.core.components {
 			if (object3D && object3D.animator && object3D.animator is SkeletonAnimator) {
 				this.animator = object3D.animator as SkeletonAnimator;
 				this.object3D.addChild(this.component);
-				this.object3D.addEventListener(Object3D.EXIT_DRAW_EVENT, onExitDraw);
 			}
 		}
 		
-		private function onExitDraw(e : Event):void {
+		override public function onDraw(scene:Scene3D):void {
 			if (!this.animator || !this.component) {
 				return;
 			}
