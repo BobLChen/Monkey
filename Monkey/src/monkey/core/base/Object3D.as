@@ -71,8 +71,7 @@ package monkey.core.base {
 		protected var _parent		: Object3D;						// 父级
 		protected var _visible		: Boolean;						// 是否显示
 		protected var _disposed		: Boolean;						// 是否已经被销毁
-		protected var _camera		: Camera3D;						// object3D的camera
-		
+				
 		protected var componentDict : Dictionary;					// 组件字典，懒汉模式
 						
 		public function Object3D() {
@@ -84,22 +83,7 @@ package monkey.core.base {
 			this.componentDict = new Dictionary();
 			this.addComponent(new Transform3D());
 		}
-		
-		public function get camera():Camera3D {
-			return _camera;
-		}
-		
-		/**
-		 * object3D的camera。如果设置了camera，那么就使用该camera渲染object3d。如果未设置，则使用scene.camera。
-		 * 这样可以单独为某个object3d设置特殊的camera。例如：某个object不需要近大远小，就可以单独设置使用正交camera 
-		 * 注意：某些情况需要注意保持该camera和scene.camera位置角度一致。
-		 * @param value
-		 * 
-		 */		
-		public function set camera(value:Camera3D):void {
-			_camera = value;
-		}
-		
+				
 		/**
 		 * 暂停动画 
 		 * @param frame					暂停帧数或者动画名字
@@ -498,28 +482,20 @@ package monkey.core.base {
 			if (!visible) {
 				return;
 			}
-			// 进入绘制事件
-			if (this.hasEventListener(ENTER_DRAW_EVENT)) {
-				this.dispatchEvent(enterDrawEvent);
-			}
-			// 使用camera绘制object3d
-			if (this.camera && scene) {
-				scene.setupFrame(this.camera);
-			}
 			// mvp			
 			Device3D.world.copyFrom(transform.world);
 			Device3D.mvp.copyFrom(Device3D.world);
 			Device3D.mvp.append(Device3D.viewProjection);
 			Device3D.drawOBJNum++;
+			// 进入绘制事件
+			if (this.hasEventListener(ENTER_DRAW_EVENT)) {
+				this.dispatchEvent(enterDrawEvent);
+			}
 			// 绘制
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {
 					icom.onDraw(scene);
 				}
-			}
-			// 重置为scene.camera
-			if (this.camera && scene) {
-				scene.setupFrame(scene.camera);
 			}
 			// 是否绘制子节点
 			if (includeChildren) {
@@ -627,16 +603,14 @@ package monkey.core.base {
 		 * 
 		 */		
 		public function inView() : Boolean {
-			// 获取camera
-			var c : Camera3D = this.camera ? this.camera : Device3D.camera;
 			// 获取位置
 			var vec : Vector3D = Vector3DUtils.vec0;
 			this.transform.getPosition(false, vec);
-			Matrix3DUtils.transformVector(c.view, vec, vec);
-			if (vec.z < c.near || vec.z > c.far) {
+			Matrix3DUtils.transformVector(Device3D.camera.view, vec, vec);
+			if (vec.z < Device3D.camera.near || vec.z > Device3D.camera.far) {
 				return false;
 			}
-			var rect : Rectangle = c.viewPort;
+			var rect : Rectangle = Device3D.camera.viewPort;
 			if (vec.x < -rect.width / 2 || vec.x > rect.width / 2) {
 				return false;
 			}

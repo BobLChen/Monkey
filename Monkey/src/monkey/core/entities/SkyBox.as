@@ -198,14 +198,6 @@ package monkey.core.entities {
 			if (!visible) {
 				return;
 			}
-			// 渲染事件
-			if (this.hasEventListener(ENTER_DRAW_EVENT)) {
-				this.dispatchEvent(enterDrawEvent);
-			}
-			// 使用camera绘制object3d
-			if (this.camera && scene) {
-				scene.setupFrame(this.camera);
-			}
 			// 设置mvp
 			Device3D.camera.transform.getPosition(false, Vector3DUtils.vec0);
 			this.transform.setPosition(Vector3DUtils.vec0.x, Vector3DUtils.vec0.y, Vector3DUtils.vec0.z);
@@ -214,15 +206,15 @@ package monkey.core.entities {
 			Device3D.mvp.append(Device3D.viewProjection);
 			Device3D.mvp.appendScale(scaleRatio, scaleRatio, 1);
 			Device3D.drawOBJNum++;
+			// 渲染事件
+			if (this.hasEventListener(ENTER_DRAW_EVENT)) {
+				this.dispatchEvent(enterDrawEvent);
+			}
 			// 绘制
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {
 					icom.onDraw(scene);
 				}
-			}
-			// 重置为scene.camera
-			if (this.camera && scene) {
-				scene.setupFrame(scene.camera);
 			}
 			// 绘制子节点
 			if (includeChildren) {

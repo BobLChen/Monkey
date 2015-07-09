@@ -77,6 +77,7 @@ package monkey.core.scene {
 		private var _viewPort			: Rectangle;			// viewport
 		private var _antialias			: int;					// 抗锯齿等级
 		private var _paused				: Boolean;				// 是否暂停
+		private var _camera				: Camera3D;				// 相机
 						
 		/**
 		 * @param dispObject
@@ -104,7 +105,7 @@ package monkey.core.scene {
 		 * @return 
 		 * 
 		 */		
-		override public function get camera():Camera3D {
+		public function get camera():Camera3D {
 			return _camera;
 		}
 		
@@ -113,7 +114,7 @@ package monkey.core.scene {
 		 * @param value
 		 * 
 		 */		
-		override public function set camera(value:Camera3D):void {
+		public function set camera(value:Camera3D):void {
 			if (value == _camera) {
 				return;
 			}
