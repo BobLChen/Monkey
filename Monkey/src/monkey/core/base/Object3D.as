@@ -71,6 +71,8 @@ package monkey.core.base {
 		protected var _parent		: Object3D;						// 父级
 		protected var _visible		: Boolean;						// 是否显示
 		protected var _disposed		: Boolean;						// 是否已经被销毁
+		protected var _camera		: Camera3D;						// object3D的camera
+		
 		protected var componentDict : Dictionary;					// 组件字典，懒汉模式
 						
 		public function Object3D() {
@@ -83,6 +85,27 @@ package monkey.core.base {
 			this.addComponent(new Transform3D());
 		}
 		
+		public function get camera():Camera3D {
+			return _camera;
+		}
+		
+		/**
+		 * object3D的camera。如果设置了camera，那么就使用该camera渲染object3d。如果未设置，则使用scene.camera。
+		 * 这样可以单独为某个object3d设置特殊的camera。例如：某个object不需要近大远小，就可以单独设置使用正交camera 
+		 * 注意：某些情况需要注意保持该camera和scene.camera位置角度一致。
+		 * @param value
+		 * 
+		 */		
+		public function set camera(value:Camera3D):void {
+			_camera = value;
+		}
+		
+		/**
+		 * 暂停动画 
+		 * @param frame					暂停帧数或者动画名字
+		 * @param includeChildren		是否暂停子节点
+		 * 
+		 */		
 		public function gotoAndStop(frame : Object, includeChildren : Boolean = true) : void {
 			if (animator) {
 				animator.gotoAndStop(frame);
@@ -94,6 +117,13 @@ package monkey.core.base {
 			}
 		}
 		
+		/**
+		 * 播放动画
+		 * @param frame					播放起始帧或名称
+		 * @param animationMode			播放模式
+		 * @param includeChildren		是否包含子节点
+		 * 
+		 */		
 		public function gotoAndPlay(frame : Object, animationMode : int = Animator.ANIMATION_LOOP_MODE, includeChildren : Boolean = true) : void {
 			if (animator) {
 				animator.gotoAndPlay(frame, animationMode);
@@ -105,6 +135,12 @@ package monkey.core.base {
 			}
 		}
 		
+		/**
+		 * 播放动画 
+		 * @param animationMode		播放模式
+		 * @param includeChildren	是否播放子节点
+		 * 
+		 */		
 		public function play(animationMode : int = Animator.ANIMATION_STOP_MODE, includeChildren : Boolean = true) : void {
 			if (animator) {
 				animator.play(animationMode);
@@ -116,6 +152,11 @@ package monkey.core.base {
 			}
 		}
 		
+		/**
+		 * 暂停播放 
+		 * @param includeChildren	是否包含子节点
+		 * 
+		 */		
 		public function stop(includeChildren : Boolean = true) : void {
 			if (animator) {
 				animator.stop();
@@ -127,14 +168,29 @@ package monkey.core.base {
 			}
 		}
 		
+		/**
+		 * 渲染器 
+		 * @return 
+		 * 
+		 */		
 		public function get renderer() : MeshRenderer {
 			return this.getComponent(MeshRenderer) as MeshRenderer;
 		}
 		
+		/**
+		 * 动画控制器 
+		 * @return 
+		 * 
+		 */		
 		public function get animator() : Animator {
 			return this.getComponent(Animator) as Animator;
 		}
 		
+		/**
+		 * 层级 
+		 * @return 
+		 * 
+		 */		
 		public function get layer():int {
 			return _layer;
 		}
@@ -164,6 +220,11 @@ package monkey.core.base {
 			return _visible;
 		}
 		
+		/**
+		 * 是否显示object3d 
+		 * @param value
+		 * 
+		 */		
 		public function set visible(value:Boolean):void {
 			if (value == _visible) {
 				return;
@@ -273,6 +334,11 @@ package monkey.core.base {
 			}
 		}
 		
+		/**
+		 * scene 
+		 * @return 
+		 * 
+		 */		
 		public function get scene() : Scene3D {
 			return _scene;
 		}
@@ -432,29 +498,37 @@ package monkey.core.base {
 			if (!visible) {
 				return;
 			}
-			
-			if (hasEventListener(ENTER_DRAW_EVENT)) {
+			// 进入绘制事件
+			if (this.hasEventListener(ENTER_DRAW_EVENT)) {
 				this.dispatchEvent(enterDrawEvent);
 			}
-			
+			// 使用camera绘制object3d
+			if (this.camera && scene) {
+				scene.setupFrame(this.camera);
+			}
+			// mvp			
 			Device3D.world.copyFrom(transform.world);
 			Device3D.mvp.copyFrom(Device3D.world);
 			Device3D.mvp.append(Device3D.viewProjection);
 			Device3D.drawOBJNum++;
-			
+			// 绘制
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {
 					icom.onDraw(scene);
 				}
 			}
-			
+			// 重置为scene.camera
+			if (this.camera && scene) {
+				scene.setupFrame(scene.camera);
+			}
+			// 是否绘制子节点
 			if (includeChildren) {
 				for each (var child : Object3D in children) {
 					child.draw(scene, includeChildren);
 				}
 			}
-			
-			if (hasEventListener(EXIT_DRAW_EVENT)) {
+			// 退出绘制事件
+			if (this.hasEventListener(EXIT_DRAW_EVENT)) {
 				this.dispatchEvent(exitDrawEvent);
 			}
 		}
@@ -547,14 +621,22 @@ package monkey.core.base {
 			}
 		}
 		
+		/**
+		 * object3d是否在视野中 
+		 * @return 
+		 * 
+		 */		
 		public function inView() : Boolean {
+			// 获取camera
+			var c : Camera3D = this.camera ? this.camera : Device3D.camera;
+			// 获取位置
 			var vec : Vector3D = Vector3DUtils.vec0;
 			this.transform.getPosition(false, vec);
-			Matrix3DUtils.transformVector(Device3D.camera.view, vec, vec);
-			if (vec.z < Device3D.camera.near || vec.z > Device3D.camera.far) {
+			Matrix3DUtils.transformVector(c.view, vec, vec);
+			if (vec.z < c.near || vec.z > c.far) {
 				return false;
 			}
-			var rect : Rectangle = Device3D.camera.viewPort;
+			var rect : Rectangle = c.viewPort;
 			if (vec.x < -rect.width / 2 || vec.x > rect.width / 2) {
 				return false;
 			}

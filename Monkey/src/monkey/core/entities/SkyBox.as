@@ -14,6 +14,11 @@ package monkey.core.entities {
 	import monkey.core.utils.Texture3DUtils;
 	import monkey.core.utils.Vector3DUtils;
 	
+	/**
+	 * 天空盒 
+	 * @author Neil
+	 * 
+	 */	
 	public class SkyBox extends Object3D {
 		
 		private var _size 		: int;
@@ -41,6 +46,11 @@ package monkey.core.entities {
 			this.initSkybox();
 		}
 		
+		/**
+		 * 销毁 
+		 * @param force
+		 * 
+		 */		
 		override public function dispose(force : Boolean = false):void {
 			super.dispose(force);
 			if (this.bitmapData) {
@@ -48,6 +58,9 @@ package monkey.core.entities {
 			}
 		}
 		
+		/**
+		 *  初始化天空盒
+		 */		
 		private function initSkybox() : void {
 			this._dirty = false;
 			if (this.renderer.mesh) {
@@ -117,10 +130,15 @@ package monkey.core.entities {
 			this.renderer.mesh = new Mesh3D(surfaces);
 		}
 		
+		/**
+		 * 天空盒位图 
+		 * @return 
+		 * 
+		 */		
 		public function get bitmapData():BitmapData {
 			return _bitmapData;
 		}
-
+		
 		public function set bitmapData(value:BitmapData):void {
 			if (this._bitmapData) {
 				this._bitmapData.dispose();
@@ -140,6 +158,11 @@ package monkey.core.entities {
 			this._material.textures = texs;
 		}
 		
+		/**
+		 * 缩放比例 
+		 * @return 
+		 * 
+		 */		
 		public function get scaleRatio():Number {
 			return _scaleRatio;
 		}
@@ -148,6 +171,11 @@ package monkey.core.entities {
 			this._scaleRatio = value;
 		}
 		
+		/**
+		 * 尺寸 
+		 * @return 
+		 * 
+		 */		
 		public function get size():int {
 			return _size;
 		}
@@ -157,6 +185,12 @@ package monkey.core.entities {
 			this._dirty = true;
 		}
 		
+		/**
+		 * 绘制天空盒 
+		 * @param scene
+		 * @param includeChildren
+		 * 
+		 */		
 		override public function draw(scene:Scene3D, includeChildren:Boolean=true):void {
 			if (this._dirty) {
 				this.initSkybox();
@@ -164,29 +198,40 @@ package monkey.core.entities {
 			if (!visible) {
 				return;
 			}
-			if (hasEventListener(ENTER_DRAW_EVENT)) {
+			// 渲染事件
+			if (this.hasEventListener(ENTER_DRAW_EVENT)) {
 				this.dispatchEvent(enterDrawEvent);
 			}
-			
+			// 使用camera绘制object3d
+			if (this.camera && scene) {
+				scene.setupFrame(this.camera);
+			}
+			// 设置mvp
 			Device3D.camera.transform.getPosition(false, Vector3DUtils.vec0);
 			this.transform.setPosition(Vector3DUtils.vec0.x, Vector3DUtils.vec0.y, Vector3DUtils.vec0.z);
 			Device3D.world.copyFrom(transform.world);
 			Device3D.mvp.copyFrom(Device3D.world);
-			Device3D.mvp.append(scene.camera.viewProjection);
+			Device3D.mvp.append(Device3D.viewProjection);
 			Device3D.mvp.appendScale(scaleRatio, scaleRatio, 1);
 			Device3D.drawOBJNum++;
-			
+			// 绘制
 			for each (var icom : IComponent in components) {
 				if (icom.enable) {
 					icom.onDraw(scene);
 				}
 			}
+			// 重置为scene.camera
+			if (this.camera && scene) {
+				scene.setupFrame(scene.camera);
+			}
+			// 绘制子节点
 			if (includeChildren) {
 				for each (var child : Object3D in children) {
 					child.draw(scene, includeChildren);
 				}
 			}
-			if (hasEventListener(EXIT_DRAW_EVENT)) {
+			// 退出渲染
+			if (this.hasEventListener(EXIT_DRAW_EVENT)) {
 				this.dispatchEvent(exitDrawEvent);
 			}
 		}
