@@ -60,7 +60,12 @@ package {
 			plane.addComponent(new MeshRenderer(new Plane(10, 10), new AlphaThreadMaterial(new Bitmap2DTexture(new IMG().bitmapData))));
 			plane.renderer.material.blendMode = Material3D.BLEND_ALPHA;
 			
+			var plane1 : Object3D = new Object3D();
+			plane.addComponent(new MeshRenderer(new Plane(10, 10, 1, "+xz"), new AlphaThreadMaterial(new Bitmap2DTexture(new IMG().bitmapData))));
+			plane.renderer.material.blendMode = Material3D.BLEND_ALPHA;
+			
 			this.scene.addChild(plane);
+			this.scene.addChild(plane1);
 		}
 		
 	}
