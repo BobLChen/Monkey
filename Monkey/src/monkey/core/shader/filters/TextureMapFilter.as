@@ -73,7 +73,7 @@ package monkey.core.shader.filters {
 		 * 片段程序 
 		 * @param regCache		regCache
 		 * @param agal			是否创建agal字符串，为优化做准备
-		 * @return 
+		 * @return  
 		 * 
 		 */		
 		override public function getFragmentCode(regCache : ShaderRegisterCache, agal : Boolean) : String {
