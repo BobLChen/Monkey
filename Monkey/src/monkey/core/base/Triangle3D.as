@@ -88,6 +88,7 @@ package monkey.core.base {
 			this.normal.y = _b.z * _a.x - _b.x * _a.z;
 			this.normal.z = _b.x * _a.y - _b.y * _a.x;
 			this.normal.normalize();
+			// t = (n*p1 - n*p0) / n * u (法线点乘v0就是为了计算n*p0)
 			this.normal.w = -(this.normal.dotProduct(this.v0));
 			// 法线点乘p0 http://www.cnblogs.com/graphics/archive/2009/10/17/1585281.html
 			this.plane = this.normal.w;

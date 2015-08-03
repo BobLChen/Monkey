@@ -199,6 +199,19 @@ package monkey.core.base {
 				}
 			}
 		}
+		
+		/**
+		 * 是否启用component 
+		 * @param value
+		 * 
+		 */		
+		public function set enable(value : Boolean) : void {
+			for each (var icom : IComponent in this.components) {
+				if (icom) {
+					icom.enable = value;
+				}
+			}
+		}
 				
 		public function get visible():Boolean {
 			return _visible;

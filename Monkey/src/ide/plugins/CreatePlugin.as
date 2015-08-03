@@ -3,6 +3,7 @@ package ide.plugins {
 	import com.adobe.images.PNGEncoder;
 	
 	import flash.events.Event;
+	import flash.utils.getTimer;
 	
 	import ide.App;
 	import ide.plugins.groups.particles.lifetime.LifetimeData;
@@ -98,6 +99,7 @@ package ide.plugins {
 				Texture3DUtils.nullBitmapData, 
 				Texture3DUtils.nullBitmapData
 			);
+			water.name = "Water" + getTimer();
 			this._app.scene.addChild(water);
 			this._app.selection.objects = [water];
 		}

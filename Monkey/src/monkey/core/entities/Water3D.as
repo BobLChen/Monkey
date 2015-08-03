@@ -1,5 +1,5 @@
 package monkey.core.entities {
-
+	
 	import flash.display.BitmapData;
 	import flash.display.Shader;
 	import flash.display.ShaderJob;
@@ -18,9 +18,10 @@ package monkey.core.entities {
 	import monkey.core.textures.Bitmap2DTexture;
 	import monkey.core.textures.BitmapCubeTexture;
 	import monkey.core.utils.Color;
-
+	
 	/**
 	 * 海水 
+	 * 由于ShaderJob不能多实例运行。因此Water3D只能使用一个。。。
 	 * @author Neil
 	 * 
 	 */	
@@ -30,17 +31,17 @@ package monkey.core.entities {
 		private static var WaterShader : Class;
 		
 		private var _pointArr 		: Array;			
-		private var _waveMesh 		: Plane; 		// 海浪geometry
-		private var _waveBmp 		: BitmapData; 	// 海浪bitmapdata
-		private var _waveBytes 		: ByteArray; 	// 海浪bytes
-		private var _shader2d 		: Shader; 		// shader
-		private var _waterSpeed 	: Number; 		// 设置水流速度
-		private var _waterMaterial  : WaterMaterial;// 水波材质
-		private var _waterDirty		: Boolean;
-		private var _width			: Number;
-		private var _height			: Number;
-		private var _segment		: int;
-				
+		private var _waveMesh 		: Plane; 			// 海浪geometry
+		private var _waveBmp 		: BitmapData; 		// 海浪bitmapdata
+		private var _waveBytes 		: ByteArray; 		// 海浪bytes
+		private var _shader2d 		: Shader; 			// shader
+		private var _waterSpeed 	: Number; 			// 设置水流速度
+		private var _waterMaterial  : WaterMaterial;	// 水波材质
+		private var _waterDirty		: Boolean;			// 是否需要更新
+		private var _width			: Number;			// 宽度
+		private var _height			: Number;			// 高度
+		private var _segment		: int;				// 分段
+		
 		/**
 		 *  
 		 * @param cubeTexture			海水材质贴图
@@ -64,6 +65,9 @@ package monkey.core.entities {
 			this.initWater();
 		}
 		
+		/**
+		 *  初始化Water
+		 */		
 		private function initWater() : void {
 			if (this.renderer.mesh) {
 				this.renderer.mesh.dispose(true);
@@ -84,10 +88,20 @@ package monkey.core.entities {
 			return this._waterMaterial.cubeTexture as BitmapCubeTexture;
 		}
 		
+		/**
+		 * water 贴图 
+		 * @param value
+		 * 
+		 */		
 		public function set texture(value : BitmapCubeTexture) : void {
 			this._waterMaterial.cubeTexture = value;
 		}
 		
+		/**
+		 * water 波纹图 
+		 * @param value
+		 * 
+		 */		
 		public function set normalTexture(value : Bitmap2DTexture) : void {
 			this._waterMaterial.normalTexture = value;
 		}
@@ -95,7 +109,12 @@ package monkey.core.entities {
 		public function get normalTexture() : Bitmap2DTexture {
 			return this._waterMaterial.normalTexture as Bitmap2DTexture;
 		}
-						
+		
+		/**
+		 * 混合色 
+		 * @param value
+		 * 
+		 */		
 		public function set blendColor(value : Color) : void {
 			this._waterMaterial.blendColor = value;
 		}
@@ -104,6 +123,11 @@ package monkey.core.entities {
 			return this._waterMaterial.blendColor;
 		}
 		
+		/**
+		 * 段数 
+		 * @param value
+		 * 
+		 */		
 		public function set segment(value:int):void {
 			this._segment = value;
 			this._waterDirty = true;
@@ -114,6 +138,11 @@ package monkey.core.entities {
 			this._waterDirty = true;
 		}
 		
+		/**
+		 * 宽度 
+		 * @param value
+		 * 
+		 */		
 		public function set width(value:Number):void {
 			this._width = value;
 			this._waterDirty = true;
@@ -200,6 +229,12 @@ package monkey.core.entities {
 			return _waterSpeed;
 		}
 		
+		/**
+		 * 绘制water 
+		 * @param scene
+		 * @param includeChildren
+		 * 
+		 */		
 		override public function draw(scene:Scene3D, includeChildren:Boolean=true):void {
 			if (this._waterDirty) {
 				this.initWater();
@@ -209,6 +244,10 @@ package monkey.core.entities {
 			super.draw(scene, includeChildren);
 		}
 		
+		/**
+		 * 更新water 波浪
+		 * 
+		 */		
 		private function updateWave() : void {
 			if (!visible || disposed) {
 				return;
@@ -223,6 +262,11 @@ package monkey.core.entities {
 			job.start();
 		}
 		
+		/**
+		 * shaderjob完成 
+		 * @param event
+		 * 
+		 */		
 		private function onWaterShaderComplete(event:ShaderEvent) : void {
 			if (disposed) {
 				return;

@@ -1,7 +1,5 @@
 package monkey.core.utils {
 	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
