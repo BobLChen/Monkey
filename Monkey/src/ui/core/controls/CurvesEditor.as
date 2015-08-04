@@ -65,6 +65,9 @@ package ui.core.controls {
 		public function set axisYValue(value : Number) : void {
 			for each (var point : Point in points) {
 				point.y = point.y / valueY * value;
+				if (isNaN(point.y)) {
+					point.y = 0;
+				}
 			}
 			valueY = value;
 			for (var i:int = 0; i < yTexts.length; i++) {

@@ -10,13 +10,13 @@ package {
 	import monkey.core.scene.Scene3D;
 	import monkey.core.scene.Viewer3D;
 	import monkey.core.textures.Bitmap2DTexture;
-	import monkey.core.utils.Color;
+	import monkey.core.utils.Color; 
 
 	/**
 	 *　　　　　　　　┏┓　　　┏┓+ +
 	 *　　　　　　　┏┛┻━━━┛┻┓ + +
 	 *　　　　　　　┃　　　　　　　┃ 　
-	 *　　　　　　　┃　　　━　　　┃ ++ + + +
+	 *　　　　　　　┃　　　━　　　┃ ++ + + + 
 	 *　　　　　　 ████━████ ┃+
 	 *　　　　　　　┃　　　　　　　┃ +
 	 *　　　　　　　┃　　　┻　　　┃
