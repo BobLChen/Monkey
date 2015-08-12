@@ -1,9 +1,9 @@
 ﻿package monkey.core.utils {
-
+	
 	import flash.geom.Matrix3D;
 	import flash.geom.Orientation3D;
 	import flash.geom.Vector3D;
-
+	
 	public class Matrix3DUtils {
 		
 		/** rawData */
@@ -22,7 +22,7 @@
 		private static var _x 		: Number;
 		private static var _y 		: Number;
 		private static var _z 		: Number;
-
+		
 		public static function getRight(m : Matrix3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();
@@ -30,7 +30,7 @@
 			m.copyColumnTo(0, out);
 			return out;
 		}
-
+		
 		public static function getUp(m : Matrix3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();
@@ -38,7 +38,7 @@
 			m.copyColumnTo(1, out);
 			return out;
 		}
-
+		
 		public static function getDir(m : Matrix3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();
@@ -46,7 +46,7 @@
 			m.copyColumnTo(2, out);
 			return out;
 		}
-
+		
 		public static function getLeft(m : Matrix3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();
@@ -55,7 +55,7 @@
 			out.negate();
 			return out;
 		}
-
+		
 		public static function getDown(m : Matrix3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();
@@ -64,7 +64,7 @@
 			out.negate();
 			return out;
 		}
-
+		
 		public static function getBackward(m : Matrix3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();
@@ -73,7 +73,7 @@
 			out.negate();
 			return out;
 		}
-
+		
 		public static function getPosition(m : Matrix3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();
@@ -81,7 +81,7 @@
 			m.copyColumnTo(3, out);
 			return out;
 		}
-
+		
 		public static function getScale(m : Matrix3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();
@@ -94,7 +94,7 @@
 			out.z = _dir.length;
 			return out;
 		}
-
+		
 		public static function setPosition(m : Matrix3D, x : Number, y : Number, z : Number, smooth : Number = 1) : void {
 			if (smooth == 1) {
 				_vector.setTo(x, y, z);
@@ -108,10 +108,10 @@
 				m.copyColumnFrom(3, _pos);
 			}
 		}
-
+		
 		public static function setOrientation(m : Matrix3D, dir : Vector3D, up : Vector3D = null, smooth : Number = 1) : void {
 			getScale(m, _scale);
-
+			
 			if (up == null) {
 				if ((((((dir.x == 0)) && ((Math.abs(dir.y) == 1)))) && ((dir.z == 0)))) {
 					up = Vector3D.Z_AXIS;
@@ -119,7 +119,7 @@
 					up = Vector3D.Y_AXIS;
 				}
 			}
-
+			
 			if (smooth != 1) {
 				getDir(m, _dir);
 				_dir.x = (_dir.x + ((dir.x - _dir.x) * smooth));
@@ -143,14 +143,14 @@
 			dir.scaleBy(_scale.z);
 			setVectors(m, rVec, uVec, dir);
 		}
-
+		
 		public static function setNormalOrientation(m : Matrix3D, normal : Vector3D, smooth : Number = 1) : void {
 			if (((normal.x == 0) && (normal.y == 0)) && (normal.z == 0)) {
 				return;
 			}
 			getScale(m, _scale);
 			getDir(m, _dir);
-
+			
 			if (smooth != 1) {
 				getUp(m, _up);
 				_up.x = (_up.x + ((normal.x - _up.x) * smooth));
@@ -185,7 +185,7 @@
 			_vector.z = (z - _pos.z);
 			setOrientation(m, _vector, up, smooth);
 		}
-
+		
 		public static function setTranslation(m : Matrix3D, x : Number = 0, y : Number = 0, z : Number = 0, local : Boolean = true) : void {
 			if (local) {
 				m.prependTranslation(x, y, z);
@@ -193,11 +193,11 @@
 				m.appendTranslation(x, y, z);
 			}
 		}
-
+		
 		public static function translateX(m : Matrix3D, distance : Number, local : Boolean = true) : void {
 			m.copyColumnTo(3, _pos);
 			m.copyColumnTo(0, _right);
-
+			
 			if (local) {
 				_pos.x = (_pos.x + (distance * _right.x));
 				_pos.y = (_pos.y + (distance * _right.y));
@@ -207,11 +207,11 @@
 			}
 			m.copyColumnFrom(3, _pos);
 		}
-
+		
 		public static function translateY(m : Matrix3D, distance : Number, local : Boolean = true) : void {
 			m.copyColumnTo(3, _pos);
 			m.copyColumnTo(1, _up);
-
+			
 			if (local) {
 				_pos.x = (_pos.x + (distance * _up.x));
 				_pos.y = (_pos.y + (distance * _up.y));
@@ -221,11 +221,11 @@
 			}
 			m.copyColumnFrom(3, _pos);
 		}
-
+		
 		public static function translateZ(m : Matrix3D, distance : Number, local : Boolean = true) : void {
 			m.copyColumnTo(3, _pos);
 			m.copyColumnTo(2, _dir);
-
+			
 			if (local) {
 				_pos.x = (_pos.x + (distance * _dir.x));
 				_pos.y = (_pos.y + (distance * _dir.y));
@@ -235,7 +235,7 @@
 			}
 			m.copyColumnFrom(3, _pos);
 		}
-
+		
 		public static function translateAxis(m : Matrix3D, distance : Number, axis : Vector3D) : void {
 			m.copyColumnTo(3, _pos);
 			_pos.x = (_pos.x + (distance * axis.x));
@@ -243,7 +243,7 @@
 			_pos.z = (_pos.z + (distance * axis.z));
 			m.copyColumnFrom(3, _pos);
 		}
-
+		
 		public static function setScale(m : Matrix3D, x : Number, y : Number, z : Number, smooth : Number = 1) : void {
 			getScale(m, _scale);
 			_x = _scale.x;
@@ -257,7 +257,7 @@
 			_dir.scaleBy((_scale.z / _z));
 			setVectors(m, _right, _up, _dir);
 		}
-
+		
 		public static function scaleX(m : Matrix3D, scale : Number) : void {
 			m.copyColumnTo(0, _right);
 			_right.normalize();
@@ -266,7 +266,7 @@
 			_right.z = (_right.z * scale);
 			m.copyColumnFrom(0, _right);
 		}
-
+		
 		public static function scaleY(m : Matrix3D, scale : Number) : void {
 			m.copyColumnTo(1, _up);
 			_up.normalize();
@@ -275,7 +275,7 @@
 			_up.z = (_up.z * scale);
 			m.copyColumnFrom(1, _up);
 		}
-
+		
 		public static function scaleZ(m : Matrix3D, scale : Number) : void {
 			m.copyColumnTo(2, _dir);
 			_dir.normalize();
@@ -284,7 +284,7 @@
 			_dir.z = (_dir.z * scale);
 			m.copyColumnFrom(2, _dir);
 		}
-
+		
 		public static function getRotation(m : Matrix3D, out : Vector3D = null) : Vector3D {
 			out = ((out) || (new Vector3D()));
 			_vector = m.decompose(Orientation3D.EULER_ANGLES)[1];
@@ -293,7 +293,7 @@
 			out.z = _vector.z * _toAng;
 			return out;
 		}
-
+		
 		public static function setRotation(m : Matrix3D, x : Number, y : Number, z : Number) : void {
 			var v : Vector.<Vector3D> = m.decompose(Orientation3D.EULER_ANGLES);
 			v[1].x = (x * _toRad);
@@ -301,19 +301,19 @@
 			v[1].z = (z * _toRad);
 			m.recompose(v, Orientation3D.EULER_ANGLES);
 		}
-
+		
 		public static function rotateX(m : Matrix3D, angle : Number, local : Boolean = true, pivotPoint : Vector3D = null) : void {
 			rotateAxis(m, angle, (local) ? getRight(m, _vector) : Vector3D.X_AXIS, pivotPoint);
 		}
-
+		
 		public static function rotateY(m : Matrix3D, angle : Number, local : Boolean = true, pivotPoint : Vector3D = null) : void {
 			rotateAxis(m, angle, (local) ? getUp(m, _vector) : Vector3D.Y_AXIS, pivotPoint);
 		}
-
+		
 		public static function rotateZ(m : Matrix3D, angle : Number, local : Boolean = true, pivotPoint : Vector3D = null) : void {
 			rotateAxis(m, angle, (local) ? getDir(m, _vector) : Vector3D.Z_AXIS, pivotPoint);
 		}
-
+		
 		public static function rotateAxis(m : Matrix3D, angle : Number, axis : Vector3D, pivotPoint : Vector3D = null) : void {
 			_vector.x = axis.x;
 			_vector.y = axis.y;
@@ -328,19 +328,19 @@
 				out = new Vector3D();
 			}
 			_vector.copyFrom(vector);
-
+			
 			m.copyRowTo(0, _right);
 			m.copyRowTo(1, _up);
 			m.copyRowTo(2, _dir);
 			m.copyColumnTo(3, out);
-
+			
 			out.x = out.x + (_vector.x * _right.x) + (_vector.y * _right.y) + (_vector.z * _right.z);
 			out.y = out.y + (_vector.x * _up.x) + (_vector.y * _up.y) + (_vector.z * _up.z);
 			out.z = out.z + (_vector.x * _dir.x) + (_vector.y * _dir.y) + (_vector.z * _dir.z);
-
+			
 			return out;
 		}
-
+		
 		public static function deltaTransformVector(m : Matrix3D, vector : Vector3D, out : Vector3D = null) : Vector3D {
 			if (out == null) {
 				out = new Vector3D();
@@ -354,7 +354,7 @@
 			out.z = (((_vector.x * _dir.x) + (_vector.y * _dir.y)) + (_vector.z * _dir.z));
 			return out;
 		}
-
+		
 		public static function invert(m : Matrix3D, out : Matrix3D = null) : Matrix3D {
 			if (out == null) {
 				out = new Matrix3D();
@@ -363,12 +363,12 @@
 			out.invert();
 			return out;
 		}
-
+		
 		public static function equal(a : Matrix3D, b : Matrix3D) : Boolean {
 			var v0 : Vector.<Number> = a.rawData;
 			var v1 : Vector.<Number> = b.rawData;
 			var i : int;
-
+			
 			while (i < 16) {
 				if (v0[i] != v1[i]) {
 					return (false);
@@ -377,7 +377,7 @@
 			}
 			return true;
 		}
-
+		
 		public static function interpolateTo(src : Matrix3D, dest : Matrix3D, percent : Number) : void {
 			Matrix3DUtils.getScale(src, _scale);
 			Matrix3DUtils.getScale(dest, _vector);
@@ -391,24 +391,36 @@
 		public static function resetPosition(m : Matrix3D) : void {
 			setPosition(m, 0, 0, 0);
 		}
-
+		
 		public static function resetRotation(m : Matrix3D) : void {
 			setRotation(m, 0, 0, 0);
 		}
-
+		
 		public static function resetScale(m : Matrix3D) : void {
 			setScale(m, 1, 1, 1);
 		}
-
+		
+		/**
+		 * 正交投影 
+		 * @param left			左侧
+		 * @param right			右侧
+		 * @param bottom		底部
+		 * @param top			顶部
+		 * @param near			近裁面
+		 * @param far			远裁面
+		 * @param out			投影矩阵
+		 * @return 
+		 * 
+		 */		
 		public static function buildOrthoProjection(left : Number, right : Number, bottom : Number, top : Number, near : Number, far : Number, out : Matrix3D = null) : Matrix3D {
-
+			
 			var scaleX : Number = 0;
 			var scaleY : Number = 0;
 			var scaleZ : Number = 0;
 			var offsX : Number = 0;
 			var offsY : Number = 0;
 			var offsZ : Number = 0;
-
+			
 			if (out == null) {
 				out = new Matrix3D();
 			}
@@ -429,6 +441,50 @@
 			out.copyRawDataFrom(_raw);
 			return out;
 		}
-
+		
+		/**
+		 * 创建透视投影 
+		 * @param fieldOfView
+		 * @param width
+		 * @param height
+		 * @param near
+		 * @param far
+		 * @param out
+		 * @return 
+		 * 
+		 */		
+		public static function buildPerspectiveProjection(fieldOfView : Number, width : Number, height : Number, near : Number, far : Number, out : Matrix3D = null) : Matrix3D {
+			
+			if (!out) {
+				out = new Matrix3D();
+			}
+			
+			var w : Number = width;
+			var h : Number = height;
+			var n : Number = near;
+			var f : Number = far;
+			var a : Number = w / h;
+			var y : Number = 1 / Math.tan(fieldOfView * Math.PI / 360) * a;
+			var x : Number = y / a;
+			
+			var rawData : Vector.<Number> = out.rawData;
+			
+			rawData[0]  = x;
+			rawData[5]  = y;
+			rawData[10] = f / (n - f);
+			rawData[11] = -1;
+			rawData[14] = (f * n) / (n - f);
+			rawData[8]  = 0;
+			rawData[9]  = 0;
+			rawData[15] = 0;
+			
+			out.copyRawDataFrom(rawData);
+			out.prependScale(1, 1, -1);
+			
+			return out;
+		}
+		
 	}
 }
+
+
