@@ -11,7 +11,7 @@ package {
 	import monkey.core.light.PointLight;
 	import monkey.core.renderer.MeshRenderer;
 	import monkey.core.scene.Scene3D;
-	import monkey.core.scene.Viewer3D;
+	import monkey.core.scene.Viewer3D; 
 	import monkey.core.utils.Color;
 
 	public class Test_PointLight extends Sprite {

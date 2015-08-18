@@ -22,9 +22,10 @@ package monkey.core.shader.filters {
 		private var v1			: ShaderRegisterElement;
 		
 		public function PointLightFilter(light : PointLight) {
-			this.name = "PointLightFilter";
-			this.priority = 13;
 			this._pointData = Vector.<Number>([0.0, 0, 0, 10000]);
+			this.name 		= "PointLightFilter";
+			this.priority 	= 13;
+			this.light		= light;
 		}
 				
 		public function set light(value:PointLight):void {
