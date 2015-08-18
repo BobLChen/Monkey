@@ -111,15 +111,14 @@
 		
 		public static function setOrientation(m : Matrix3D, dir : Vector3D, up : Vector3D = null, smooth : Number = 1) : void {
 			getScale(m, _scale);
-			
+			dir.normalize();
 			if (up == null) {
-				if ((((((dir.x == 0)) && ((Math.abs(dir.y) == 1)))) && ((dir.z == 0)))) {
+				if (dir.x == 0 && Math.abs(dir.y) == 1 && dir.z == 0) {
 					up = Vector3D.Z_AXIS;
 				} else {
 					up = Vector3D.Y_AXIS;
 				}
 			}
-			
 			if (smooth != 1) {
 				getDir(m, _dir);
 				_dir.x = (_dir.x + ((dir.x - _dir.x) * smooth));
