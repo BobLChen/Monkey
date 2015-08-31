@@ -181,6 +181,10 @@
 				}
 				this._current.addControl(label);
 				this._current.addControl(control);
+				this._current.minHeight = control.minHeight;
+				this._current.maxHeight = control.maxHeight;
+				this._current.minWidth  = control.minWidth;
+				this._current.maxWidth	= control.maxWidth;
 				this.endGroup();
 			} else {
 				this._current.addControl(control);

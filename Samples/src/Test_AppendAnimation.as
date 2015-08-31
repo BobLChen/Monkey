@@ -3,6 +3,8 @@ package {
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DTriangleFace;
 	import flash.events.KeyboardEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -14,6 +16,7 @@ package {
 	import monkey.core.animator.Animator;
 	import monkey.core.animator.Label3D;
 	import monkey.core.base.Object3D;
+	import monkey.core.materials.Material3D;
 	import monkey.core.materials.SkeDifQuatMaterial;
 	import monkey.core.renderer.SkeletonRenderer;
 	import monkey.core.scene.Scene3D;
@@ -69,7 +72,7 @@ package {
 			this.akali	= new Object3D();
 			this.akali.addComponent(new SkeletonRenderer(Mesh3DUtils.readMesh(new MESH()), new SkeDifQuatMaterial(new Bitmap2DTexture(new IMG().bitmapData))));
 			this.akali.renderer.material.twoSided = true;	// lol使用的逆时针索引
-			
+						
 			var datas : Array = [Attack1, Attack2, Channel, Crit, Dance, Death, Idel0, Idel1, Idel3];
 			var keys  : Array = [Keyboard.NUMBER_1, Keyboard.NUMBER_2, Keyboard.NUMBER_3, Keyboard.NUMBER_4, Keyboard.NUMBER_5, Keyboard.NUMBER_6, Keyboard.NUMBER_7, Keyboard.NUMBER_8, Keyboard.NUMBER_9];
 			
@@ -100,6 +103,19 @@ package {
 			}
 			
 			this.addChild(text);
+			
+			// 克隆
+			for (var m:int = 0; m < 20; m++) {
+				for (var n:int = 0; n < 20; n++) {
+					var c : Object3D = this.akali.clone();
+					c.transform.x = (m - 10) * 100;
+					c.transform.y = (n - 10) * 100;
+					c.transform.z = 500;
+					c.play(Animator.ANIMATION_LOOP_MODE);
+					c.renderer.material.cullFace = Context3DTriangleFace.FRONT;
+					this.scene.addChild(c);
+				}
+			}
 						
 			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		}

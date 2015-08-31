@@ -21,7 +21,6 @@
 		 */
 		public var stretch  : Boolean = false;
 		
-		private var _source : String;
 		private var _bitmap : Bitmap;
 		
 		/**
@@ -95,7 +94,7 @@
 		}
 				
 		public function get source() : Object {
-			return this._source;
+			return this._bitmap;
 		}
 		
 		override public function draw() : void {
