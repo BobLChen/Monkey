@@ -119,6 +119,7 @@ package monkey.core.base {
 			bounds.max    = this.max.clone();
 			bounds.length = this.length.clone();
 			bounds.center = this.center.clone();
+			bounds.radius = this.radius;
 			return bounds;
 		}
 		
