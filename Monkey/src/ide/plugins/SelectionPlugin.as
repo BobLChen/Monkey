@@ -1,29 +1,33 @@
 package ide.plugins {
 	
-	import flash.geom.Vector3D;
-	import monkey.core.entities.particles.ParticleSystem;
-	import monkey.core.light.Light3D;
-	import ide.events.SceneEvent;
-	import flash.events.Event;
-	import monkey.core.camera.Camera3D;
-	import monkey.core.entities.DebugLight;
-	import monkey.core.utils.Device3D;
-	import ui.core.interfaces.IPlugin;
-	import flash.events.MouseEvent;
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Vector3D;
+	import flash.utils.Dictionary;
+	
+	import ide.App;
+	import ide.events.LogEvent;
+	import ide.events.SceneEvent;
+	import ide.panel.Gizmo;
+	import ide.utils.MathUtils;
+	
+	import monkey.core.base.Bounds3D;
+	import monkey.core.base.Object3D;
+	import monkey.core.camera.Camera3D;
 	import monkey.core.entities.Axis3D;
 	import monkey.core.entities.DebugBounds;
-	import ide.App;
-	import monkey.core.base.Object3D;
-	import monkey.core.utils.Vector3DUtils;
-	import monkey.core.base.Bounds3D;
 	import monkey.core.entities.DebugCamera;
-	import monkey.core.utils.Input3D;
-	import ide.utils.MathUtils;
-	import monkey.core.scene.Scene3D;
+	import monkey.core.entities.DebugLight;
 	import monkey.core.entities.DebugWireframe;
-	import ide.panel.Gizmo;
-	import flash.utils.Dictionary;
+	import monkey.core.entities.particles.ParticleSystem;
+	import monkey.core.light.Light3D;
+	import monkey.core.scene.Scene3D;
+	import monkey.core.utils.Device3D;
+	import monkey.core.utils.Input3D;
+	import monkey.core.utils.Vector3DUtils;
+	
+	import ui.core.interfaces.IPlugin;
 
 	
 
@@ -78,6 +82,11 @@ package ide.plugins {
 			this._app.addMenu("Helper/ShowGizmo",		showGizmo);
 			this._app.addMenu("Helper/ResetCamera",		resetCamera);
 			this._app.addMenu("Helper/MouseCollision",	enableMouseCollision);
+			this._app.addMenu("Helper/CameraTransfrom",	showCameraTransform);
+		}
+		
+		private function showCameraTransform(e : Event) : void {
+			this._app.dispatchEvent(new LogEvent("" + this._app.scene.camera.transform.local));
 		}
 		
 		private function enableMouseCollision(e : Event) : void {

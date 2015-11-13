@@ -1,20 +1,27 @@
 package {
 
+	import com.adobe.images.PNGEncoder;
+	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.utils.getTimer;
 	
+	import ide.plugins.groups.particles.lifetime.LifetimeData;
+	
 	import monkey.core.base.Object3D;
+	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.scene.Scene3D;
 	import monkey.core.scene.Viewer3D;
 	import monkey.core.utils.FPSStats;
+	import monkey.core.utils.UUID;
 	import monkey.loader.ParticleLoader;
 
 	public class Test_Particles extends Sprite {
 		
-		[Embed(source="../assets/test_06/test_optimize.particle", mimeType="application/octet-stream")]
+		[Embed(source="../assets/test_08/test_08_optimize.particle", mimeType="application/octet-stream")]
+//		[Embed(source="../assets/test_06/test_optimize.particle", mimeType="application/octet-stream")]
 		private var DATA  : Class;
 		
 		private var scene : Scene3D;
@@ -28,25 +35,37 @@ package {
 			this.stage.addChild(new FPSStats());
 			
 			this.scene = new Viewer3D(this);
-			this.scene.camera.transform.z = -500;
+			this.scene.camera.transform.z = -50;
 			this.scene.autoResize = true;
 			
-			var loader : ParticleLoader = new ParticleLoader();
-			loader.loadBytes(new DATA());
-			loader.addEventListener(Event.COMPLETE, loadComplete);	
+			var particle : ParticleSystem = new ParticleSystem();
+			particle.init();
+			particle.build();
+			particle.play();
 			
-			this.scene.addChild(loader);
+			var data : LifetimeData = new LifetimeData();
+			data.init();
+			particle.userData.lifetime  = data;
+			particle.userData.uuid 		= UUID.generate();		
+			particle.userData.imageData = PNGEncoder.encode(particle.image);
+			particle.userData.imageName = "default_image";
 			
-			this.scene.addEventListener(Scene3D.PRE_RENDER_EVENT, function(e:Event):void{
-				loader.transform.x = Math.sin(getTimer() / 5000) * 100;
-				loader.transform.y = Math.cos(getTimer() / 5000) * 100;
-			});
+			this.scene.addChild(particle);
 			
+//			var loader : ParticleLoader = new ParticleLoader();
+//			loader.loadBytes(new DATA());
+//			loader.addEventListener(Event.COMPLETE, loadComplete);	
+//			
+//			this.scene.addChild(loader);
+//			
+//			this.scene.addEventListener(Scene3D.PRE_RENDER_EVENT, function(e:Event):void{
+//				loader.transform.x = Math.sin(getTimer() / 5000) * 100;
+//				loader.transform.y = Math.cos(getTimer() / 5000) * 100;
+//			});
 		}
 		
 		protected function loadComplete(event:Event) : void {
 			var p : Object3D = event.target as ParticleLoader;
-			
 			var num : int = 10;
 			for (var i:int = 0; i < num; i++) {
 				for (var j:int = 0; j < num; j++) {

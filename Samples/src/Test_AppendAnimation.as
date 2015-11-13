@@ -3,8 +3,8 @@ package {
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
-	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTriangleFace;
+	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -16,7 +16,6 @@ package {
 	import monkey.core.animator.Animator;
 	import monkey.core.animator.Label3D;
 	import monkey.core.base.Object3D;
-	import monkey.core.materials.Material3D;
 	import monkey.core.materials.SkeDifQuatMaterial;
 	import monkey.core.renderer.SkeletonRenderer;
 	import monkey.core.scene.Scene3D;
@@ -64,7 +63,7 @@ package {
 			this.stage.addChild(new FPSStats());
 			
 			this.scene = new Viewer3D(this);
-			this.scene.camera.transform.z = -500;
+			this.scene.camera.transform.z = -1500;
 			this.scene.camera.transform.lookAt(0, 0, 0);
 			this.scene.autoResize = true;
 			
@@ -119,7 +118,7 @@ package {
 						
 			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		}
-		
+				
 		protected function onKeyDown(event:KeyboardEvent) : void {
 			if (this.keyMap[event.keyCode]) {
 				this.akali.animator.gotoAndPlay(this.keyMap[event.keyCode]);

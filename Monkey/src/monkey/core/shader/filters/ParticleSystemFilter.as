@@ -271,7 +271,7 @@ package monkey.core.shader.filters {
 				code += "mul " + vt3 + ".xyz, " + vt3 + ".xyz, " + vtKey + ".y \n";
 				code += "add " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt3 + ".xyz \n";
 				code += "mul " + vt2 + ".xyz, " + vt2 + ".xyz, " + timeVa + ".y \n";
-				code += "div " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt2 + ".w \n";
+//				code += "div " + vt2 + ".xyz, " + vt2 + ".xyz, " + vt2 + ".w \n";
 				// 速度 * 时间
 				code += "mul " + vt3 + ".xyz, " + speedVa + ".xyz, " + vtTime + ".x \n";
 				// lifetime位移 + 速度 * 时间 + offset
