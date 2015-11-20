@@ -165,7 +165,7 @@ package ide.plugins.groups.properties {
 		
 		private function updateWater() : void {
 			this._width.value 			= _water.width;
-			this._height.height 		= _water.height;
+			this._height.value 			= _water.height;
 			this._segment.value 		= _water.segment;
 			this._speed.value 			= _water.waterSpeed;
 			this._wave.value 			= _water.waterWave;
