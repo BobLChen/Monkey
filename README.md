@@ -28,7 +28,7 @@ Monkey同级目录有一个Samples目录。该目录为FlashBuild工程文件，
 
 ### Play Animation
 
-<img src="http://boblchen.github.io/samples/Monkey/fbx2.png"></img>
+<img src="http://boblchen.github.io/samples/Monkey/fbx3.png"></img>
 
 ## Water
 
