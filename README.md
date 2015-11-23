@@ -63,7 +63,7 @@ Monkey同级目录有一个Samples目录。该目录为FlashBuild工程文件，
 <img src="http://boblchen.github.io/samples/Monkey/particle7.jpg"></img>
 
 ### Shape With Sphere
-<img src="http://boblchen.github.io/samples/Monkey/particle8.jpg"></img>
+<img src="http://boblchen.github.io/samples/Monkey/particle8.png"></img>
 
 ### Curve With Init
 <img src="http://boblchen.github.io/samples/Monkey/particle9.jpg"></img>
