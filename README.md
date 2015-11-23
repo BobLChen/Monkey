@@ -17,7 +17,56 @@ flash3d stage3d
 ## 例子
 Monkey同级目录有一个Samples目录。该目录为FlashBuild工程文件，直接导入即可。Samples需要链接Monkey/Src目录。
 
-## 正在开发中
+## Import FBX
 
-<img src="http://boblchen.github.io/samples/ide.png"></img>
+<img src="http://boblchen.github.io/samples/Monkey/fbx0.png"></img>
+<img src="http://boblchen.github.io/samples/Monkey/fbx1.png"></img>
 
+### Import FBX With Animation
+
+<img src="http://boblchen.github.io/samples/Monkey/fbx2.png"></img>
+
+### Play Animation
+
+<img src="http://boblchen.github.io/samples/Monkey/fbx2.png"></img>
+
+## Water
+
+<img src="http://boblchen.github.io/samples/Monkey/water.png"></img>
+
+## SkyBox
+
+<img src="http://boblchen.github.io/samples/Monkey/sky.png"></img>
+
+## ParticleSystem
+
+### Fire
+<img src="http://boblchen.github.io/samples/Monkey/particle0.png"></img>
+
+### Gradient Color
+<img src="http://boblchen.github.io/samples/Monkey/particle1.jpg"></img>
+
+### Curve Edit
+<img src="http://boblchen.github.io/samples/Monkey/particle2.jpg"></img>
+
+### Scale
+<img src="http://boblchen.github.io/samples/Monkey/particle3.jpg"></img>
+
+### Particle With Mesh
+<img src="http://boblchen.github.io/samples/Monkey/particle4.png"></img>
+
+### Shape With Mesh
+<img src="http://boblchen.github.io/samples/Monkey/particle5.jpg"></img>
+<img src="http://boblchen.github.io/samples/Monkey/particle6.jpg"></img>
+
+### Shape With Cone
+<img src="http://boblchen.github.io/samples/Monkey/particle7.jpg"></img>
+
+### Shape With Sphere
+<img src="http://boblchen.github.io/samples/Monkey/particle8.jpg"></img>
+
+### Curve With Init
+<img src="http://boblchen.github.io/samples/Monkey/particle9.jpg"></img>
+
+### Burst
+<img src="http://boblchen.github.io/samples/Monkey/particle10.jpg"></img>
