@@ -52,9 +52,13 @@ package monkey.core.collisions {
 				{
 					continue;
 				}
-				
 				// 转换起点和方向到模型local空间
 				collider.object3D.transform.globalToLocal(from, RayFrom);
+				// 测试碰撞体中心点与起点之间的距离，如果之间的距离大于碰撞体半径,则无法碰撞
+				var rad : Number = Vector3DUtils.length(RayFrom, collider.mesh.bounds.center);
+				if (rad > collider.mesh.bounds.radius) {
+					continue;
+				}
 				collider.object3D.transform.globalToLocalVector(dir, RayDir);
 				RayDir.normalize();
 				// 遍历所有的surface
