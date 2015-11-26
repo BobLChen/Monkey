@@ -12,6 +12,7 @@ package ide {
 	
 	import ide.help.Selection;
 	
+	import monkey.core.collisions.MouseCollision;
 	import monkey.core.scene.Scene3D;
 	
 	import ui.core.Undo;
@@ -19,7 +20,7 @@ package ide {
 	import ui.core.interfaces.IPlugin;
 
 	public class App extends EventDispatcher {
-
+		
 		private static var _instance : App;
 
 		public var stage : Stage; 						// stage
@@ -33,7 +34,8 @@ package ide {
 		private var _scene 		: Scene3D; 				// scene
 		private var _selection 	: Selection;			// selection
 		private var _menu 		: NativeMenu; 			// menu
-		private var _studio 	: Studio;
+		private var _studio 	: Studio;				// studio
+		private var _mouse		: MouseCollision;		// mouse
 				
 		public function App(studio : Studio) {
 			if (_instance != null) {
@@ -51,6 +53,14 @@ package ide {
 			this._undo.addEventListener(UndoEvent.UNDO, this.dispatchEvent);
 			this._undo.addEventListener(UndoEvent.REDO, this.dispatchEvent);
 			this._studio.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		}
+		
+		public function get mouse():MouseCollision {
+			return _mouse;
+		}
+
+		public function set mouse(value:MouseCollision):void {
+			_mouse = value;
 		}
 
 		/**

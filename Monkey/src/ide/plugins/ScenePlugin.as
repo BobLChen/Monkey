@@ -73,7 +73,7 @@ package ide.plugins {
 			this.antialias 		= 4;
 			this.autoResize 	= false;
 			this.background		= new Color(0x505050);
-			this.addEventListener(Event.CONTEXT3D_CREATE, contextCreateEvent);
+			this.addEventListener(Event.CONTEXT3D_CREATE, 	 contextCreateEvent);
 			this.addEventListener(Scene3D.POST_RENDER_EVENT, onPostRender);
 		}
 		
@@ -127,6 +127,7 @@ package ide.plugins {
 		
 		public function init(app : App) : void {
 			this._app = app;
+			this._app.mouse = mouse;
 			this._app.scene = this;
 			this._app.studio.scene.addPanel(this._scenePanel);
 			this._app.studio.scene.open();

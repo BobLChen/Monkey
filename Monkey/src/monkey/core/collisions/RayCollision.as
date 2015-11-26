@@ -56,7 +56,7 @@ package monkey.core.collisions {
 				collider.object3D.transform.globalToLocal(from, RayFrom);
 				// 测试碰撞体中心点与起点之间的距离，如果之间的距离大于碰撞体半径,则无法碰撞
 				var rad : Number = Vector3DUtils.length(RayFrom, collider.mesh.bounds.center);
-				if (rad > collider.mesh.bounds.radius) {
+				if (rad > collider.mesh.bounds.radius + distance) {
 					continue;
 				}
 				collider.object3D.transform.globalToLocalVector(dir, RayDir);

@@ -18,9 +18,16 @@ package monkey.core.components {
 		public static const ENABLE_EVENT 	: String = "Component3D:ENABLE";
 		/** disable */
 		public static const DISABLE_EVENT   : String = "Component3D:DISABLE";
+		/** 添加到object */
+		public static const ADD_EVENT		: String = "Component3D:ADD";
+		/** 从object中移除 */
+		public static const REMOVE_EVENT	: String = "Component3D:REMOVE";
+		
 		// 事件
 		private static const enableEvent    : Event = new Event(ENABLE_EVENT);
 		private static const disableEvent   : Event = new Event(DISABLE_EVENT);
+		private static const addEvent		: Event = new Event(ADD_EVENT);
+		private static const removeEvent	: Event = new Event(REMOVE_EVENT);
 		
 		protected var _object3D : Object3D;	// object3d
 		protected var _enable   : Boolean;	// 是否启用
@@ -47,6 +54,9 @@ package monkey.core.components {
 		 */		
 		public function onAdd(master : Object3D) : void {
 			this._object3D = master;
+			if (this.hasEventListener(ADD_EVENT)) {
+				this.dispatchEvent(addEvent);
+			}
 		}
 		
 		/**
@@ -55,7 +65,7 @@ package monkey.core.components {
 		 * 
 		 */		
 		public function onOtherComponentAdd(component : IComponent) : void {
-
+			
 		}
 		
 		/**
@@ -64,7 +74,7 @@ package monkey.core.components {
 		 * 
 		 */		
  		public function onOtherComponentRemove(component : IComponent) : void {
-
+			
 		}
 
 		/**
@@ -74,6 +84,9 @@ package monkey.core.components {
 		 */		
 		public function onRemove(master : Object3D) : void {
 			this._object3D = null;
+			if (this.hasEventListener(REMOVE_EVENT)) {
+				this.dispatchEvent(removeEvent);
+			}
 		}
 		
 		/**
