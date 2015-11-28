@@ -100,7 +100,8 @@ package ide.plugins {
 			stream.position = 0;
 			var bytes : ByteArray = new ByteArray();
 			stream.readBytes(bytes, 0, stream.bytesAvailable);
-			onImport(bytes, file.name, type);
+			onImport(bytes, file.name, file.nativePath, type);
+			stream.close();
 			App.core.dispatchEvent(new LogEvent("file:" + file.nativePath));
 		}
 		
@@ -109,7 +110,15 @@ package ide.plugins {
 			readFile(file);
 		}		
 						
-		private static function onImport(data : ByteArray, name : String, type : String) : void {
+		/**
+		 *  
+		 * @param data	文件数据
+		 * @param name	文件名称
+		 * @param patn	文件路径
+		 * @param type	文件类型
+		 * 
+		 */		
+		private static function onImport(data : ByteArray, name : String, path : String, type : String) : void {
 			if (!_utils[type] || !data) {
 				return;
 			}
@@ -117,6 +126,7 @@ package ide.plugins {
 			var obj  : Object3D = func(name, data);
 			if (obj) {
 				obj.name = name;
+				obj.userData.path = path;
 				_app.scene.addChild(obj);
 				_app.selection.objects = [obj];
 			}

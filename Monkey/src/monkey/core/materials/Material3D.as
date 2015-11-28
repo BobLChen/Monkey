@@ -22,6 +22,8 @@ package monkey.core.materials {
 		public static const BLEND_SCREEN 		: String = 'BLEND_SCREEN';
 		public static const BLEND_ALPHA 		: String = 'BLEND_ALPHA';
 		
+		public var userData : Object = {};
+		
 		protected var _sourceFactor	: String;								// 混合模式
 		protected var _destFactor	: String;								// 混合模式
 		protected var _depthWrite 	: Boolean;								// 开启深度

@@ -296,7 +296,10 @@
 					material[acc.@name].dispose();
 					material[acc.@name] = new Bitmap2DTexture(bmp);
 					material[acc.@name].upload(app.scene);
+					material.userData[acc.@name + "path"] = file.file.nativePath;
+					material.userData[acc.@name + "name"] = file.file.name;
 					image.source = bmp;
+					trace(acc.@name);
 				});
 			});
 			
@@ -333,6 +336,6 @@
 			content.maxHeight += 25;
 			content.minHeight += 25;
 		}
-				
+		
 	}
 }

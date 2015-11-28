@@ -48,7 +48,7 @@ package ide.plugins {
 			if (event.level == LogEvent.NORMAL) {
 				msg += "<font color='#207020'>" + event.log + "</font> \n";
 			} else if (event.level == LogEvent.ERROR) {
-				msg += "<font color='#ff8080'>" + event.log + "</font> \n";
+				msg += "<font color='#FF0000'>" + event.log + "</font> \n";
 			} else {
 				msg += "<font color='#907020'>" + event.log + "</font> \n";
 			}
