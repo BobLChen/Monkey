@@ -10,6 +10,7 @@
 	import monkey.core.entities.particles.ParticleSystem;
 	import monkey.core.light.Light3D;
 	import monkey.core.scene.Scene3D;
+	import monkey.navmesh.NavigationMesh;
 	
 	import ui.core.Style;
 	import ui.core.controls.Control;
@@ -54,7 +55,9 @@
 			this.maxHeight = 18;
 			this.arrow.transform.colorTransform = Style.colorTransform;
 			
-			if (pivot is ParticleSystem) {
+			if (pivot is NavigationMesh) {
+				this.icon.gotoAndStop(8);
+			} else if (pivot is ParticleSystem) {
 				this.icon.gotoAndStop(7);
 			} else if (pivot.renderer) {
 				this.icon.gotoAndStop(1);

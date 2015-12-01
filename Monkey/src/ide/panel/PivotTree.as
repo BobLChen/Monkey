@@ -94,11 +94,6 @@
 						this.createItems(child, level + 1);
 					}
 				}
-//				if (pivot is Mesh3D) {
-//					if (Mesh3D(pivot).render is SkeletonRender) {
-//						this.createItems(SkeletonRender(Mesh3D(pivot).render).rootBone, level + 1);
-//					}
-//				}
 			} else {
 				item.arrow.rotation = 0;
 			}

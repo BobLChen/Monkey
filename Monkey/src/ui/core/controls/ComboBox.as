@@ -182,7 +182,9 @@
 			menu.display(view.stage, position.x, position.y);
 			setTimeout(function() : void {
 				_lock = false;
-				view.stage.focus = view;
+				if (view.stage) {
+					view.stage.focus = view;
+				}
 			}, 500);
 		}
 		
