@@ -296,6 +296,7 @@ package ide.plugins {
 		 */		
 		public static function openParticle(name : String, bytes : ByteArray) : Object3D {
 			var loader : ParticleLoader = new ParticleLoader("");
+			loader.name = name;
 			loader.loadBytes(bytes);
 			loader.addEventListener(Event.COMPLETE, function(e : Event):void{
 				loader.forEach(function(particle : ParticleSystem):void{
@@ -315,11 +316,8 @@ package ide.plugins {
 					data.size     = convert2Linears(value.size);
 					data.lifetime = value.lifetime;
 					particle.userData.lifetime = data;
-					
 				}, ParticleSystem);
-				loader.parent = null;
-				App.core.scene.addChild(loader.particles);
-				App.core.selection.objects = [loader.particles];
+				App.core.selection.objects = [loader];
 				App.core.dispatchEvent(new SceneEvent(SceneEvent.CHANGE));
 			});
 			return loader;

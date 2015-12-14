@@ -228,103 +228,111 @@ package monkey.navmesh {
 		 * @return
 		 *
 		 */
-		public function findWayPoint(path : Array, startPos : Vector3D, stopPos : Vector3D) : Array {
-
+		public function findWayPoint(path : Array, satpos : Vector3D, endpos : Vector3D) : Array {
 			var wayPoints : Array = [];
-
 			if (path.length == 0) {
 				return wayPoints;
 			}
-
-			var end : Point = new Point(stopPos.x, stopPos.z);
-			var start : Point = new Point(startPos.x, startPos.z);
-			
-			wayPoints.push(startPos);
-			
+			var end : Point = new Point(endpos.x, endpos.z);
+			var sat : Point = new Point(satpos.x, satpos.z);
+			wayPoints.push(satpos);
+			// 路径长度为1
 			if (path.length == 1) {
-				wayPoints.push(stopPos);
+				wayPoints.push(endpos);
 				return wayPoints;
 			}
-			
-			var i : int = 0;
-			var wayP : WayPoint = new WayPoint(path[0], start);
-			while (!wayP.point.equals(end)) {
-				wayP = this.getFurthestWayPoint(wayP, path, end);
-				var point : Vector3D = new Vector3D(wayP.point.x, wayP.cell.plane.getY(wayP.point.x, wayP.point.y), wayP.point.y);
-				wayPoints.push(point);
-				i++;
-				if (i >= MAX_TRY) {
-					break;
+			// 开始搜寻拐点
+			var cel : NavigationCell = path[0];
+			var sid : Line2D = cel.side[cel.arrivalWall];
+			var sp2 : Point  = new Point(satpos.x, satpos.z);	
+			var la	: Line2D = new Line2D(sp2, sid.pa);
+			var lb	: Line2D = new Line2D(sp2, sid.pb);
+			var va	: Vector3D = cel.vertives[cel.arrivalWall];
+			var vb  : Vector3D = cel.vertives[(cel.arrivalWall + 1) % 3];
+			var ta  : Vector3D = null;
+			var tb  : Vector3D = null;
+			var mid	: Vector3D = new Vector3D();
+			var pa  : Point  = null;
+			var pb  : Point  = null;
+			// 遍历所有的路径
+			for (var i:int = 0; i < path.length; i++) {
+				cel = path[i];
+				sid = cel.side[cel.arrivalWall];
+				pa  = sid.pa;
+				pb  = sid.pb;
+				ta	= cel.vertives[cel.arrivalWall];
+				tb	= cel.vertives[(cel.arrivalWall + 1) % 3];
+				if (i == path.length - 1) {
+					pa = new Point(endpos.x, endpos.z);
+					pb = new Point(endpos.x, endpos.z);
+					ta = endpos;
+					tb = endpos;
+				}
+				// 是否共点，左直线和右直线都与穿出边共点
+				if (la.pb.equals(pa) && lb.pb.equals(pb)) {
+					continue;
+				}
+				// 左点在直线左侧，或者点在直线上面,就需要检测右点与该直线之间的关系
+				if (la.classifyPoint(pa) != Line2D.RIGHT_SIDE) {
+					// 如果右点在左直线上面或者在左直线左侧，则视为一个拐点。如果右点在左直线右侧，则无视，视为正常流程
+					if (la.classifyPoint(pb) != Line2D.RIGHT_SIDE) {
+						wayPoints.push(va.clone());
+						sp2 = new Point(va.x, va.z);
+						va  = ta;
+						vb  = tb;
+						la  = new Line2D(sp2, pa);
+						lb  = new Line2D(sp2, pb);
+						continue;
+					}
+				} else {
+					// 检测左点是否在右直线上或者右侧
+					if (lb.classifyPoint(pa) != Line2D.LEFT_SIDE) {
+						wayPoints.push(vb.clone());
+						sp2 = new Point(vb.x, vb.z);
+						va  = ta;
+						vb  = tb;
+						la  = new Line2D(sp2, pa);
+						lb  = new Line2D(sp2, pb);
+						continue;
+					} else {
+						la.pb = pa;				
+						va = ta;
+					}
+				}
+				// 右点在直线右侧，或者点在直线上面,就需要检测左点与该直线之间的关系
+				if (lb.classifyPoint(pb) != Line2D.LEFT_SIDE) {
+					// 如果左点在右直线上面或者右侧，则视为一个拐点。
+					if (lb.classifyPoint(pa) != Line2D.LEFT_SIDE) {
+						wayPoints.push(vb.clone());
+						sp2 = new Point(vb.x, vb.z);
+						va  = ta;
+						vb  = tb;
+						la  = new Line2D(sp2, pa);
+						lb  = new Line2D(sp2, pb);
+						continue;
+					}
+				} else {
+					// 检测右点是否在左直线上或者左侧
+					if (la.classifyPoint(pb) != Line2D.RIGHT_SIDE) {
+						wayPoints.push(va.clone());
+						sp2 = new Point(va.x, va.z);
+						va  = ta;
+						vb  = tb;
+						la  = new Line2D(sp2, pa);
+						lb  = new Line2D(sp2, pb);
+						continue;
+					} else {
+						lb.pb = pb;
+						vb = tb;
+					}
 				}
 			}
-			
+			ta = wayPoints[wayPoints.length - 1];
+			if (!ta.equals(endpos)) {
+				wayPoints.push(endpos);
+			}
 			return wayPoints;
 		}
 		
-		/**
-		 * 获取一个拐点 
-		 * @param wayPoint
-		 * @param cellPath
-		 * @param end
-		 * @return 
-		 * 
-		 */		
-		private function getFurthestWayPoint(wayPoint : WayPoint, cellPath : Array, end : Point) : WayPoint {
-			
-			//当前所在路径点
-			var startPt : Point = wayPoint.point; 
-			var cell : NavigationCell = wayPoint.cell;
-			var lastCell : NavigationCell = cell;
-			//开始路点所在的网格索引
-			var startIndex : int = cellPath.indexOf(cell); 
-			//路径线在网格中的穿出边
-			var outSide : Line2D = cell.side[cell.arrivalWall]; 
-			var lastPtA : Point = outSide.pa;
-			var lastPtB : Point = outSide.pb;
-			var lastLineA : Line2D = new Line2D(startPt, lastPtA);
-			var lastLineB : Line2D = new Line2D(startPt, lastPtB);
-			var testPtA : Point, testPtB : Point; //要测试的点
-
-			for (var i : int = startIndex + 1; i < cellPath.length; i++) {
-				cell = cellPath[i];
-				outSide = cell.side[cell.arrivalWall];
-
-				if (i == cellPath.length - 1) {
-					testPtA = end;
-					testPtB = end;
-				} else {
-					testPtA = outSide.pa;
-					testPtB = outSide.pb;
-				}
-
-				if (!lastPtA.equals(testPtA)) {
-					if (lastLineB.classifyPoint(testPtA, EPSILON) == Line2D.RIGHT_SIDE) {
-						//路点
-						return new WayPoint(lastCell, lastPtB);
-					} else {
-						if (lastLineA.classifyPoint(testPtA, EPSILON) != Line2D.LEFT_SIDE) {
-							lastPtA = testPtA;
-							lastCell = cell;
-							lastLineA.pb = lastPtA;
-						}
-					}
-				}
-				
-				if (!lastPtB.equals(testPtB)) {
-					if (lastLineA.classifyPoint(testPtB, EPSILON) == Line2D.LEFT_SIDE) {
-						return new WayPoint(lastCell, lastPtA);
-					} else {
-						if (lastLineB.classifyPoint(testPtB, EPSILON) != Line2D.RIGHT_SIDE) {
-							lastPtB = testPtB;
-							lastCell = cell;
-							lastLineB.pb = lastPtB;
-						}
-					}
-				}
-			}
-			
-			return new WayPoint(cellPath[cellPath.length - 1], end);
-		}
-
 	}
 }

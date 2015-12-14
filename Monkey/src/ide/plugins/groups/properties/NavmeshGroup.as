@@ -1,12 +1,12 @@
 package ide.plugins.groups.properties {
 	
+	import flash.display3D.Context3DCompareMode;
 	import flash.events.Event;
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
 	
 	import ide.App;
 	import ide.events.LogEvent;
-	import ide.events.SceneEvent;
 	
 	import monkey.core.base.Object3D;
 	import monkey.core.collisions.CollisionInfo;
@@ -15,6 +15,7 @@ package ide.plugins.groups.properties {
 	import monkey.core.entities.primitives.Capsule;
 	import monkey.core.materials.ColorMaterial;
 	import monkey.core.renderer.MeshRenderer;
+	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Input3D;
 	import monkey.navmesh.NavigationCell;
@@ -40,6 +41,7 @@ package ide.plugins.groups.properties {
 		private var endCell 	: NavigationCell;
 		private var endPos 		: Vector3D = new Vector3D();
 		private var pathLine 	: Lines3D  = new Lines3D();
+		private var pathMesh	: PathMesh = new PathMesh();
 		private var sx 			: Spinner;
 		private var sy 			: Spinner;
 		private var sz 			: Spinner;
@@ -62,6 +64,7 @@ package ide.plugins.groups.properties {
 			this.endRole.name = "EndRole";
 			this.endRole.addComponent(new MeshRenderer(new Capsule(0.3, 1, 12), new ColorMaterial(new Color(0x00FF00))));
 			this.pathLine.name = "PathLine";
+			this.pathLine.renderer.material.depthCompare = Context3DCompareMode.ALWAYS;
 			
 			this.layout.labelWidth = 55;
 			this.layout.addHorizontalGroup("Start:");
@@ -105,14 +108,22 @@ package ide.plugins.groups.properties {
 			if (app.selection.main is NavigationMesh) {
 				this.app = app;
 				this.navMesh = app.selection.main as NavigationMesh;
-				this.navMesh.addChild(startRole);
-				this.navMesh.addChild(endRole);
-				this.navMesh.addChild(pathLine);
 				this.mouse.addCollisionWith(this.navMesh);
-				this.app.addEventListener(SceneEvent.UPDATE_EVENT, this.updateEvent, false, -1000);
+				this.app.scene.addEventListener(Scene3D.PRE_RENDER_EVENT, 	updateEvent);
+				this.app.scene.addEventListener(Scene3D.POST_RENDER_EVENT, 	onPostRender);
 				return true;
+			} else {
+				app.scene.removeEventListener(Scene3D.PRE_RENDER_EVENT, 	updateEvent);
+				app.scene.removeEventListener(Scene3D.POST_RENDER_EVENT,	onPostRender);
 			}
 			return false;
+		}
+		
+		protected function onPostRender(event:Event) : void {
+			this.pathMesh.draw(app.scene);
+			this.startRole.draw(app.scene);
+			this.endRole.draw(app.scene);
+			this.pathLine.draw(app.scene);
 		}
 		
 		protected function updateEvent(event:Event) : void {
@@ -156,9 +167,21 @@ package ide.plugins.groups.properties {
 						var path 	 : Array = navMesh.findPath(startPos, startCell, endPos, endCell);
 						var wayPoint : Array = navMesh.findWayPoint(path, startPos, endPos);
 						app.dispatchEvent(new LogEvent("寻路消耗时间：" + (getTimer() - t) + "毫秒"));
-						// 绘制路点
+						
 						pathLine.clear();
 						pathLine.lineStyle(1, 0xff00ff);
+						pathMesh.clear();
+						for each(var node : NavigationCell in path) {
+							pathMesh.addPloy(node.vertives[0], node.vertives[1], node.vertives[2]);
+							var v0 : Vector3D = node.vertives[node.arrivalWall];
+							var v1 : Vector3D = node.vertives[(node.arrivalWall + 1) % 3];
+							pathLine.moveTo(v0.x, v0.y, v0.z);
+							pathLine.lineTo(v1.x, v1.y, v1.z);
+						}
+												
+						// 绘制路点
+//						pathLine.clear();
+						pathLine.lineStyle(2, 0xFF0000);
 						pathLine.moveTo(startPos.x, startPos.y, startPos.z);
 						app.dispatchEvent(new LogEvent("路点(起点)：" + startPos.x + "," + startPos.y + "," + startPos.z));
 						for each (var p : Vector3D in wayPoint) {
@@ -175,4 +198,55 @@ package ide.plugins.groups.properties {
 		}
 		
 	}
+}
+import flash.geom.Vector3D;
+
+import monkey.core.base.Object3D;
+import monkey.core.base.Surface3D;
+import monkey.core.entities.Mesh3D;
+import monkey.core.materials.ColorMaterial;
+import monkey.core.renderer.MeshRenderer;
+import monkey.core.utils.Color;
+
+class PathMesh extends Object3D {
+	
+	private var mesh : Mesh3D;
+	private var mat  : ColorMaterial;
+	private var surf : Surface3D;
+	
+	public function PathMesh() : void {
+		super();	
+		this.name = "path_mesh";
+		this.surf = new Surface3D();
+		this.mesh = new Mesh3D([surf]);
+		this.surf.setVertexVector(Surface3D.POSITION, Vector.<Number>([
+			0, 	0, 	0,
+			0,	0,	0,
+			0,	0,	0
+		]), 3);
+		this.surf.indexVector = new Vector.<uint>();
+		this.surf.indexVector.push(0, 1, 2);
+		this.mat  = new ColorMaterial(Color.GREEN);
+		this.addComponent(new MeshRenderer(mesh, mat));
+		this.setLayer(999999);
+	}
+	
+	public function clear() : void {
+		this.mesh.download(true);
+		this.surf.setVertexVector(Surface3D.POSITION, new Vector.<Number>(), 3);		
+		this.surf.indexVector = new Vector.<uint>();
+	}
+	
+	public function addPloy(v0 : Vector3D, v1 : Vector3D, v2 : Vector3D) : void {
+		this.surf.getVertexVector(Surface3D.POSITION).push(
+			v0.x, v0.y, v0.z,
+			v1.x, v1.y, v1.z,
+			v2.x, v2.y, v2.z
+		);
+		var idx : int = this.surf.indexVector.length;
+		this.surf.indexVector.push(idx, idx + 1, idx + 2);
+		this.surf.updateBoundings();
+		this.mesh.bounds = null;
+	}
+	
 }
