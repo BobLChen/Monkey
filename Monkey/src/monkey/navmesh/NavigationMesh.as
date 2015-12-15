@@ -49,7 +49,7 @@ package monkey.navmesh {
 				v0.setTo(vertices[px], vertices[(px + 1)], vertices[(px + 2)]);
 				v1.setTo(vertices[py], vertices[(py + 1)], vertices[(py + 2)]);
 				v2.setTo(vertices[pz], vertices[(pz + 1)], vertices[(pz + 2)]);
-				this.addCell(v0, v1, v2);
+				this.addCell(v2, v1, v0);
 			}
 			this.linkCells();
 			this.addComponent(new MeshRenderer(this._mesh, new ColorMaterial(new Color(0xFFCB00))));
@@ -241,7 +241,6 @@ package monkey.navmesh {
 			var mid	: Vector3D = new Vector3D();
 			var pl  : Point  = null;
 			var pr  : Point  = null;
-			var tk  : Boolean = false;
 			// 遍历所有的路径
 			for (var i:int = 0; i < path.length; i++) {
 				cel = path[i];
@@ -256,16 +255,6 @@ package monkey.navmesh {
 					ta = endpos;
 					tb = endpos;
 				}
-				if (tk) {
-					var t0 : Point = pl;
-					pl = pr;
-					pr = t0;
-					var t1 : Vector3D = ta;
-					ta = tb;
-					tb = ta;
-				}
-				tk = !tk;
-				
 				// 是否共点，左直线和右直线都与穿出边共点
 				if (ll.pb.equals(pl) && lr.pb.equals(pr)) {
 					continue;
