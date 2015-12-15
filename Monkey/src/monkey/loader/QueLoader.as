@@ -14,59 +14,90 @@ package monkey.loader {
 	 */	
 	public class QueLoader extends EventDispatcher implements IQueLoader {
 		
-		private var _queues 	 : Vector.<IQueLoader>;		// 加载队列
-		private var _loaded		 : Boolean;					// 是否已经加载完成
-		private var _loading	 : Boolean;					// 正在载入
-		private var _bytesLoaded : uint;
-		private var _bytesTotal  : uint;
-		private var _closed		 : Boolean;
-		private var _current	 : IQueLoader;
+		protected var _queues 	   : Vector.<IQueLoader>;		// 加载队列
+		protected var _loaded	   : Boolean;					// 是否已经加载完成
+		protected var _loading	   : Boolean;					// 正在载入
+		protected var _bytesLoaded : uint;
+		protected var _bytesTotal  : uint;
+		protected var _closed	   : Boolean;
+		protected var _current	   : IQueLoader;
 		
 		public function QueLoader() {
-			this._queues = new Vector.<IQueLoader>();
+			this._queues  = new Vector.<IQueLoader>();
 			this._loading = false;
 			this._closed  = false;
+			this._loaded  = false;
 		}
 		
+		/**
+		 * 载入队列 
+		 * @return 
+		 * 
+		 */		
 		public function get queues():Vector.<IQueLoader> {
 			return _queues;
 		}
-
+		
+		/**
+		 * 压入一个 
+		 * @param item
+		 * 
+		 */		
 		public function push(item : IQueLoader) : void {
 			this._queues.push(item);
 		}
 		
+		/**
+		 *  载入
+		 */		
 		public function load() : void {
 			if (this._loading || this._closed) {
 				return;
 			}
 			var item : IQueLoader = this._queues.pop();
 			if (!item) {
-				this._loaded = true;
-				this._closed = true;
-				this.dispatchEvent(new Event(Event.COMPLETE));
+				this.allComplete();
 				return;
 			}
 			this._loading = true;
 			this._current = item;
-			item.addEventListener(Event.COMPLETE, 			onComplete);
-			item.addEventListener(ProgressEvent.PROGRESS, 	onProgress);
-			item.addEventListener(IOErrorEvent.IO_ERROR,  	onComplete);
+			item.addEventListener(Event.COMPLETE, 			onItemComplete);
+			item.addEventListener(ProgressEvent.PROGRESS, 	onItemProgress);
+			item.addEventListener(IOErrorEvent.IO_ERROR,  	onItemComplete);
 			item.load();
 		}
 		
-		private function onProgress(e : ProgressEvent) : void {
+		/**
+		 * 所有的都载入完成 
+		 */		
+		protected function allComplete() : void {
+			this._loaded = true;
+			this._closed = true;
+			this.dispatchEvent(new Event(Event.COMPLETE));			
+		}
+		
+		/**
+		 * 载入进度 
+		 * @param e
+		 * 
+		 */		
+		protected function onItemProgress(e : ProgressEvent) : void {
 			this._bytesLoaded = e.bytesLoaded;
 			this._bytesTotal  = e.bytesTotal;
 			this.dispatchEvent(e);
 		}
 		
-		private function onComplete(e : Event) : void {
+		/**
+		 * 载入完成 
+		 * @param e
+		 * 
+		 */		
+		protected function onItemComplete(e : Event) : void {
 			this._loading = false;
 			var item : IQueLoader = e.target as IQueLoader;
-			item.removeEventListener(Event.COMPLETE, 			onComplete);
-			item.removeEventListener(ProgressEvent.PROGRESS, 	onProgress);
-			item.removeEventListener(IOErrorEvent.IO_ERROR,  	onComplete);
+			item.removeEventListener(Event.COMPLETE, 			onItemComplete);
+			item.removeEventListener(ProgressEvent.PROGRESS, 	onItemProgress);
+			item.removeEventListener(IOErrorEvent.IO_ERROR,  	onItemComplete);
 			if (e is IOErrorEvent) {
 				this.dispatchEvent(e);
 				this.dispatchEvent(new QueLoaderEvent(item, QueLoaderEvent.QUEUE_ITEM_IO_ERROE));	
@@ -76,6 +107,9 @@ package monkey.loader {
 			this.load();
 		}
 		
+		/**
+		 * 关闭链接 
+		 */		
 		public function close():void {
 			if (this._closed) {
 				return;
@@ -86,14 +120,29 @@ package monkey.loader {
 			this._closed = true;
 		}
 		
+		/**
+		 * 已经载入了多少 
+		 * @return 
+		 * 
+		 */		
 		public function get bytesLoaded():uint {
 			return _bytesLoaded;
 		}
 		
+		/**
+		 * 总量 
+		 * @return 
+		 * 
+		 */		
 		public function get bytesTotal():uint {
 			return _bytesTotal;
 		}
 		
+		/**
+		 * 是否载入完成 
+		 * @return 
+		 * 
+		 */		
 		public function get loaded():Boolean {
 			return _loaded;
 		}

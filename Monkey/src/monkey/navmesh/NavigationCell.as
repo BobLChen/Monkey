@@ -67,7 +67,7 @@ package monkey.navmesh {
 		}
 		
 		/**
-		 * 穿出边 
+		 * 穿入边 
 		 * @param value
 		 * 
 		 */		

@@ -240,8 +240,12 @@ package monkey.core.entities {
 				this.initWater();
 				return;
 			}
-			this,updateWave();
 			super.draw(scene, includeChildren);
+		}
+		
+		override public function update(includeChildren:Boolean):void {
+			super.update(includeChildren);
+			this,updateWave();
 		}
 		
 		/**

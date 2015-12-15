@@ -158,7 +158,7 @@ package monkey.core.utils {
 						
 			_stage.addEventListener(KeyboardEvent.KEY_DOWN, 		keyDownEvent, 			false, 0, true);
 			_stage.addEventListener(KeyboardEvent.KEY_UP, 			keyUpEvent, 			false, 0, true);
-			_stage.addEventListener(MouseEvent.MOUSE_MOVE, 			mouseMove, 			false, 0, true);
+			_stage.addEventListener(MouseEvent.MOUSE_MOVE, 			mouseMove, 				false, 0, true);
 			_stage.addEventListener(MouseEvent.MOUSE_WHEEL, 		mouseWheelEvent, 		false, 0, true);
 			_stage.addEventListener(MouseEvent.MOUSE_DOWN, 			mouseDownEvent, 		false, 0, true);
 			_stage.addEventListener(MouseEvent.MOUSE_UP, 			mouseUpEvent, 			false, 0, true);

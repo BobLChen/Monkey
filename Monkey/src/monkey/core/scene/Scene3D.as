@@ -77,6 +77,7 @@ package monkey.core.scene {
 		private var _viewPort			: Rectangle;			// viewport
 		private var _antialias			: int;					// 抗锯齿等级
 		private var _paused				: Boolean;				// 是否暂停
+		private var _updatable			: Boolean;				// 是否停止update
 		private var _camera				: Camera3D;				// 相机
 						
 		/**
@@ -90,6 +91,7 @@ package monkey.core.scene {
 			this.shaders	= new Vector.<Shader3D>();
 			this.container  = dispObject;
 			this.antialias  = 4;
+			this.updatable	= true;
 			this.background = new Color(0x333333);
 			this.camera     = new Camera3D(new PerspectiveLens());
 			this.camera.transform.setPosition(0, 0, -100);
@@ -98,6 +100,14 @@ package monkey.core.scene {
 			} else {
 				this.container.addEventListener(Event.ADDED_TO_STAGE, addedToStageEvent, false, 0, true);
 			}
+		}
+		
+		public function get updatable():Boolean {
+			return _updatable;
+		}
+
+		public function set updatable(value:Boolean):void {
+			_updatable = value;
 		}
 				
 		/**
@@ -338,8 +348,10 @@ package monkey.core.scene {
 		
 		override public function update(includeChildren : Boolean) : void {
 			this.dispatchEvent(enterFrameEvent);
-			for each (var pivot  : Object3D in renderList) {
-				pivot.update(false);
+			if (this.updatable) {
+				for each (var pivot  : Object3D in renderList) {
+					pivot.update(false);
+				}
 			}
 			this.dispatchEvent(exitFrameEvent);
 		}

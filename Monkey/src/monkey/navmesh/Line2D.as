@@ -80,16 +80,6 @@ package monkey.navmesh {
 		 *
 		 */
 		public function classifyPoint(p : Point, epsilon : Number = 0) : int {
-			// 一个点，不是直线
-			if (normal.length == 0) {
-				if (p.y > pa.y) {
-					return LEFT_SIDE;
-				} else if (p.y < pa.y) {
-					return RIGHT_SIDE;
-				} else {
-					return ON_LINE;
-				}
-			}
 			var distance : Number = this.crossProduct(p);
 			if (distance > epsilon) {
 				return RIGHT_SIDE;

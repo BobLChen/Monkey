@@ -45,7 +45,7 @@ package monkey.core.utils {
 		public function get target():Object3D {
 			return _ref;
 		}
-
+		
 		public function set target(value:Object3D):void {
 			_ref = value;
 		}
@@ -53,15 +53,15 @@ package monkey.core.utils {
 		public function get pivot():Object3D {
 			return _pivot;
 		}
-
+		
 		public function set pivot(value:Object3D):void {
 			_pivot = value;
 		}
-
+		
 		public function get distance():Number {
 			return _distance;
 		}
-
+		
 		public function set distance(value:Number):void {
 			value = Math.max(value, minDistance);
 			value = Math.min(value, maxDistance);
@@ -71,7 +71,7 @@ package monkey.core.utils {
 		public function get tiltAngle():Number {
 			return _tiltAngle;
 		}
-
+		
 		public function set tiltAngle(value:Number):void {
 			value = Math.max(value, minTiltAngle);
 			value = Math.min(value, maxTiltAngle);
@@ -98,25 +98,25 @@ package monkey.core.utils {
 					}
 					if (panAngle - _currentPanAngle < -180) {
 						_currentPanAngle -= 360;
-					} else if (panAngle - _currentPanAngle > 180) {
+					} else if (panAngle  - _currentPanAngle > 180) {
 						_currentPanAngle += 360;
 					}
 				}
 				if (hasTweenStep) {
 					_currentTiltAngle += (tiltAngle - _currentTiltAngle) / (steps + 1);
-					_currentPanAngle += (panAngle - _currentPanAngle) / (steps + 1);
-					_currentDistance += (distance - _currentDistance)/ (steps + 1);
+					_currentPanAngle  += (panAngle - _currentPanAngle) 	/ (steps + 1);
+					_currentDistance  += (distance - _currentDistance)	/ (steps + 1);
 				} else {
 					_currentTiltAngle = tiltAngle;
-					_currentPanAngle = panAngle;
+					_currentPanAngle  = panAngle;
 				}
 				if ((Math.abs(tiltAngle - _currentTiltAngle) < 0.01) &&
-					(Math.abs(panAngle - _currentPanAngle) < 0.01) &&
-					(Math.abs(distance - _currentDistance) < 0.01)
+					(Math.abs(panAngle  - _currentPanAngle) < 0.01) &&
+					(Math.abs(distance  - _currentDistance) < 0.01)
 				) {
 					_currentTiltAngle = tiltAngle;
-					_currentPanAngle = panAngle;
-					_currentDistance = distance;
+					_currentPanAngle  = panAngle;
+					_currentDistance  = distance;
 				}
 			}
 			

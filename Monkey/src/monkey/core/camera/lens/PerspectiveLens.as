@@ -69,7 +69,7 @@ package monkey.core.camera.lens {
 			var a : Number = w / h;
 			var y : Number = 1 / this._zoom * a;
 			var x : Number = y / a;
-						
+			
 			rawData[0] = x;
 			rawData[5] = y;
 			rawData[10] = f / (n - f);

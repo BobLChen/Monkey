@@ -1,5 +1,5 @@
 package monkey.navmesh {
-
+	
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	
@@ -25,7 +25,7 @@ package monkey.navmesh {
 		private var _cells 	: Vector.<NavigationCell>;
 		private var _heap 	: BinaryHeap;
 		private var _mesh	: Mesh3D;
-				
+		
 		public function NavigationMesh() {
 			this.name  = "NavigationMesh";
 			this._heap = new BinaryHeap(compare);
@@ -65,7 +65,7 @@ package monkey.navmesh {
 		private function compare(a : NavigationCell, b : NavigationCell) : Number {
 			return a.pathCost - b.pathCost;
 		}
-
+		
 		/** 所有单元格 */
 		public function get cells() : Vector.<NavigationCell> {
 			return _cells;
@@ -86,7 +86,7 @@ package monkey.navmesh {
 			var cell : NavigationCell = new NavigationCell(pa, pb, pc);
 			_cells.push(cell);
 		}
-
+		
 		/**
 		 * 当单元格添加完成之后，需要调用该方法
 		 *  维护单元格之间的关系
@@ -108,7 +108,7 @@ package monkey.navmesh {
 				}
 			}
 		}
-
+		
 		/**
 		 * 通过顶点搜寻cell
 		 * @param v0
@@ -136,7 +136,7 @@ package monkey.navmesh {
 		private function computeHeuristic(cell : NavigationCell, goal : Vector3D) : Number {
 			return Vector3DUtils.length(cell.center, goal);
 		}
-
+		
 		/**
 		 * 搜寻路径
 		 * @param startPos		起始点
@@ -206,7 +206,7 @@ package monkey.navmesh {
 			}
 			return path;
 		}
-
+		
 		/**
 		 * 使用拐点法求取路径点
 		 * @param path			路径
@@ -331,6 +331,7 @@ package monkey.navmesh {
 			}
 			return wayPoints;
 		}
-				
+		
 	}
 }
+
