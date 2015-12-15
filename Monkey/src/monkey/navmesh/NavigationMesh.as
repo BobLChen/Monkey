@@ -274,7 +274,9 @@ package monkey.navmesh {
 				if (ll.classifyPoint(pl) != Line2D.RIGHT_SIDE) {
 					// 如果右点在左直线上面或者在左直线左侧，则视为一个拐点。
 					if (ll.classifyPoint(pr) != Line2D.RIGHT_SIDE) {
-						wayPoints.push(va);
+						if (!wayPoints[wayPoints.length - 1].equals(va)) {
+							wayPoints.push(va);
+						}
 						va  = ta;
 						vb  = tb;
 						Vector3DUtils.interpolate(ta, tb, 0.5, mid);
@@ -286,7 +288,9 @@ package monkey.navmesh {
 				} else {
 					// 检测左点是否在右直线上或者右侧
 					if (lr.classifyPoint(pl) != Line2D.LEFT_SIDE) {
-						wayPoints.push(vb);
+						if (!wayPoints[wayPoints.length - 1].equals(vb)) {
+							wayPoints.push(vb);
+						}
 						va  = ta;
 						vb  = tb;
 						Vector3DUtils.interpolate(ta, tb, 0.5, mid);
@@ -303,7 +307,9 @@ package monkey.navmesh {
 				if (lr.classifyPoint(pr) != Line2D.LEFT_SIDE) {
 					// 如果左点在右直线上面或者右侧，则视为一个拐点。
 					if (lr.classifyPoint(pl) != Line2D.LEFT_SIDE) {
-						wayPoints.push(vb);
+						if (!wayPoints[wayPoints.length - 1].equals(vb)) {
+							wayPoints.push(vb);
+						}
 						va  = ta;
 						vb  = tb;
 						Vector3DUtils.interpolate(ta, tb, 0.5, mid);
@@ -315,7 +321,9 @@ package monkey.navmesh {
 				} else {
 					// 检测右点是否在左直线上或者左侧
 					if (ll.classifyPoint(pr) != Line2D.RIGHT_SIDE) {
-						wayPoints.push(va);
+						if (!wayPoints[wayPoints.length - 1].equals(va)) {
+							wayPoints.push(va);
+						}
 						va  = ta;
 						vb  = tb;
 						Vector3DUtils.interpolate(ta, tb, 0.5, mid);
@@ -329,8 +337,7 @@ package monkey.navmesh {
 					}
 				}
 			}
-			ta = wayPoints[wayPoints.length - 1];
-			if (!ta.equals(endpos)) {
+			if (!wayPoints[wayPoints.length - 1].equals(endpos)) {
 				wayPoints.push(endpos);
 			}
 			return wayPoints;
