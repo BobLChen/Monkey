@@ -146,9 +146,7 @@ package monkey.navmesh {
 		 * @return path
 		 */
 		public function findPath(startPos : Vector3D, startCell : NavigationCell, endPos : Vector3D, endCell : NavigationCell) : Array {
-
 			var path : Array = [];
-
 			for each (var cell : NavigationCell in _cells) {
 				cell.open = -1;
 				cell.parent = null;
@@ -163,60 +161,49 @@ package monkey.navmesh {
 			_heap.clear();
 			_heap.push(endCell);
 			var pathFount : Boolean = false;
-
+			
 			while (_heap.isNotEmpty() && !pathFount) {
 				// 获取花费最低的单元格
 				var curCell : NavigationCell = _heap.pop() as NavigationCell;
 				curCell.open = 0; // 加入到关闭列表
-
 				if (curCell == startCell) {
 					pathFount = true;
 					break;
 				}
-
 				// 检测所有相邻的单元格
 				for (var i : int = 0; i < 3; i++) {
 					var adj : NavigationCell = curCell.link[i];
-
-					// 如果邻接单元格存在
-					if (adj != null) {
-						// 忽略在关闭列表或者不可通过的单元格
-						if (adj.open == 0) {
-							continue;
-						} else if (adj.open == -1) { // 不处于开启列表，加入到开启列表
-							adj.open = 1;
+					if (adj == null) {
+						continue;
+					}
+					// 如果邻接单元格存在 忽略在关闭列表或者不可通过的单元格
+					if (adj.open == 0) {
+						continue;
+					} else if (adj.open == -1) { // 不处于开启列表，加入到开启列表
+						adj.open = 1;
+						adj.parent = curCell;
+						adj.heuristic = computeHeuristic(adj, startPos); // 启发式花费
+						adj.arrivalCost = curCell.arrivalCost + curCell.wallDistance[Math.abs(i - curCell.arrivalWall)]; // 到达的路径花费,即从curCell到达该单元的花费
+						adj.arrivalWall = adj.getSide(curCell); // 设置adj的穿入边
+						_heap.push(adj);
+					} else if (adj.open == 1) { // 处于开启列表
+						// 检测当前单元格到邻接单元格的花费是否更小
+						if (curCell.arrivalCost + curCell.wallDistance[Math.abs(i - curCell.arrivalWall)] < adj.arrivalCost) {
+							adj.arrivalCost = curCell.arrivalCost;
 							adj.parent = curCell;
-							adj.heuristic = computeHeuristic(adj, startPos); // 启发式花费
-							adj.arrivalCost = curCell.arrivalCost + curCell.wallDistance[Math.abs(i - curCell.arrivalWall)]; // 到达的路径花费,即从curCell到达该单元的花费
-							adj.arrivalWall = adj.getSide(curCell); // 设置adj的穿入边
-							_heap.push(adj);
-						} else if (adj.open == 1) { // 处于开启列表
-							// 检测当前单元格到邻接单元格的花费是否更小
-							if (curCell.arrivalCost + curCell.wallDistance[Math.abs(i - curCell.arrivalWall)] < adj.arrivalCost) {
-								// 没影响
-								// adj.arrivalCost = curCell.arrivalCost + curCell.wallDistance[Math.abs(i - curCell.arrivalWall)];
-								adj.arrivalCost = curCell.arrivalCost;
-								adj.parent = curCell;
-								adj.arrivalWall = adj.getSide(curCell);
-								// _heap.update(adj); // 不用更新二叉堆
-							}
+							adj.arrivalWall = adj.getSide(curCell);
 						}
 					}
-
 				}
 			}
-
 			if (!pathFount) {
 				return path;
 			}
-
 			path.push(startCell);
-
 			while (startCell.parent != null) {
 				path.push(startCell.parent);
 				startCell = startCell.parent;
 			}
-
 			return path;
 		}
 
@@ -245,84 +232,99 @@ package monkey.navmesh {
 			var cel : NavigationCell = path[0];
 			var sid : Line2D = cel.side[cel.arrivalWall];
 			var sp2 : Point  = new Point(satpos.x, satpos.z);	
-			var la	: Line2D = new Line2D(sp2, sid.pa);
-			var lb	: Line2D = new Line2D(sp2, sid.pb);
+			var ll	: Line2D = new Line2D(sp2, sid.pa);
+			var lr	: Line2D = new Line2D(sp2, sid.pb);
 			var va	: Vector3D = cel.vertives[cel.arrivalWall];
 			var vb  : Vector3D = cel.vertives[(cel.arrivalWall + 1) % 3];
 			var ta  : Vector3D = null;
 			var tb  : Vector3D = null;
 			var mid	: Vector3D = new Vector3D();
-			var pa  : Point  = null;
-			var pb  : Point  = null;
+			var pl  : Point  = null;
+			var pr  : Point  = null;
+			var tk  : Boolean = false;
 			// 遍历所有的路径
 			for (var i:int = 0; i < path.length; i++) {
 				cel = path[i];
 				sid = cel.side[cel.arrivalWall];
-				pa  = sid.pa;
-				pb  = sid.pb;
+				pl  = sid.pa;
+				pr  = sid.pb;
 				ta	= cel.vertives[cel.arrivalWall];
 				tb	= cel.vertives[(cel.arrivalWall + 1) % 3];
 				if (i == path.length - 1) {
-					pa = new Point(endpos.x, endpos.z);
-					pb = new Point(endpos.x, endpos.z);
+					pl = new Point(endpos.x, endpos.z);
+					pr = new Point(endpos.x, endpos.z);
 					ta = endpos;
 					tb = endpos;
 				}
+				if (tk) {
+					var t0 : Point = pl;
+					pl = pr;
+					pr = t0;
+					var t1 : Vector3D = ta;
+					ta = tb;
+					tb = ta;
+				}
+				tk = !tk;
+				
 				// 是否共点，左直线和右直线都与穿出边共点
-				if (la.pb.equals(pa) && lb.pb.equals(pb)) {
+				if (ll.pb.equals(pl) && lr.pb.equals(pr)) {
 					continue;
 				}
-				// 左点在直线左侧，或者点在直线上面,就需要检测右点与该直线之间的关系
-				if (la.classifyPoint(pa) != Line2D.RIGHT_SIDE) {
-					// 如果右点在左直线上面或者在左直线左侧，则视为一个拐点。如果右点在左直线右侧，则无视，视为正常流程
-					if (la.classifyPoint(pb) != Line2D.RIGHT_SIDE) {
-						wayPoints.push(va.clone());
-						sp2 = new Point(va.x, va.z);
+				// 左点在左直线左侧
+				if (ll.classifyPoint(pl) != Line2D.RIGHT_SIDE) {
+					// 如果右点在左直线上面或者在左直线左侧，则视为一个拐点。
+					if (ll.classifyPoint(pr) != Line2D.RIGHT_SIDE) {
+						wayPoints.push(va);
 						va  = ta;
 						vb  = tb;
-						la  = new Line2D(sp2, pa);
-						lb  = new Line2D(sp2, pb);
+						Vector3DUtils.interpolate(ta, tb, 0.5, mid);
+						sp2 = new Point(mid.x, mid.z);
+						ll  = new Line2D(sp2, pl);
+						lr  = new Line2D(sp2, pr);
 						continue;
 					}
 				} else {
 					// 检测左点是否在右直线上或者右侧
-					if (lb.classifyPoint(pa) != Line2D.LEFT_SIDE) {
-						wayPoints.push(vb.clone());
-						sp2 = new Point(vb.x, vb.z);
+					if (lr.classifyPoint(pl) != Line2D.LEFT_SIDE) {
+						wayPoints.push(vb);
 						va  = ta;
 						vb  = tb;
-						la  = new Line2D(sp2, pa);
-						lb  = new Line2D(sp2, pb);
+						Vector3DUtils.interpolate(ta, tb, 0.5, mid);
+						sp2 = new Point(mid.x, mid.z);
+						ll  = new Line2D(sp2, pl);
+						lr  = new Line2D(sp2, pr);
 						continue;
 					} else {
-						la.pb = pa;				
+						ll.pb = pl;				
 						va = ta;
 					}
 				}
-				// 右点在直线右侧，或者点在直线上面,就需要检测左点与该直线之间的关系
-				if (lb.classifyPoint(pb) != Line2D.LEFT_SIDE) {
+				// 右点在右直线右侧，或者点在直线上面
+				if (lr.classifyPoint(pr) != Line2D.LEFT_SIDE) {
 					// 如果左点在右直线上面或者右侧，则视为一个拐点。
-					if (lb.classifyPoint(pa) != Line2D.LEFT_SIDE) {
-						wayPoints.push(vb.clone());
-						sp2 = new Point(vb.x, vb.z);
+					if (lr.classifyPoint(pl) != Line2D.LEFT_SIDE) {
+						wayPoints.push(vb);
 						va  = ta;
 						vb  = tb;
-						la  = new Line2D(sp2, pa);
-						lb  = new Line2D(sp2, pb);
+						Vector3DUtils.interpolate(ta, tb, 0.5, mid);
+						sp2 = new Point(mid.x, mid.z);
+						ll  = new Line2D(sp2, pl);
+						lr  = new Line2D(sp2, pr);
 						continue;
 					}
 				} else {
 					// 检测右点是否在左直线上或者左侧
-					if (la.classifyPoint(pb) != Line2D.RIGHT_SIDE) {
-						wayPoints.push(va.clone());
-						sp2 = new Point(va.x, va.z);
+					if (ll.classifyPoint(pr) != Line2D.RIGHT_SIDE) {
+						wayPoints.push(va);
 						va  = ta;
 						vb  = tb;
-						la  = new Line2D(sp2, pa);
-						lb  = new Line2D(sp2, pb);
+						Vector3DUtils.interpolate(ta, tb, 0.5, mid);
+						sp2 = new Point(mid.x, mid.z);
+						ll  = new Line2D(sp2, pl);
+						lr  = new Line2D(sp2, pr);
 						continue;
 					} else {
-						lb.pb = pb;
+						lr.pb = pr;
 						vb = tb;
 					}
 				}
@@ -333,6 +335,6 @@ package monkey.navmesh {
 			}
 			return wayPoints;
 		}
-		
+				
 	}
 }

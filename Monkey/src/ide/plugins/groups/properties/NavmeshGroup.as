@@ -18,6 +18,7 @@ package ide.plugins.groups.properties {
 	import monkey.core.scene.Scene3D;
 	import monkey.core.utils.Color;
 	import monkey.core.utils.Input3D;
+	import monkey.core.utils.Vector3DUtils;
 	import monkey.navmesh.NavigationCell;
 	import monkey.navmesh.NavigationMesh;
 	
@@ -120,7 +121,7 @@ package ide.plugins.groups.properties {
 		}
 		
 		protected function onPostRender(event:Event) : void {
-			this.pathMesh.draw(app.scene);
+//			this.pathMesh.draw(app.scene);
 			this.startRole.draw(app.scene);
 			this.endRole.draw(app.scene);
 			this.pathLine.draw(app.scene);
@@ -168,19 +169,16 @@ package ide.plugins.groups.properties {
 						var wayPoint : Array = navMesh.findWayPoint(path, startPos, endPos);
 						app.dispatchEvent(new LogEvent("寻路消耗时间：" + (getTimer() - t) + "毫秒"));
 						
-						pathLine.clear();
-						pathLine.lineStyle(1, 0xff00ff);
 						pathMesh.clear();
 						for each(var node : NavigationCell in path) {
 							pathMesh.addPloy(node.vertives[0], node.vertives[1], node.vertives[2]);
 							var v0 : Vector3D = node.vertives[node.arrivalWall];
 							var v1 : Vector3D = node.vertives[(node.arrivalWall + 1) % 3];
-							pathLine.moveTo(v0.x, v0.y, v0.z);
-							pathLine.lineTo(v1.x, v1.y, v1.z);
+							var vv : Vector3D = new Vector3D();
+							Vector3DUtils.interpolate(v0, v1, 0.5, vv);
 						}
-												
 						// 绘制路点
-//						pathLine.clear();
+						pathLine.clear();
 						pathLine.lineStyle(2, 0xFF0000);
 						pathLine.moveTo(startPos.x, startPos.y, startPos.z);
 						app.dispatchEvent(new LogEvent("路点(起点)：" + startPos.x + "," + startPos.y + "," + startPos.z));
