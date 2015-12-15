@@ -10,8 +10,11 @@ package ide.plugins {
 	import flash.utils.ByteArray;
 	
 	import ide.App;
+	import ide.utils.ExportUtils;
+	import ide.utils.FileUtils;
 	
 	import monkey.core.base.Object3D;
+	import monkey.core.utils.AssetsType;
 	import monkey.navmesh.NavigationMesh;
 	
 	import ui.core.interfaces.IPlugin;
@@ -96,8 +99,8 @@ package ide.plugins {
 				var navMesh : NavigationMesh = new NavigationMesh();
 				navMesh.build(obj.renderer.mesh);
 				navMesh.name = obj.name + "_NavMesh";
-				this._app.scene.addChild(navMesh);
-				this._app.selection.objects = [navMesh];
+				var file : FileUtils = new FileUtils();
+				file.save(ExportUtils.exportNavmesh(navMesh), AssetsType.NAV);
 			}
 		}
 		
