@@ -172,9 +172,13 @@ package ide.plugins.groups.properties {
 						pathMesh.clear();
 						pathLine.clear();
 						pathLine.lineStyle(2, 0x00FF00);
-						for each(var node : NavigationCell in path) {
-							pathMesh.addPloy(node.vertives[0], node.vertives[1], node.vertives[2]);
-														
+						for (var i:int = 0; i < path.length; i++) {
+							var node : NavigationCell = path[i];
+							pathMesh.addPloy(node.vertives[2], node.vertives[1], node.vertives[0]);
+							
+							if (i == path.length - 1) {
+								continue;
+							}
 							var v0 : Vector3D = node.vertives[node.arrivalWall];
 							var v1 : Vector3D = node.vertives[(node.arrivalWall + 1) % 3];
 							pathLine.moveTo(v0.x, v0.y, v0.z);

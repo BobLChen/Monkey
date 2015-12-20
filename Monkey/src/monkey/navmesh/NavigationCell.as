@@ -36,9 +36,7 @@ package monkey.navmesh {
 		private var _vertives 		: Vector.<Vector3D>; 			// 顶点
 		private var _id 			: int; 							// id
 		private var _open 			: int; 							// 是否处于open表中
-		private var _plane 			: CellPlane; 					// 单元所在平面
 		private var _link 			: Vector.<NavigationCell>; 		// 单元邻接平面		
-		private var _side 			: Vector.<Line2D>; 				// 邻接边
 		private var _center 		: Vector3D; 					// 三角形中心点
 		private var _arrivalCost	: Number; 						// 达到该单元格的花费。
 		private var _heuristic 		: Number; 						// 启发式消耗
@@ -49,7 +47,6 @@ package monkey.navmesh {
 		public function NavigationCell(v0 : Vector3D, v1 : Vector3D, v2 : Vector3D) {
 			this._vertives = new Vector.<Vector3D>();
 			this._link = new Vector.<NavigationCell>();
-			this._side = new Vector.<Line2D>();
 			this._wallMidPoint = new Vector.<Vector3D>();
 			this._wallDistance = new Vector.<Number>();
 			this._open = -1;
@@ -124,30 +121,12 @@ package monkey.navmesh {
 		}
 		
 		/**
-		 * 边 
-		 * @return 
-		 * 
-		 */		
-		public function get side() : Vector.<Line2D> {
-			return _side;
-		}
-		
-		/**
 		 * 邻接三角形 
 		 * @return 
 		 * 
 		 */		
 		public function get link() : Vector.<NavigationCell> {
 			return _link;
-		}
-		
-		/**
-		 * plane 
-		 * @return 
-		 * 
-		 */		
-		public function get plane() : CellPlane {
-			return _plane;
 		}
 		
 		/**
@@ -197,12 +176,6 @@ package monkey.navmesh {
 			var p1 : Point = new Point(_vertives[VERT_A].x, _vertives[VERT_A].z);
 			var p2 : Point = new Point(_vertives[VERT_B].x, _vertives[VERT_B].z);
 			var p3 : Point = new Point(_vertives[VERT_C].x, _vertives[VERT_C].z);
-			// 初始化边
-			this._side[SIDE_AB] = new Line2D(p1, p2);
-			this._side[SIDE_BC] = new Line2D(p2, p3);
-			this._side[SIDE_CA] = new Line2D(p3, p1);
-			// 初始化平面
-			this._plane = new CellPlane(_vertives[VERT_A], _vertives[VERT_B], _vertives[VERT_C]);
 			// 计算中心点
 			this._center = new Vector3D();
 			this._center.x = (_vertives[VERT_A].x + _vertives[VERT_B].x + _vertives[VERT_C].x) / 3;
@@ -236,14 +209,12 @@ package monkey.navmesh {
 		 */
 		public function copyFrom(src : NavigationCell) : void {
 			if (this != src) {
-				this._plane 	= src.plane;
 				this._center	= src._center;
 				this._id 	= src.id;
 				this._open 	= src.open;
 				this._heuristic = src.heuristic;
 				this._arrivalCost = src.arrivalCost;
 				for (var i : int = 0; i < 3; i++) {
-					this._side[i] = src.side[i];
 					this._link[i] = src.link[i];
 					this._vertives[i] = src.vertives[i];
 					this._wallMidPoint[i] = src.wallMidPoint[i];
@@ -291,29 +262,7 @@ package monkey.navmesh {
 			// 无邻接边
 			return false;
 		}
-
-		/**
-		 * 检测点是否在单元格内
-		 * @param testPoint
-		 * @return
-		 *
-		 */
-		public function isPointInCell2(testPoint : Point) : Boolean {
-			var count : int = 0;
-			for (var i : int = 0; i < 3; i++) {
-				var side : int = _side[i].classifyPoint(testPoint);
-				if (side != Line2D.LEFT_SIDE) {
-					count++;
-				}
-			}
-			return (count == 3);
-		}
-
-		public function isPointInCell3(testPoint : Vector3D) : Boolean {
-			temp2.setTo(testPoint.x, testPoint.z);
-			return isPointInCell2(temp2);
-		}
-
+		
 		/**
 		 * 设置邻接单元格
 		 * @param SIDE_AB

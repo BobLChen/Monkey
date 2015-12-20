@@ -29,7 +29,6 @@ package {
 			
 			var cube : Object3D = new Object3D();
 			cube.addComponent(new MeshRenderer(new Cube(), new ColorMaterial(Color.GRAY)));
-			
 			this.scene.addChild(cube);
 		}
 	}
