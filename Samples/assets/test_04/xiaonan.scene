@@ -1,0 +1,144 @@
+{
+    "cameras": [], 
+    "meshes": [
+        {
+            "anim": {
+                "name": "xiaonan_boo1.anim", 
+                "totalFrames": 33
+            }, 
+            "name": "xiaonan_boo1.mesh", 
+            "skeleton": true, 
+            "textures": {
+                "AmbientColor": [], 
+                "AmbientFactor": [], 
+                "Bump": [], 
+                "DiffuseColor": [
+                    "\u9898\u56fe.jpg"
+                ], 
+                "DiffuseFactor": [], 
+                "DisplacementColor": [], 
+                "EmissiveColor": [], 
+                "EmissiveFactor": [], 
+                "NormalMap": [], 
+                "ReflectionColor": [], 
+                "ReflectionFactor": [], 
+                "ShininessExponent": [], 
+                "SpecularColor": [], 
+                "SpecularFactor": [], 
+                "TransparencyFactor": [], 
+                "TransparentColor": [], 
+                "VectorDisplacementColor": []
+            }, 
+            "transform": [
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0
+            ]
+        }, 
+        {
+            "anim": {
+                "name": "xiaonan__weapon01.anim", 
+                "totalFrames": 33
+            }, 
+            "name": "xiaonan__weapon01.mesh", 
+            "skeleton": false, 
+            "textures": {
+                "AmbientColor": [], 
+                "AmbientFactor": [], 
+                "Bump": [], 
+                "DiffuseColor": [
+                    "\u9898\u56fe.jpg"
+                ], 
+                "DiffuseFactor": [], 
+                "DisplacementColor": [], 
+                "EmissiveColor": [], 
+                "EmissiveFactor": [], 
+                "NormalMap": [], 
+                "ReflectionColor": [], 
+                "ReflectionFactor": [], 
+                "ShininessExponent": [], 
+                "SpecularColor": [], 
+                "SpecularFactor": [], 
+                "TransparencyFactor": [], 
+                "TransparentColor": [], 
+                "VectorDisplacementColor": []
+            }, 
+            "transform": [
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0
+            ]
+        }, 
+        {
+            "anim": {
+                "name": "xiaonan__weapon00.anim", 
+                "totalFrames": 33
+            }, 
+            "name": "xiaonan__weapon00.mesh", 
+            "skeleton": false, 
+            "textures": {
+                "AmbientColor": [], 
+                "AmbientFactor": [], 
+                "Bump": [], 
+                "DiffuseColor": [], 
+                "DiffuseFactor": [], 
+                "DisplacementColor": [], 
+                "EmissiveColor": [], 
+                "EmissiveFactor": [], 
+                "NormalMap": [], 
+                "ReflectionColor": [], 
+                "ReflectionFactor": [], 
+                "ShininessExponent": [], 
+                "SpecularColor": [], 
+                "SpecularFactor": [], 
+                "TransparencyFactor": [], 
+                "TransparentColor": [], 
+                "VectorDisplacementColor": []
+            }, 
+            "transform": [
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                0.0, 
+                1.0
+            ]
+        }
+    ]
+}

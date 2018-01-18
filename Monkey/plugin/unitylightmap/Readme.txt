@@ -1,0 +1,8 @@
+Unity3D Lightmap导出插件
+
+1、在Unity3D的Project/Assets目录下面创建Editor目录
+2、将LightmapPlugin.cs拷贝至Editor目录
+3、选中已经烘焙好的模型,点击工具条中Monkey/ExportLightmap
+4、选择导出的目录
+5、将Lightmap.exr转换为PNG或者JPG格式
+6、scene.lightmap为配置文件，根据项目需要重新配置该配置即可
